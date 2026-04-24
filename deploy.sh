@@ -1,33 +1,28 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ── Konfiguration ──────────────────────────────────────────
-# Ziel-Verzeichnis anpassen (lokaler Pfad oder user@host:/pfad)
-# WICHTIG: Darf NICHT das Projektverzeichnis selbst sein!
-DEPLOY_TARGET="/var/www/html/webit"
-
-# ── Sicherheitscheck ───────────────────────────────────────
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RESOLVED_TARGET="$(realpath -m "${DEPLOY_TARGET}")"
-
-if [[ "${RESOLVED_TARGET}" == "${SCRIPT_DIR}" || "${SCRIPT_DIR}" == "${RESOLVED_TARGET}"* ]]; then
-  echo "FEHLER: DEPLOY_TARGET darf nicht das Projektverzeichnis sein!" >&2
-  exit 1
-fi
+FTP_HOST="palladius.sui-inter.net"
+FTP_USER="ftp.webit"
+FTP_REMOTE="/"   # HTTP-Root auf dem Server
 
 # ── Build ──────────────────────────────────────────────────
 echo "→ Build starten…"
 npm run build
 
-# ── Deploy ────────────────────────────────────────────────
-echo "→ Deploye dist/ nach ${DEPLOY_TARGET}…"
-rsync -av \
-  --exclude='.htaccess' \
-  --exclude='api/' \
-  --exclude='uploads/' \
-  dist/ "${DEPLOY_TARGET}/"
+# ── Deploy via lftp ────────────────────────────────────────
+echo "→ Uploade dist/ nach ${FTP_HOST}${FTP_REMOTE}…"
+lftp -u "${FTP_USER}" "${FTP_HOST}" <<'LFTP'
+set ftp:ssl-allow yes
+set net:max-retries 3
+set net:timeout 10
 
-# .htaccess separat (nur wenn noch nicht vorhanden oder explizit gewollt)
-rsync -av .htaccess "${DEPLOY_TARGET}/.htaccess"
+# Ohne --delete: api/, uploads/ und alles andere auf dem Server bleibt unangetastet
+mirror --reverse --parallel=4 --verbose dist/ /
 
-echo "✓ Frontend deployed nach ${DEPLOY_TARGET}"
+# .htaccess separat (mirror überspringt dotfiles standardmässig)
+put .htaccess -o /.htaccess
+
+quit
+LFTP
+
+echo "✓ Frontend deployed nach ${FTP_HOST}"
