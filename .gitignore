@@ -1,0 +1,22 @@
+# Abhängigkeiten
+node_modules/
+
+# Build-Output
+dist/
+
+# API ist ein eigenes Repo
+api/
+
+# Env / lokale Konfiguration
+.env
+.env.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+api/config
+
+# Archives
+*.zip
+*.tar.gz
