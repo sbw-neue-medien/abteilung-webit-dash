@@ -1,16 +1,16 @@
 <template>
   <div class="max-w-full px-4 py-8">
-    <div v-if="projects.loading || tasks.loading" class="text-center py-16 text-slate-400 italic">Laden…</div>
+    <div v-if="projects.loading || tasks.loading" class="text-center py-16 text-lo italic">Laden…</div>
     <template v-else-if="projects.current">
       <div class="flex flex-wrap items-start gap-4 mb-6 max-w-7xl mx-auto">
         <div class="flex-1 min-w-0">
           <RouterLink to="/projekte" class="text-brand-600 hover:underline text-sm">← Projekte</RouterLink>
-          <h1 class="text-2xl font-bold text-slate-800 truncate mt-1">{{ projects.current.name }}</h1>
+          <h1 class="text-2xl font-bold text-hi truncate mt-1">{{ projects.current.name }}</h1>
           <div class="flex items-center gap-3 mt-1">
             <StatusBadge :status="projects.current.status" />
-            <span v-if="projects.current.client" class="text-sm text-slate-400">{{ projects.current.client }}</span>
+            <span v-if="projects.current.client" class="text-sm text-lo">{{ projects.current.client }}</span>
           </div>
-          <p v-if="projects.current.description" class="mt-2 text-sm text-slate-600">{{ projects.current.description }}</p>
+          <p v-if="projects.current.description" class="mt-2 text-sm text-mid">{{ projects.current.description }}</p>
         </div>
         <div class="flex gap-2 shrink-0">
           <button v-if="auth.isLeiter" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
@@ -30,16 +30,16 @@
       </div>
 
       <div v-if="auth.isLeiter && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
-        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">Mitglieder</h3>
+        <h3 class="text-sm font-semibold text-lo uppercase tracking-wide mb-2">Mitglieder</h3>
         <div class="flex flex-wrap gap-2">
           <span v-for="m in projects.current.members" :key="m.id"
-                class="px-3 py-1 bg-brand-50 text-brand-700 rounded-full text-sm font-medium">
+                class="px-3 py-1 bg-brand-subtle text-brand-700 rounded-full text-sm font-medium">
             {{ m.name }}
           </span>
         </div>
       </div>
     </template>
-    <div v-else class="text-center py-16 text-slate-400">Projekt nicht gefunden.</div>
+    <div v-else class="text-center py-16 text-lo">Projekt nicht gefunden.</div>
 
     <Modal v-model="showTaskModal" :title="editingTask ? 'Aufgabe bearbeiten' : 'Neue Aufgabe'">
       <form @submit.prevent="saveTask" class="space-y-4">

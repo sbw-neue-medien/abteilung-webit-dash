@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-slate-800">Projekte</h1>
+      <h1 class="text-2xl font-bold text-hi">Projekte</h1>
       <button v-if="auth.isLeiter" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -18,28 +18,28 @@
       </button>
     </div>
 
-    <div v-if="projects.loading" class="text-slate-400 italic py-8 text-center">Laden…</div>
+    <div v-if="projects.loading" class="text-lo italic py-8 text-center">Laden…</div>
     <div v-else class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="p in filtered" :key="p.id"
            class="card hover:shadow-md transition-shadow cursor-pointer flex flex-col gap-3"
            @click="router.push(`/projekte/${p.id}`)">
         <div class="flex items-start justify-between gap-2">
           <div>
-            <p class="font-semibold text-slate-800">{{ p.name }}</p>
-            <p v-if="p.client" class="text-xs text-slate-400 mt-0.5">{{ p.client }}</p>
+            <p class="font-semibold text-hi">{{ p.name }}</p>
+            <p v-if="p.client" class="text-xs text-lo mt-0.5">{{ p.client }}</p>
           </div>
           <StatusBadge :status="p.status" />
         </div>
-        <p v-if="p.description" class="text-sm text-slate-500 line-clamp-2">{{ p.description }}</p>
-        <div class="flex items-center justify-between mt-auto pt-2 border-t border-slate-100">
-          <span class="text-xs text-slate-400">{{ p.owner_name }}</span>
+        <p v-if="p.description" class="text-sm text-mid line-clamp-2">{{ p.description }}</p>
+        <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
+          <span class="text-xs text-lo">{{ p.owner_name }}</span>
           <div v-if="auth.isLeiter" class="flex gap-1" @click.stop>
             <button class="btn btn-sm btn-secondary" @click="openEdit(p)">Bearbeiten</button>
             <button class="btn btn-sm btn-danger" @click="confirmDelete(p)">Löschen</button>
           </div>
         </div>
       </div>
-      <div v-if="!filtered.length" class="col-span-full text-center py-12 text-slate-400 italic">Keine Projekte.</div>
+      <div v-if="!filtered.length" class="col-span-full text-center py-12 text-lo italic">Keine Projekte.</div>
     </div>
 
     <Modal v-model="showModal" :title="editing ? 'Projekt bearbeiten' : 'Neues Projekt'">

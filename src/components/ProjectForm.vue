@@ -23,10 +23,10 @@
     </div>
     <div v-if="users.length">
       <label class="label">Lernende zuweisen</label>
-      <div class="space-y-1 max-h-40 overflow-y-auto border border-slate-200 rounded-lg p-2">
-        <label v-for="u in users" :key="u.id" class="flex items-center gap-2 text-sm cursor-pointer">
+      <div class="space-y-1 max-h-40 overflow-y-auto border border-line rounded-lg p-2 bg-lift">
+        <label v-for="u in users" :key="u.id" class="flex items-center gap-2 text-sm cursor-pointer text-hi">
           <input type="checkbox" :value="u.id" v-model="form.member_ids"
-                 class="rounded border-slate-300 text-brand-600" />
+                 class="rounded border-line text-brand-600" />
           {{ u.name }}
         </label>
       </div>

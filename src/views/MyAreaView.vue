@@ -1,30 +1,30 @@
 <template>
   <div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
-    <h1 class="text-2xl font-bold text-slate-800">Mein Bereich</h1>
+    <h1 class="text-2xl font-bold text-hi">Mein Bereich</h1>
 
     <div class="card flex items-center gap-5">
-      <div class="w-16 h-16 rounded-full bg-brand-100 text-brand-700 text-2xl font-bold flex items-center justify-center shrink-0">
+      <div class="w-16 h-16 rounded-full bg-brand-subtle text-brand-600 text-2xl font-bold flex items-center justify-center shrink-0">
         {{ auth.user?.name?.charAt(0) }}
       </div>
       <div class="flex-1">
-        <h2 class="text-xl font-semibold text-slate-800">{{ auth.user?.name }}</h2>
-        <p class="text-sm text-slate-500">{{ auth.user?.role === 'leiter' ? 'Abteilungsleiter' : 'Lernender' }}</p>
+        <h2 class="text-xl font-semibold text-hi">{{ auth.user?.name }}</h2>
+        <p class="text-sm text-mid">{{ auth.user?.role === 'leiter' ? 'Abteilungsleiter' : 'Lernender' }}</p>
       </div>
       <button class="btn-secondary" @click="showPwModal = true">Passwort ändern</button>
     </div>
 
     <section>
-      <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Meine Projekte</h2>
+      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Meine Projekte</h2>
       <div class="grid sm:grid-cols-2 gap-4">
         <RouterLink v-for="p in projects.list" :key="p.id" :to="`/projekte/${p.id}`"
           class="card hover:shadow-md transition-shadow flex items-start justify-between gap-2 cursor-pointer">
           <div>
-            <p class="font-semibold text-slate-800">{{ p.name }}</p>
+            <p class="font-semibold text-hi">{{ p.name }}</p>
             <p v-if="p.is_personal" class="text-xs text-brand-600 mt-0.5">Eigenprojekt</p>
           </div>
           <StatusBadge :status="p.status" />
         </RouterLink>
-        <div v-if="!projects.list.length" class="col-span-2 text-center py-8 text-slate-400 italic">
+        <div v-if="!projects.list.length" class="col-span-2 text-center py-8 text-lo italic">
           Keine Projekte zugewiesen.
         </div>
       </div>
@@ -32,42 +32,42 @@
 
     <section>
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">Meine Stunden</h2>
+        <h2 class="text-sm font-semibold text-lo uppercase tracking-wide">Meine Stunden</h2>
         <RouterLink to="/zeiterfassung" class="text-sm text-brand-600 hover:underline">Alle anzeigen →</RouterLink>
       </div>
       <div class="grid grid-cols-3 gap-4 mb-4">
         <div class="card text-center">
           <div class="text-2xl font-bold text-brand-600">{{ formatMin(weekMin) }}</div>
-          <div class="text-xs text-slate-500 mt-1">Diese Woche</div>
+          <div class="text-xs text-lo mt-1">Diese Woche</div>
         </div>
         <div class="card text-center">
-          <div class="text-2xl font-bold text-slate-700">{{ formatMin(monthMin) }}</div>
-          <div class="text-xs text-slate-500 mt-1">Dieser Monat</div>
+          <div class="text-2xl font-bold text-hi">{{ formatMin(monthMin) }}</div>
+          <div class="text-xs text-lo mt-1">Dieser Monat</div>
         </div>
         <div class="card text-center">
-          <div class="text-2xl font-bold text-slate-700">{{ recentEntries.length }}</div>
-          <div class="text-xs text-slate-500 mt-1">Letzte Einträge</div>
+          <div class="text-2xl font-bold text-hi">{{ recentEntries.length }}</div>
+          <div class="text-xs text-lo mt-1">Letzte Einträge</div>
         </div>
       </div>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
-          <thead class="bg-slate-50 border-b border-slate-200">
+          <thead class="bg-lift border-b border-line">
             <tr>
-              <th class="px-4 py-3 text-left font-medium text-slate-600">Datum</th>
-              <th class="px-4 py-3 text-left font-medium text-slate-600">Projekt</th>
-              <th class="px-4 py-3 text-left font-medium text-slate-600">Dauer</th>
-              <th class="px-4 py-3 text-left font-medium text-slate-600">Tätigkeit</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Datum</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Projekt</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Dauer</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr v-for="e in recentEntries" :key="e.id" class="hover:bg-slate-50">
-              <td class="px-4 py-3 text-slate-600">{{ formatDate(e.date) }}</td>
-              <td class="px-4 py-3 text-slate-600">{{ e.project_name }}</td>
-              <td class="px-4 py-3 font-medium text-slate-800">{{ formatMin(e.duration_min) }}</td>
-              <td class="px-4 py-3 text-slate-500 truncate max-w-xs">{{ e.description || '—' }}</td>
+          <tbody class="divide-y divide-groove">
+            <tr v-for="e in recentEntries" :key="e.id" class="hover:bg-lift">
+              <td class="px-4 py-3 text-mid">{{ formatDate(e.date) }}</td>
+              <td class="px-4 py-3 text-mid">{{ e.project_name }}</td>
+              <td class="px-4 py-3 font-medium text-hi">{{ formatMin(e.duration_min) }}</td>
+              <td class="px-4 py-3 text-mid truncate max-w-xs">{{ e.description || '—' }}</td>
             </tr>
             <tr v-if="!recentEntries.length">
-              <td colspan="4" class="px-4 py-6 text-center text-slate-400 italic">Noch keine Einträge.</td>
+              <td colspan="4" class="px-4 py-6 text-center text-lo italic">Noch keine Einträge.</td>
             </tr>
           </tbody>
         </table>
@@ -81,15 +81,15 @@
           <input v-model="currentPw" type="password" class="input" required autocomplete="current-password" />
         </div>
         <div>
-          <label class="label">Neues Passwort <span class="text-slate-400 font-normal">(min. 8 Zeichen)</span></label>
+          <label class="label">Neues Passwort <span class="text-lo font-normal">(min. 8 Zeichen)</span></label>
           <input v-model="newPw" type="password" class="input" required autocomplete="new-password" minlength="8" />
         </div>
         <div>
           <label class="label">Neues Passwort bestätigen</label>
           <input v-model="confirmPw" type="password" class="input" required autocomplete="new-password" />
         </div>
-        <p v-if="pwError" class="text-sm text-red-600">{{ pwError }}</p>
-        <p v-if="pwSuccess" class="text-sm text-green-600">{{ pwSuccess }}</p>
+        <p v-if="pwError" class="text-sm text-red-500">{{ pwError }}</p>
+        <p v-if="pwSuccess" class="text-sm text-brand-600">{{ pwSuccess }}</p>
         <div class="flex gap-2 justify-end">
           <button type="button" class="btn-secondary" @click="closePwModal">Abbrechen</button>
           <button type="submit" class="btn-primary" :disabled="pwLoading">

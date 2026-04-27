@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col bg-bg text-hi">
     <NavBar v-if="auth.isLoggedIn" />
     <main class="flex-1">
       <RouterView />

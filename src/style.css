@@ -2,15 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --c-bg:           #ffffff;
+    --c-surface:      #ffffff;
+    --c-lift:         #f4f4f4;
+    --c-line:         #e0e0e0;
+    --c-groove:       #ededed;
+    --c-hi:           #0d0d0d;
+    --c-mid:          #4a4a4a;
+    --c-lo:           #999999;
+    --c-brand-subtle: #e4f1c4;
+  }
+
+  html.dark {
+    --c-bg:           #111111;
+    --c-surface:      #1b1b1b;
+    --c-lift:         #252525;
+    --c-line:         #333333;
+    --c-groove:       #2a2a2a;
+    --c-hi:           #f0f0f0;
+    --c-mid:          #aaaaaa;
+    --c-lo:           #555555;
+    --c-brand-subtle: #1d2f0a;
+  }
+
+  html {
+    background-color: var(--c-bg);
+    color: var(--c-hi);
+  }
+}
+
 @layer components {
   .btn {
-    @apply inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1;
+    @apply inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 focus:ring-offset-bg;
   }
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-500;
+    @apply btn bg-brand-600 text-white hover:bg-brand-700;
   }
   .btn-secondary {
-    @apply btn bg-white text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50 focus:ring-brand-500;
+    @apply btn bg-surface text-hi ring-1 ring-line hover:bg-lift;
   }
   .btn-danger {
     @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
@@ -19,13 +50,15 @@
     @apply px-2.5 py-1 text-xs;
   }
   .card {
-    @apply bg-white rounded-xl shadow-sm ring-1 ring-slate-200 p-5;
+    @apply bg-surface rounded-xl shadow-sm ring-1 ring-line p-5;
   }
   .input {
-    @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none;
+    @apply w-full rounded-lg border border-line bg-surface text-hi px-3 py-2 text-sm shadow-sm
+           focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none
+           placeholder:text-lo;
   }
   .label {
-    @apply block text-sm font-medium text-slate-700 mb-1;
+    @apply block text-sm font-medium text-mid mb-1;
   }
   .badge {
     @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;

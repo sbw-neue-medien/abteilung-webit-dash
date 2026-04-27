@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-3">
-      <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">Todo-Liste</h3>
+      <h3 class="text-sm font-semibold text-lo uppercase tracking-wide">Todo-Liste</h3>
       <button class="btn-primary text-xs py-1 px-3" @click="openAdd">
         <svg class="w-3 h-3 inline -mt-0.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -10,49 +10,49 @@
       </button>
     </div>
 
-    <div v-if="todos.loading" class="text-slate-400 italic text-sm py-4 text-center">Laden…</div>
+    <div v-if="todos.loading" class="text-lo italic text-sm py-4 text-center">Laden…</div>
 
-    <div v-else-if="todos.list.length === 0" class="text-slate-400 text-sm py-4 text-center">
+    <div v-else-if="todos.list.length === 0" class="text-lo text-sm py-4 text-center">
       Noch keine Todos vorhanden.
     </div>
 
     <ul v-else class="space-y-2">
       <li v-for="todo in todos.list" :key="todo.id"
-          class="flex items-start gap-3 bg-white rounded-lg border border-slate-200 px-4 py-3 shadow-sm"
-          :class="{ 'opacity-60': todo.done }">
+          class="flex items-start gap-3 bg-surface rounded-lg border border-line px-4 py-3 shadow-sm"
+          :class="{ 'opacity-50': todo.done }">
         <button @click="toggleDone(todo)" class="mt-0.5 shrink-0 text-brand-600 hover:text-brand-700">
           <svg v-if="todo.done" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
           </svg>
-          <svg v-else class="w-5 h-5 text-slate-300 hover:text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg v-else class="w-5 h-5 text-lo hover:text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="9" stroke-width="2"/>
           </svg>
         </button>
 
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium text-slate-800" :class="{ 'line-through text-slate-400': todo.done }">
+          <p class="text-sm font-medium text-hi" :class="{ 'line-through text-lo': todo.done }">
             {{ todo.title }}
           </p>
-          <p v-if="todo.description" class="text-xs text-slate-500 mt-0.5">{{ todo.description }}</p>
+          <p v-if="todo.description" class="text-xs text-mid mt-0.5">{{ todo.description }}</p>
           <div class="flex flex-wrap items-center gap-3 mt-1.5">
-            <span class="text-xs text-slate-400">
-              <span class="font-medium text-slate-600">Geplant:</span> {{ formatDuration(todo.planned_duration_min) }}
+            <span class="text-xs text-lo">
+              <span class="font-medium text-mid">Geplant:</span> {{ formatDuration(todo.planned_duration_min) }}
             </span>
-            <span v-if="todo.actual_duration_min" class="text-xs text-slate-400">
-              <span class="font-medium text-slate-600">Realisiert:</span> {{ formatDuration(todo.actual_duration_min) }}
+            <span v-if="todo.actual_duration_min" class="text-xs text-lo">
+              <span class="font-medium text-mid">Realisiert:</span> {{ formatDuration(todo.actual_duration_min) }}
             </span>
-            <span class="text-xs text-slate-300">{{ todo.creator_name }}</span>
+            <span class="text-xs text-lo">{{ todo.creator_name }}</span>
           </div>
         </div>
 
         <div v-if="canModify(todo)" class="flex gap-1 shrink-0">
-          <button @click="openEdit(todo)" class="text-slate-400 hover:text-brand-600 p-1 rounded">
+          <button @click="openEdit(todo)" class="text-lo hover:text-brand-600 p-1 rounded">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
           </button>
-          <button @click="remove(todo.id)" class="text-slate-400 hover:text-red-500 p-1 rounded">
+          <button @click="remove(todo.id)" class="text-lo hover:text-red-500 p-1 rounded">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>

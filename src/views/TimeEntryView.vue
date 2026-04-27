@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-slate-800">Zeiterfassung</h1>
+      <h1 class="text-2xl font-bold text-hi">Zeiterfassung</h1>
       <button class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -33,44 +33,44 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
       <div class="card text-center">
         <div class="text-2xl font-bold text-brand-600">{{ formatMin(totalMin) }}</div>
-        <div class="text-xs text-slate-500 mt-1">Gesamt</div>
+        <div class="text-xs text-lo mt-1">Gesamt</div>
       </div>
       <div class="card text-center">
-        <div class="text-2xl font-bold text-slate-700">{{ entries.length }}</div>
-        <div class="text-xs text-slate-500 mt-1">Einträge</div>
+        <div class="text-2xl font-bold text-hi">{{ entries.length }}</div>
+        <div class="text-xs text-lo mt-1">Einträge</div>
       </div>
       <div class="card text-center">
-        <div class="text-2xl font-bold text-slate-700">{{ avgMin > 0 ? formatMin(avgMin) : '—' }}</div>
-        <div class="text-xs text-slate-500 mt-1">Ø pro Tag</div>
+        <div class="text-2xl font-bold text-hi">{{ avgMin > 0 ? formatMin(avgMin) : '—' }}</div>
+        <div class="text-xs text-lo mt-1">Ø pro Tag</div>
       </div>
     </div>
 
     <div class="card overflow-hidden p-0">
       <table class="min-w-full text-sm">
-        <thead class="bg-slate-50 border-b border-slate-200">
+        <thead class="bg-lift border-b border-line">
           <tr>
-            <th class="px-4 py-3 text-left font-medium text-slate-600">Datum</th>
-            <th v-if="auth.isLeiter" class="px-4 py-3 text-left font-medium text-slate-600">Person</th>
-            <th class="px-4 py-3 text-left font-medium text-slate-600">Projekt</th>
-            <th class="px-4 py-3 text-left font-medium text-slate-600">Dauer</th>
-            <th class="px-4 py-3 text-left font-medium text-slate-600">Tätigkeit</th>
+            <th class="px-4 py-3 text-left font-medium text-mid">Datum</th>
+            <th v-if="auth.isLeiter" class="px-4 py-3 text-left font-medium text-mid">Person</th>
+            <th class="px-4 py-3 text-left font-medium text-mid">Projekt</th>
+            <th class="px-4 py-3 text-left font-medium text-mid">Dauer</th>
+            <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
             <th class="px-4 py-3"></th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr v-for="e in entries" :key="e.id" class="hover:bg-slate-50 transition-colors">
-            <td class="px-4 py-3 text-slate-700">{{ formatDate(e.date) }}</td>
-            <td v-if="auth.isLeiter" class="px-4 py-3 text-slate-600">{{ e.user_name }}</td>
-            <td class="px-4 py-3 text-slate-600">{{ e.project_name }}</td>
-            <td class="px-4 py-3 font-medium text-slate-800">{{ formatMin(e.duration_min) }}</td>
-            <td class="px-4 py-3 text-slate-500 max-w-xs truncate">{{ e.description || '—' }}</td>
+        <tbody class="divide-y divide-groove">
+          <tr v-for="e in entries" :key="e.id" class="hover:bg-lift transition-colors">
+            <td class="px-4 py-3 text-mid">{{ formatDate(e.date) }}</td>
+            <td v-if="auth.isLeiter" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
+            <td class="px-4 py-3 text-mid">{{ e.project_name }}</td>
+            <td class="px-4 py-3 font-medium text-hi">{{ formatMin(e.duration_min) }}</td>
+            <td class="px-4 py-3 text-mid max-w-xs truncate">{{ e.description || '—' }}</td>
             <td class="px-4 py-3 flex gap-1 justify-end">
               <button v-if="canEdit(e)" class="btn btn-sm btn-secondary" @click="openEdit(e)">Bearbeiten</button>
               <button v-if="canEdit(e)" class="btn btn-sm btn-danger" @click="remove(e.id)">Löschen</button>
             </td>
           </tr>
           <tr v-if="!entries.length">
-            <td :colspan="auth.isLeiter ? 6 : 5" class="px-4 py-8 text-center text-slate-400 italic">Keine Einträge.</td>
+            <td :colspan="auth.isLeiter ? 6 : 5" class="px-4 py-8 text-center text-lo italic">Keine Einträge.</td>
           </tr>
         </tbody>
       </table>
