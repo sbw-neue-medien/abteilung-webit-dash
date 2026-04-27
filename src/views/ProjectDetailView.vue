@@ -25,6 +25,10 @@
 
       <KanbanBoard :tasks="tasks.list" @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
 
+      <div class="mt-8 max-w-7xl mx-auto">
+        <TodoList />
+      </div>
+
       <div v-if="auth.isLeiter && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
         <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">Mitglieder</h3>
         <div class="flex flex-wrap gap-2">
@@ -84,15 +88,18 @@ import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUsersStore } from '../stores/users.js'
+import { useTodosStore } from '../stores/todos.js'
 import KanbanBoard from '../components/KanbanBoard.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
+import TodoList from '../components/TodoList.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()
 const projects   = useProjectsStore()
 const tasks      = useTasksStore()
+const todos      = useTodosStore()
 const usersStore = useUsersStore()
 
 const showTaskModal = ref(false)
@@ -104,7 +111,7 @@ const taskForm      = ref({ title: '', description: '', status: 'offen', assigne
 
 onMounted(async () => {
   const id = Number(route.params.id)
-  await Promise.all([projects.fetchOne(id), tasks.fetchForProject(id)])
+  await Promise.all([projects.fetchOne(id), tasks.fetchForProject(id), todos.fetchForProject(id)])
   if (auth.isLeiter) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender')
