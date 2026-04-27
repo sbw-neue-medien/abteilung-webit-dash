@@ -21,7 +21,22 @@
         <option value="abgeschlossen">Abgeschlossen</option>
       </select>
     </div>
-    <div v-if="users.length">
+
+    <div class="flex items-center gap-2">
+      <input id="is_personal" type="checkbox" v-model="form.is_personal"
+             class="rounded border-line text-brand-600" />
+      <label for="is_personal" class="text-sm text-hi cursor-pointer select-none">Eigenprojekt (einem Lernenden zuordnen)</label>
+    </div>
+
+    <div v-if="form.is_personal && users.length">
+      <label class="label">Lernender *</label>
+      <select v-model="form.owner_id" class="input" required>
+        <option :value="null">— Bitte wählen —</option>
+        <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }}</option>
+      </select>
+    </div>
+
+    <div v-if="!form.is_personal && users.length">
       <label class="label">Lernende zuweisen</label>
       <div class="space-y-1 max-h-40 overflow-y-auto border border-line rounded-lg p-2 bg-lift">
         <label v-for="u in users" :key="u.id" class="flex items-center gap-2 text-sm cursor-pointer text-hi">
@@ -31,6 +46,7 @@
         </label>
       </div>
     </div>
+
     <div class="flex gap-2 justify-end pt-2">
       <button type="button" class="btn-secondary" @click="$emit('cancel')">Abbrechen</button>
       <button type="submit" class="btn-primary" :disabled="loading">
@@ -46,18 +62,32 @@ import { ref, watch } from 'vue'
 const props = defineProps({ project: Object, users: { type: Array, default: () => [] }, loading: Boolean })
 const emit  = defineEmits(['submit', 'cancel'])
 
-const form = ref({ name: '', client: '', description: '', status: 'geplant', member_ids: [] })
+const form = ref({
+  name: '', client: '', description: '', status: 'geplant',
+  is_personal: false, owner_id: null, member_ids: [],
+})
 
 watch(() => props.project, (p) => {
   if (!p) return
   form.value = {
     name:        p.name,
-    client:      p.client      ?? '',
-    description: p.description ?? '',
+    client:      p.client       ?? '',
+    description: p.description  ?? '',
     status:      p.status,
+    is_personal: !!p.is_personal,
+    owner_id:    p.is_personal ? (p.owner_id ?? null) : null,
     member_ids:  (p.members ?? []).map(m => m.id),
   }
 }, { immediate: true })
 
-function submit() { emit('submit', { ...form.value }) }
+function submit() {
+  const payload = { ...form.value }
+  if (payload.is_personal && payload.owner_id) {
+    // Auto-add the selected lernender as a member
+    if (!payload.member_ids.includes(payload.owner_id)) {
+      payload.member_ids = [payload.owner_id]
+    }
+  }
+  emit('submit', payload)
+}
 </script>
