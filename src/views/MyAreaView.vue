@@ -77,12 +77,24 @@
     <Modal v-model="showPwModal" title="Passwort ändern">
       <form @submit.prevent="changePw" class="space-y-4">
         <div>
-          <label class="label">Neues Passwort</label>
-          <input v-model="pw" type="password" class="input" required autocomplete="new-password" />
+          <label class="label">Aktuelles Passwort</label>
+          <input v-model="currentPw" type="password" class="input" required autocomplete="current-password" />
         </div>
+        <div>
+          <label class="label">Neues Passwort <span class="text-slate-400 font-normal">(min. 8 Zeichen)</span></label>
+          <input v-model="newPw" type="password" class="input" required autocomplete="new-password" minlength="8" />
+        </div>
+        <div>
+          <label class="label">Neues Passwort bestätigen</label>
+          <input v-model="confirmPw" type="password" class="input" required autocomplete="new-password" />
+        </div>
+        <p v-if="pwError" class="text-sm text-red-600">{{ pwError }}</p>
+        <p v-if="pwSuccess" class="text-sm text-green-600">{{ pwSuccess }}</p>
         <div class="flex gap-2 justify-end">
-          <button type="button" class="btn-secondary" @click="showPwModal = false">Abbrechen</button>
-          <button type="submit" class="btn-primary">Speichern</button>
+          <button type="button" class="btn-secondary" @click="closePwModal">Abbrechen</button>
+          <button type="submit" class="btn-primary" :disabled="pwLoading">
+            {{ pwLoading ? 'Speichern…' : 'Speichern' }}
+          </button>
         </div>
       </form>
     </Modal>
@@ -103,7 +115,18 @@ const projects  = useProjectsStore()
 const timeStore = useTimeEntriesStore()
 
 const showPwModal = ref(false)
-const pw          = ref('')
+const currentPw   = ref('')
+const newPw       = ref('')
+const confirmPw   = ref('')
+const pwError     = ref('')
+const pwSuccess   = ref('')
+const pwLoading   = ref(false)
+
+function closePwModal() {
+  showPwModal.value = false
+  currentPw.value = ''; newPw.value = ''; confirmPw.value = ''
+  pwError.value = ''; pwSuccess.value = ''
+}
 
 const now        = new Date()
 const today      = now.toISOString().slice(0, 10)
@@ -117,8 +140,21 @@ const weekMin  = computed(() => timeStore.list.filter(e => e.date >= monday && e
 const monthMin = computed(() => timeStore.list.filter(e => e.date >= monthStart && e.date <= today).reduce((s, e) => s + Number(e.duration_min), 0))
 
 async function changePw() {
-  await api.updateUser(auth.user.id, { password: pw.value })
-  pw.value = ''; showPwModal.value = false
+  pwError.value = ''; pwSuccess.value = ''
+  if (newPw.value !== confirmPw.value) {
+    pwError.value = 'Passwörter stimmen nicht überein'
+    return
+  }
+  pwLoading.value = true
+  try {
+    await api.changePassword(auth.user.id, { current_password: currentPw.value, new_password: newPw.value })
+    pwSuccess.value = 'Passwort erfolgreich geändert'
+    currentPw.value = ''; newPw.value = ''; confirmPw.value = ''
+  } catch (e) {
+    pwError.value = e.message
+  } finally {
+    pwLoading.value = false
+  }
 }
 
 function formatMin(min) { if (!min) return '0h'; const h = Math.floor(min / 60), m = min % 60; return m ? `${h}h ${m}min` : `${h}h` }
