@@ -5,7 +5,7 @@ node_modules/
 dist/
 
 # API ist ein eigenes Repo
-api/
+/api/
 
 # Env / lokale Konfiguration
 .env
