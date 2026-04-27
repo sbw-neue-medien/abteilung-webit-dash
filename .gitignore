@@ -20,3 +20,4 @@ api/config
 # Archives
 *.zip
 *.tar.gz
+server/.env

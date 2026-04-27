@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "debug": "VITE_API_TARGET=http://localhost:9080 vite",
     "build": "vite build",
     "preview": "vite preview"
   },
