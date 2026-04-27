@@ -1,0 +1,174 @@
+<template>
+  <div>
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">Todo-Liste</h3>
+      <button class="btn-primary text-xs py-1 px-3" @click="openAdd">
+        <svg class="w-3 h-3 inline -mt-0.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Todo
+      </button>
+    </div>
+
+    <div v-if="todos.loading" class="text-slate-400 italic text-sm py-4 text-center">Laden…</div>
+
+    <div v-else-if="todos.list.length === 0" class="text-slate-400 text-sm py-4 text-center">
+      Noch keine Todos vorhanden.
+    </div>
+
+    <ul v-else class="space-y-2">
+      <li v-for="todo in todos.list" :key="todo.id"
+          class="flex items-start gap-3 bg-white rounded-lg border border-slate-200 px-4 py-3 shadow-sm"
+          :class="{ 'opacity-60': todo.done }">
+        <button @click="toggleDone(todo)" class="mt-0.5 shrink-0 text-brand-600 hover:text-brand-700">
+          <svg v-if="todo.done" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <svg v-else class="w-5 h-5 text-slate-300 hover:text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" stroke-width="2"/>
+          </svg>
+        </button>
+
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-slate-800" :class="{ 'line-through text-slate-400': todo.done }">
+            {{ todo.title }}
+          </p>
+          <p v-if="todo.description" class="text-xs text-slate-500 mt-0.5">{{ todo.description }}</p>
+          <div class="flex flex-wrap items-center gap-3 mt-1.5">
+            <span class="text-xs text-slate-400">
+              <span class="font-medium text-slate-600">Geplant:</span> {{ formatDuration(todo.planned_duration_min) }}
+            </span>
+            <span v-if="todo.actual_duration_min" class="text-xs text-slate-400">
+              <span class="font-medium text-slate-600">Realisiert:</span> {{ formatDuration(todo.actual_duration_min) }}
+            </span>
+            <span class="text-xs text-slate-300">{{ todo.creator_name }}</span>
+          </div>
+        </div>
+
+        <div v-if="canModify(todo)" class="flex gap-1 shrink-0">
+          <button @click="openEdit(todo)" class="text-slate-400 hover:text-brand-600 p-1 rounded">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </button>
+          <button @click="remove(todo.id)" class="text-slate-400 hover:text-red-500 p-1 rounded">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+        </div>
+      </li>
+    </ul>
+
+    <Modal v-model="showModal" :title="editing ? 'Todo bearbeiten' : 'Neues Todo'">
+      <form @submit.prevent="save" class="space-y-4">
+        <div>
+          <label class="label">Titel *</label>
+          <input v-model="form.title" class="input" required />
+        </div>
+        <div>
+          <label class="label">Beschreibung</label>
+          <textarea v-model="form.description" class="input" rows="2" />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="label">Geplanter Aufwand *</label>
+            <select v-model.number="form.planned_duration_min" class="input" required>
+              <option v-for="opt in durationOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+          <div v-if="editing">
+            <label class="label">Realisierter Aufwand</label>
+            <select v-model.number="form.actual_duration_min" class="input">
+              <option :value="null">— noch offen —</option>
+              <option v-for="opt in durationOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-2 justify-end pt-2">
+          <button type="button" class="btn-secondary" @click="showModal = false">Abbrechen</button>
+          <button type="submit" class="btn-primary">{{ editing ? 'Aktualisieren' : 'Erstellen' }}</button>
+        </div>
+      </form>
+    </Modal>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import { useTodosStore } from '../stores/todos.js'
+import { useAuthStore } from '../stores/auth.js'
+import Modal from './Modal.vue'
+
+const todos = useTodosStore()
+const auth  = useAuthStore()
+
+const showModal = ref(false)
+const editing   = ref(null)
+const form      = ref({ title: '', description: '', planned_duration_min: 30, actual_duration_min: null })
+
+const durationOptions = computed(() => {
+  const opts = []
+  for (let min = 15; min <= 480; min += 15) {
+    const h = Math.floor(min / 60)
+    const m = min % 60
+    const label = h > 0 && m > 0 ? `${h} Std. ${m} Min.`
+                : h > 0          ? `${h} Std.`
+                :                  `${m} Min.`
+    opts.push({ value: min, label })
+  }
+  return opts
+})
+
+function formatDuration(min) {
+  const h = Math.floor(min / 60)
+  const m = min % 60
+  if (h > 0 && m > 0) return `${h} Std. ${m} Min.`
+  if (h > 0)           return `${h} Std.`
+  return `${m} Min.`
+}
+
+function canModify(todo) {
+  return auth.isLeiter || Number(todo.created_by) === Number(auth.user?.id)
+}
+
+function openAdd() {
+  editing.value = null
+  form.value    = { title: '', description: '', planned_duration_min: 30, actual_duration_min: null }
+  showModal.value = true
+}
+
+function openEdit(todo) {
+  editing.value = todo
+  form.value = {
+    title:                todo.title,
+    description:          todo.description ?? '',
+    planned_duration_min: Number(todo.planned_duration_min),
+    actual_duration_min:  todo.actual_duration_min ? Number(todo.actual_duration_min) : null,
+  }
+  showModal.value = true
+}
+
+async function save() {
+  if (editing.value) {
+    await todos.update(editing.value.id, form.value)
+  } else {
+    await todos.create(form.value)
+  }
+  showModal.value = false
+}
+
+async function toggleDone(todo) {
+  const patch = { done: !todo.done }
+  if (!todo.done && !todo.actual_duration_min) {
+    patch.actual_duration_min = todo.planned_duration_min
+  }
+  await todos.update(todo.id, patch)
+}
+
+async function remove(id) {
+  if (!confirm('Todo wirklich löschen?')) return
+  await todos.remove(id)
+}
+</script>
