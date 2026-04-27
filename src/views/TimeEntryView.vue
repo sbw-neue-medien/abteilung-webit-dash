@@ -51,7 +51,7 @@
           <tr>
             <th class="px-4 py-3 text-left font-medium text-mid">Datum</th>
             <th v-if="auth.isLeiter" class="px-4 py-3 text-left font-medium text-mid">Person</th>
-            <th class="px-4 py-3 text-left font-medium text-mid">Projekt</th>
+            <th class="px-4 py-3 text-left font-medium text-mid">Projekt / Aufgabe</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Dauer</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
             <th class="px-4 py-3"></th>
@@ -61,7 +61,10 @@
           <tr v-for="e in entries" :key="e.id" class="hover:bg-lift transition-colors">
             <td class="px-4 py-3 text-mid">{{ formatDate(e.date) }}</td>
             <td v-if="auth.isLeiter" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
-            <td class="px-4 py-3 text-mid">{{ e.project_name }}</td>
+            <td class="px-4 py-3">
+              <span class="text-mid">{{ e.project_name }}</span>
+              <span v-if="e.task_title" class="block text-xs text-lo mt-0.5">{{ e.task_title }}</span>
+            </td>
             <td class="px-4 py-3 font-medium text-hi">{{ formatMin(e.duration_min) }}</td>
             <td class="px-4 py-3 text-mid max-w-xs truncate">{{ e.description || '—' }}</td>
             <td class="px-4 py-3 flex gap-1 justify-end">
