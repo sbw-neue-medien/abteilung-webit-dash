@@ -25,23 +25,70 @@
         </button>
       </div>
     </div>
+
     <p v-if="task.description" class="mt-1 text-xs text-mid line-clamp-2">{{ task.description }}</p>
-    <div v-if="task.assignee_name" class="mt-2 flex items-center gap-1">
-      <div class="w-5 h-5 rounded-full bg-brand-subtle text-brand-600 text-xs flex items-center justify-center font-medium">
-        {{ task.assignee_name.charAt(0) }}
+
+    <!-- Sprint badge -->
+    <div v-if="task.sprint_name" class="mt-2">
+      <span class="inline-flex items-center gap-1 text-xs bg-brand-subtle text-brand-700 px-1.5 py-0.5 rounded">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        {{ task.sprint_name }}
+      </span>
+    </div>
+
+    <!-- Time and assignee row -->
+    <div class="mt-2 flex items-center justify-between gap-2 flex-wrap">
+      <div v-if="task.assignee_name" class="flex items-center gap-1">
+        <div class="w-5 h-5 rounded-full bg-brand-subtle text-brand-600 text-xs flex items-center justify-center font-medium">
+          {{ task.assignee_name.charAt(0) }}
+        </div>
+        <span class="text-xs text-mid">{{ task.assignee_name }}</span>
       </div>
-      <span class="text-xs text-mid">{{ task.assignee_name }}</span>
+      <div v-else class="flex-1" />
+
+      <!-- Planned / actual time -->
+      <div v-if="task.planned_duration_min || Number(task.actual_duration_min) > 0"
+           class="flex items-center gap-1 text-xs">
+        <span v-if="task.planned_duration_min" class="text-lo" title="Geplante Zeit">
+          {{ formatMin(task.planned_duration_min) }}
+        </span>
+        <template v-if="task.planned_duration_min && Number(task.actual_duration_min) > 0">
+          <span class="text-lo">/</span>
+        </template>
+        <span v-if="Number(task.actual_duration_min) > 0"
+              :class="overtime ? 'text-red-500' : 'text-brand-600'"
+              title="Effektive Zeit">
+          {{ formatMin(task.actual_duration_min) }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({ task: Object })
 defineEmits(['edit', 'delete'])
 
 const dragging = ref(false)
+
+const overtime = computed(() => {
+  const planned = Number(props.task.planned_duration_min)
+  const actual  = Number(props.task.actual_duration_min)
+  return planned > 0 && actual > planned
+})
+
+function formatMin(min) {
+  const m = Number(min)
+  if (!m) return ''
+  const h = Math.floor(m / 60)
+  const r = m % 60
+  return h ? (r ? `${h}h ${r}min` : `${h}h`) : `${r}min`
+}
 
 function onDragStart(e) {
   dragging.value = true

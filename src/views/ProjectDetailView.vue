@@ -23,7 +23,33 @@
         </div>
       </div>
 
-      <KanbanBoard :tasks="tasks.list" @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
+      <!-- Sprint filter bar -->
+      <div class="max-w-7xl mx-auto mb-4 flex items-center gap-2 flex-wrap">
+        <span class="text-xs text-lo font-medium uppercase tracking-wide">Anzeigen:</span>
+        <button @click="sprintFilter = null"
+                class="text-xs px-3 py-1 rounded-full transition-colors"
+                :class="sprintFilter === null ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
+          Alle
+        </button>
+        <button v-for="sprint in sprints.list" :key="sprint.id"
+                @click="sprintFilter = sprint.id"
+                class="text-xs px-3 py-1 rounded-full transition-colors"
+                :class="sprintFilter === sprint.id ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
+          {{ sprint.name }}
+        </button>
+        <button @click="sprintFilter = 'backlog'"
+                class="text-xs px-3 py-1 rounded-full transition-colors"
+                :class="sprintFilter === 'backlog' ? 'bg-amber-500 text-white' : 'bg-lift text-mid hover:text-hi'">
+          Backlog
+        </button>
+      </div>
+
+      <KanbanBoard :tasks="filteredTasks" @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
+
+      <!-- Sprint planning section -->
+      <div class="mt-8 max-w-7xl mx-auto">
+        <SprintPanel :tasks="tasks.list" />
+      </div>
 
       <div class="mt-8 max-w-7xl mx-auto">
         <TodoList />
@@ -67,6 +93,18 @@
             <option v-for="m in projects.current.members" :key="m.id" :value="m.id">{{ m.name }}</option>
           </select>
         </div>
+        <div>
+          <label class="label">Sprint</label>
+          <select v-model="taskForm.sprint_id" class="input">
+            <option :value="null">— Kein Sprint (Backlog) —</option>
+            <option v-for="s in sprints.list" :key="s.id" :value="s.id">{{ s.name }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="label">Geplante Zeit (Minuten)</label>
+          <input v-model.number="taskForm.planned_duration_min" type="number" min="0" step="15"
+                 class="input" placeholder="z.B. 120 (= 2h)" />
+        </div>
         <div class="flex gap-2 justify-end pt-2">
           <button type="button" class="btn-secondary" @click="showTaskModal = false">Abbrechen</button>
           <button type="submit" class="btn-primary">{{ editingTask ? 'Aktualisieren' : 'Erstellen' }}</button>
@@ -82,24 +120,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUsersStore } from '../stores/users.js'
 import { useTodosStore } from '../stores/todos.js'
+import { useSprintsStore } from '../stores/sprints.js'
 import KanbanBoard from '../components/KanbanBoard.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import TodoList from '../components/TodoList.vue'
+import SprintPanel from '../components/SprintPanel.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()
 const projects   = useProjectsStore()
 const tasks      = useTasksStore()
 const todos      = useTodosStore()
+const sprints    = useSprintsStore()
 const usersStore = useUsersStore()
 
 const showTaskModal = ref(false)
@@ -107,11 +148,26 @@ const showEdit      = ref(false)
 const editingTask   = ref(null)
 const saving        = ref(false)
 const allUsers      = ref([])
-const taskForm      = ref({ title: '', description: '', status: 'offen', assignee_id: null })
+const sprintFilter  = ref(null)
+const taskForm      = ref({
+  title: '', description: '', status: 'offen',
+  assignee_id: null, sprint_id: null, planned_duration_min: null,
+})
+
+const filteredTasks = computed(() => {
+  if (sprintFilter.value === null) return tasks.list
+  if (sprintFilter.value === 'backlog') return tasks.list.filter(t => !t.sprint_id)
+  return tasks.list.filter(t => Number(t.sprint_id) === sprintFilter.value)
+})
 
 onMounted(async () => {
   const id = Number(route.params.id)
-  await Promise.all([projects.fetchOne(id), tasks.fetchForProject(id), todos.fetchForProject(id)])
+  await Promise.all([
+    projects.fetchOne(id),
+    tasks.fetchForProject(id),
+    todos.fetchForProject(id),
+    sprints.fetchForProject(id),
+  ])
   if (auth.isLeiter) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender')
@@ -120,19 +176,28 @@ onMounted(async () => {
 
 function addTask(status) {
   editingTask.value   = null
-  taskForm.value      = { title: '', description: '', status, assignee_id: null }
+  taskForm.value      = { title: '', description: '', status, assignee_id: null, sprint_id: null, planned_duration_min: null }
   showTaskModal.value = true
 }
 
 function openEditTask(task) {
   editingTask.value   = task
-  taskForm.value      = { title: task.title, description: task.description ?? '', status: task.status, assignee_id: task.assignee_id ?? null }
+  taskForm.value      = {
+    title:                task.title,
+    description:          task.description ?? '',
+    status:               task.status,
+    assignee_id:          task.assignee_id ?? null,
+    sprint_id:            task.sprint_id   ?? null,
+    planned_duration_min: task.planned_duration_min ?? null,
+  }
   showTaskModal.value = true
 }
 
 async function saveTask() {
-  if (editingTask.value) await tasks.update(editingTask.value.id, taskForm.value)
-  else                   await tasks.create(taskForm.value)
+  const payload = { ...taskForm.value }
+  if (!payload.planned_duration_min) payload.planned_duration_min = null
+  if (editingTask.value) await tasks.update(editingTask.value.id, payload)
+  else                   await tasks.create(payload)
   showTaskModal.value = false
 }
 
