@@ -110,24 +110,10 @@
       </div>
     </section>
 
-    <section>
+    <section v-if="!auth.isLeiter" class="card max-w-xs">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Stunden diese Woche</h2>
-      <div v-if="auth.isLeiter" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <div v-for="row in weekReport" :key="row.user_id" class="card text-center">
-          <div class="w-9 h-9 rounded-full bg-brand-subtle text-brand-600 font-bold text-sm mx-auto flex items-center justify-center mb-2">
-            {{ row.user_name.charAt(0) }}
-          </div>
-          <div class="text-sm font-semibold text-hi">{{ formatMin(row.total_min) }}</div>
-          <div class="text-xs text-lo truncate">{{ row.user_name }}</div>
-        </div>
-        <div v-if="!weekReport.length" class="col-span-full text-lo text-sm italic">
-          Noch keine Einträge diese Woche.
-        </div>
-      </div>
-      <div v-else class="card max-w-xs">
-        <div class="text-3xl font-bold text-brand-600">{{ formatMin(myWeekMin) }}</div>
-        <div class="text-sm text-mid mt-1">{{ myWeekEntries }} Einträge diese Woche</div>
-      </div>
+      <div class="text-3xl font-bold text-brand-600">{{ formatMin(myWeekMin) }}</div>
+      <div class="text-sm text-mid mt-1">{{ myWeekEntries }} Einträge diese Woche</div>
     </section>
 
     <section>
@@ -205,7 +191,6 @@ const statusStats = computed(() => [
   { status: 'abgeschlossen', label: 'Abgeschlossen', color: 'text-lo',          count: projects.list.filter(p => p.status === 'abgeschlossen').length },
 ])
 
-const weekReport    = computed(() => timeStore.report.summary ?? [])
 const myWeekEntries = computed(() => timeStore.report.entries?.length ?? 0)
 const myWeekMin     = computed(() => (timeStore.report.entries ?? []).reduce((s, e) => s + Number(e.duration_min), 0))
 
