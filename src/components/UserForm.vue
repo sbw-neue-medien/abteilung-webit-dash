@@ -10,6 +10,10 @@
       <input v-model="form.name" class="input" required placeholder="z.B. Anna Berger" />
     </div>
     <div>
+      <label class="label">E-Mail</label>
+      <input v-model="form.email" type="email" class="input" placeholder="z.B. anna.berger@schule.ch" />
+    </div>
+    <div>
       <label class="label">{{ user ? 'Neues Passwort (leer = unverändert)' : 'Passwort *' }}</label>
       <input v-model="form.password" type="password" class="input" :required="!user" autocomplete="new-password" />
     </div>
@@ -28,11 +32,11 @@ import { ref, watch } from 'vue'
 const props = defineProps({ user: Object, loading: Boolean })
 const emit  = defineEmits(['submit', 'cancel'])
 
-const form = ref({ username: '', name: '', password: '' })
+const form = ref({ username: '', name: '', email: '', password: '' })
 
 watch(() => props.user, (u) => {
   if (!u) return
-  form.value = { username: u.username, name: u.name, password: '' }
+  form.value = { username: u.username, name: u.name, email: u.email ?? '', password: '' }
 }, { immediate: true })
 
 function submit() { emit('submit', { ...form.value }) }

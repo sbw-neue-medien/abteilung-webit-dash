@@ -29,7 +29,7 @@
 
         <div class="flex-1 min-w-0">
           <p class="font-semibold text-hi">{{ u.name }}</p>
-          <p class="text-xs text-lo mt-0.5">{{ u.username }}</p>
+          <p class="text-xs text-lo mt-0.5">{{ u.email || u.username }}</p>
           <button v-if="u.avatar" @click.stop="removeAvatar(u)"
                   class="text-xs text-red-500 hover:underline mt-0.5">
             Foto entfernen
