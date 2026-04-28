@@ -176,9 +176,11 @@ function openNew() {
   editing.value = null
   let mon
   if (sorted.value.length) {
-    const d = new Date(sorted.value[sorted.value.length - 1].start_date + 'T00:00:00')
-    d.setDate(d.getDate() + 7)
-    mon = d.toISOString().slice(0, 10)
+    const last = sorted.value[sorted.value.length - 1]
+    const d    = new Date(last.end_date + 'T00:00:00')
+    const day  = d.getDay()                          // 0=Sun … 6=Sat
+    d.setDate(d.getDate() + (day === 0 ? 1 : 8 - day)) // next Monday after end
+    mon = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
   } else {
     mon = mondayOfNextWeek()
   }
