@@ -128,10 +128,13 @@ function closePwModal() {
   pwError.value = ''; pwSuccess.value = ''
 }
 
+function localDate(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 const now        = new Date()
-const today      = now.toISOString().slice(0, 10)
-const monday     = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return d.toISOString().slice(0, 10) })()
-const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+const today      = localDate()
+const monday     = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return localDate(d) })()
+const monthStart = localDate(new Date(now.getFullYear(), now.getMonth(), 1))
 
 onMounted(() => Promise.all([projects.fetchAll(), timeStore.fetchAll()]))
 

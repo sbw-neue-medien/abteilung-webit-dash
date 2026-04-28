@@ -7,6 +7,7 @@ const routes = [
   { path: '/projekte',     name: 'projects', component: () => import('../views/ProjectsView.vue') },
   { path: '/projekte/:id', name: 'project',  component: () => import('../views/ProjectDetailView.vue') },
   { path: '/zeiterfassung',name: 'time',     component: () => import('../views/TimeEntryView.vue') },
+  { path: '/sprints',      name: 'sprints',  component: () => import('../views/SprintsView.vue'),     meta: { leiter: true } },
   { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { leiter: true } },
   { path: '/mein-bereich', name: 'my-area',  component: () => import('../views/MyAreaView.vue') },
 ]

@@ -27,7 +27,6 @@
           <option v-for="p in projects.list" :key="p.id" :value="p.id">{{ p.name }}</option>
         </select>
       </div>
-      <button class="btn-secondary" @click="load">Anwenden</button>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -65,7 +64,17 @@
               <span class="text-mid">{{ e.project_name }}</span>
               <span v-if="e.task_title" class="block text-xs text-lo mt-0.5">{{ e.task_title }}</span>
             </td>
-            <td class="px-4 py-3 font-medium text-hi">{{ formatMin(e.duration_min) }}</td>
+            <td class="px-4 py-3 font-medium">
+              <span v-if="Number(e.duration_min) === 0"
+                    class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Ausstehend
+              </span>
+              <span v-else class="text-hi">{{ formatMin(e.duration_min) }}</span>
+            </td>
             <td class="px-4 py-3 text-mid max-w-xs truncate">{{ e.description || '—' }}</td>
             <td class="px-4 py-3 flex gap-1 justify-end">
               <button v-if="canEdit(e)" class="btn btn-sm btn-secondary" @click="openEdit(e)">Bearbeiten</button>
@@ -87,11 +96,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
 import { useTimeEntriesStore } from '../stores/timeEntries.js'
+import { useSprintsStore } from '../stores/sprints.js'
 import Modal from '../components/Modal.vue'
 import TimeEntryForm from '../components/TimeEntryForm.vue'
 
@@ -99,13 +109,17 @@ const auth       = useAuthStore()
 const projects   = useProjectsStore()
 const usersStore = useUsersStore()
 const timeStore  = useTimeEntriesStore()
+const sprints    = useSprintsStore()
 
 const showModal = ref(false)
 const editing   = ref(null)
 const saving    = ref(false)
 
-const today  = new Date().toISOString().slice(0, 10)
-const monday = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return d.toISOString().slice(0, 10) })()
+function localDate(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+const today      = localDate()
+const monday     = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return localDate(d) })()
 
 const filter   = ref({ from: monday, to: today, user_id: '', project_id: '' })
 const entries  = computed(() => timeStore.list)
@@ -115,7 +129,18 @@ const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.
 
 function canEdit(e) { return auth.isLeiter || e.user_id === auth.user?.id }
 
-onMounted(async () => { await Promise.all([projects.fetchAll(), usersStore.fetchAll()]); await load() })
+onMounted(async () => {
+  const calls = [projects.fetchAll(), sprints.fetchAll()]
+  if (auth.isLeiter) calls.push(usersStore.fetchAll())
+  await Promise.all(calls)
+  const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
+  if (currentSprint) {
+    filter.value.from = currentSprint.start_date
+    filter.value.to   = currentSprint.end_date
+  }
+  await load()
+  watch(filter, load, { deep: true })
+})
 
 async function load() {
   const params = Object.fromEntries(Object.entries(filter.value).filter(([, v]) => v !== ''))

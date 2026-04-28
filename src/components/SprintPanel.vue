@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-hi">Sprint-Planung</h2>
-      <button class="btn-primary" @click="openNew">
+      <button v-if="auth.isLeiter" class="btn-primary" @click="openNew">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -13,7 +13,7 @@
     <div v-if="sprints.loading" class="text-lo italic text-sm">Laden…</div>
 
     <div v-else-if="sprints.list.length === 0" class="text-lo text-sm italic py-4">
-      Noch keine Sprints. Erstelle den ersten wöchentlichen Sprint.
+      Noch keine Sprints angelegt.
     </div>
 
     <div v-else class="space-y-3">
@@ -36,21 +36,23 @@
           </div>
           <div class="flex items-center gap-3 shrink-0">
             <span class="text-xs text-lo">{{ sprint.task_count }} Aufgaben</span>
-            <button @click="openEdit(sprint)" class="text-lo hover:text-brand-600 transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-              </svg>
-            </button>
-            <button @click="removeSprint(sprint.id)" class="text-lo hover:text-red-500 transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-            </button>
+            <template v-if="auth.isLeiter">
+              <button @click="openEdit(sprint)" class="text-lo hover:text-brand-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </button>
+              <button @click="removeSprint(sprint.id)" class="text-lo hover:text-red-500 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </template>
           </div>
         </div>
 
-        <!-- Task list for this sprint -->
+        <!-- Task chips (passed in from parent for context) -->
         <div v-if="sprintTasks(sprint.id).length" class="mt-3 pt-3 border-t border-line">
           <div class="flex flex-wrap gap-2">
             <span v-for="t in sprintTasks(sprint.id)" :key="t.id"
@@ -71,12 +73,12 @@
       </button>
     </div>
 
-    <!-- Modal -->
-    <Modal v-model="showModal" :title="editing ? 'Sprint bearbeiten' : 'Neuer Sprint'">
+    <!-- Modal (Leiter only) -->
+    <Modal v-if="auth.isLeiter" v-model="showModal" :title="editing ? 'Sprint bearbeiten' : 'Neuer Sprint'">
       <form @submit.prevent="save" class="space-y-4">
         <div>
           <label class="label">Name *</label>
-          <input v-model="form.name" class="input" placeholder="z.B. KW 18 – Sprint 3" required />
+          <input v-model="form.name" class="input" placeholder="z.B. KW 18" required />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -104,15 +106,17 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useSprintsStore } from '../stores/sprints.js'
+import { useAuthStore } from '../stores/auth.js'
 import Modal from './Modal.vue'
 
-const props = defineProps({ tasks: Array })
+const props = defineProps({ tasks: { type: Array, default: () => [] } })
 
-const sprints    = useSprintsStore()
-const showModal  = ref(false)
-const editing    = ref(null)
-const expanded   = ref(false)
-const form       = ref({ name: '', start_date: '', end_date: '', goal: '' })
+const sprints   = useSprintsStore()
+const auth      = useAuthStore()
+const showModal = ref(false)
+const editing   = ref(null)
+const expanded  = ref(false)
+const form      = ref({ name: '', start_date: '', end_date: '', goal: '' })
 
 const today = new Date().toISOString().slice(0, 10)
 
@@ -124,7 +128,6 @@ const visibleSprints = computed(() => {
   if (expanded.value) return sorted.value
   const current = sorted.value.find(s => s.start_date <= today && s.end_date >= today)
   if (current) return [current]
-  // No active sprint — show the next upcoming one, or the most recent past one
   const next = sorted.value.find(s => s.start_date > today)
   if (next) return [next]
   return sorted.value.slice(-1)
@@ -133,7 +136,7 @@ const visibleSprints = computed(() => {
 const hiddenCount = computed(() => sorted.value.length - visibleSprints.value.length)
 
 function sprintTasks(sprintId) {
-  return (props.tasks ?? []).filter(t => Number(t.sprint_id) === Number(sprintId))
+  return props.tasks.filter(t => Number(t.sprint_id) === Number(sprintId))
 }
 
 function statusLabel(sprint) {
@@ -155,12 +158,7 @@ function badgeClass(sprint) {
 }
 
 function statusDot(status) {
-  return {
-    offen:     'bg-lo',
-    in_arbeit: 'bg-amber-400',
-    review:    'bg-blue-400',
-    erledigt:  'bg-brand-500',
-  }[status] ?? 'bg-lo'
+  return { offen: 'bg-lo', in_arbeit: 'bg-amber-400', review: 'bg-blue-400', erledigt: 'bg-brand-500' }[status] ?? 'bg-lo'
 }
 
 function formatDate(d) {
@@ -170,8 +168,7 @@ function formatDate(d) {
 function formatMin(min) {
   const m = Number(min)
   if (!m) return ''
-  const h = Math.floor(m / 60)
-  const r = m % 60
+  const h = Math.floor(m / 60), r = m % 60
   return h ? (r ? `${h}h ${r}min` : `${h}h`) : `${r}min`
 }
 
@@ -179,8 +176,7 @@ function openNew() {
   editing.value = null
   let mon
   if (sorted.value.length) {
-    const last = sorted.value[sorted.value.length - 1]
-    const d = new Date(last.start_date + 'T00:00:00')
+    const d = new Date(sorted.value[sorted.value.length - 1].start_date + 'T00:00:00')
     d.setDate(d.getDate() + 7)
     mon = d.toISOString().slice(0, 10)
   } else {
@@ -209,10 +205,8 @@ async function removeSprint(id) {
 }
 
 function mondayOfNextWeek() {
-  const d   = new Date()
-  const day = d.getDay()
-  const diff = (day === 0 ? 1 : 8 - day)
-  d.setDate(d.getDate() + diff)
+  const d = new Date(), day = d.getDay()
+  d.setDate(d.getDate() + (day === 0 ? 1 : 8 - day))
   return d.toISOString().slice(0, 10)
 }
 
