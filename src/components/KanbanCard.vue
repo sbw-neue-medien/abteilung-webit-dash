@@ -42,9 +42,8 @@
     <!-- Time and assignee row -->
     <div class="mt-2 flex items-center justify-between gap-2 flex-wrap">
       <div v-if="task.assignee_name" class="flex items-center gap-1">
-        <div class="w-5 h-5 rounded-full bg-brand-subtle text-brand-600 text-xs flex items-center justify-center font-medium">
-          {{ task.assignee_name.charAt(0) }}
-        </div>
+        <UserAvatar :userId="task.assignee_id" :name="task.assignee_name"
+                    :hasAvatar="task.assignee_avatar" size="sm" />
         <span class="text-xs text-mid">{{ task.assignee_name }}</span>
       </div>
       <div v-else class="flex-1" />
@@ -70,6 +69,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import UserAvatar from './UserAvatar.vue'
 
 const props = defineProps({ task: Object })
 defineEmits(['edit', 'delete'])

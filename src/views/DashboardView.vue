@@ -78,9 +78,7 @@
             <tr v-for="l in learnerHours" :key="l.id" class="hover:bg-lift">
               <td class="px-4 py-3">
                 <div class="flex items-center gap-2">
-                  <div class="w-7 h-7 rounded-full bg-brand-subtle text-brand-600 text-xs font-bold flex items-center justify-center shrink-0">
-                    {{ l.name.charAt(0) }}
-                  </div>
+                  <UserAvatar :userId="l.id" :name="l.name" :hasAvatar="l.avatar" size="sm" />
                   <span class="font-medium text-hi">{{ l.name }}</span>
                 </div>
               </td>
@@ -155,6 +153,7 @@ import { useProjectsStore } from '../stores/projects.js'
 import { useTimeEntriesStore } from '../stores/timeEntries.js'
 import { api } from '../api/index.js'
 import StatusBadge from '../components/StatusBadge.vue'
+import UserAvatar from '../components/UserAvatar.vue'
 
 const auth      = useAuthStore()
 const projects  = useProjectsStore()

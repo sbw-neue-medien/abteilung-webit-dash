@@ -26,6 +26,17 @@ export const api = {
   updateUser: (id, body)         => req(`/users/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   changePassword: (id, body)    => req(`/users/${id}/password`, { method: 'PATCH', body: JSON.stringify(body) }),
   deleteUser: (id)               => req(`/users/${id}`, { method: 'DELETE' }),
+  uploadAvatar: (id, file)       => {
+    const f = new FormData()
+    f.append('avatar', file)
+    const token = localStorage.getItem('token')
+    return fetch(`${BASE}/users/${id}/avatar`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: f,
+    }).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error ?? `HTTP ${r.status}`); return d })
+  },
+  deleteAvatar: (id)             => req(`/users/${id}/avatar`, { method: 'DELETE' }),
   getProjects: ()                => req('/projects'),
   getProject: (id)               => req(`/projects/${id}`),
   createProject: (body)          => req('/projects', { method: 'POST', body: JSON.stringify(body) }),

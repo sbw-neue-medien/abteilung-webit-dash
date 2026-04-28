@@ -3,9 +3,7 @@
     <h1 class="text-2xl font-bold text-hi">Mein Bereich</h1>
 
     <div class="card flex items-center gap-5">
-      <div class="w-16 h-16 rounded-full bg-brand-subtle text-brand-600 text-2xl font-bold flex items-center justify-center shrink-0">
-        {{ auth.user?.name?.charAt(0) }}
-      </div>
+      <UserAvatar :userId="auth.user?.id" :name="auth.user?.name" :hasAvatar="auth.user?.avatar" size="lg" class="w-16 h-16 text-2xl" />
       <div class="flex-1">
         <h2 class="text-xl font-semibold text-hi">{{ auth.user?.name }}</h2>
         <p class="text-sm text-mid">{{ auth.user?.role === 'leiter' ? 'Abteilungsleiter' : 'Lernender' }}</p>
@@ -109,6 +107,7 @@ import { useTimeEntriesStore } from '../stores/timeEntries.js'
 import { api } from '../api/index.js'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
+import UserAvatar from '../components/UserAvatar.vue'
 
 const auth      = useAuthStore()
 const projects  = useProjectsStore()
