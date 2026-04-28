@@ -209,7 +209,7 @@ async function removeSprint(id) {
 function mondayOfNextWeek() {
   const d = new Date(), day = d.getDay()
   d.setDate(d.getDate() + (day === 0 ? 1 : 8 - day))
-  return d.toISOString().slice(0, 10)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 function isoWeekNumber(d) {
@@ -222,6 +222,6 @@ function isoWeekNumber(d) {
 function fridayOfWeek(mondayStr) {
   const d = new Date(mondayStr + 'T00:00:00')
   d.setDate(d.getDate() + 4)
-  return d.toISOString().slice(0, 10)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 </script>
