@@ -3,26 +3,24 @@ import { ref } from 'vue'
 import { api } from '../api/index.js'
 
 export const useSprintsStore = defineStore('sprints', () => {
-  const list      = ref([])
-  const projectId = ref(null)
-  const loading   = ref(false)
+  const list    = ref([])
+  const loading = ref(false)
 
-  async function fetchForProject(pid) {
-    loading.value   = true
-    projectId.value = pid
-    try { list.value = await api.getSprints(pid) }
+  async function fetchAll() {
+    loading.value = true
+    try { list.value = await api.getSprints() }
     finally { loading.value = false }
   }
 
   async function create(body) {
-    const res = await api.createSprint(projectId.value, body)
-    await fetchForProject(projectId.value)
+    const res = await api.createSprint(body)
+    await fetchAll()
     return res
   }
 
   async function update(id, body) {
     await api.updateSprint(id, body)
-    await fetchForProject(projectId.value)
+    await fetchAll()
   }
 
   async function remove(id) {
@@ -30,5 +28,5 @@ export const useSprintsStore = defineStore('sprints', () => {
     list.value = list.value.filter(s => s.id !== id)
   }
 
-  return { list, projectId, loading, fetchForProject, create, update, remove }
+  return { list, loading, fetchAll, create, update, remove }
 })

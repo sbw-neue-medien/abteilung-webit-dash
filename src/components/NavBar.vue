@@ -51,6 +51,7 @@ const links = computed(() => {
     { to: '/zeiterfassung', label: 'Zeiterfassung' },
     { to: '/mein-bereich',  label: 'Mein Bereich' },
   ]
+  if (auth.isLeiter) base.push({ to: '/sprints', label: 'Sprints' })
   if (auth.isLeiter) base.push({ to: '/lernende', label: 'Lernende' })
   return base
 })

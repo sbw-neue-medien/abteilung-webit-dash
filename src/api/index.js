@@ -48,8 +48,8 @@ export const api = {
   updateTodo: (id, body)           => req(`/todos/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteTodo: (id)                 => req(`/todos/${id}`, { method: 'DELETE' }),
   getDashboardStats: ()            => req('/dashboard/stats'),
-  getSprints: (projectId)          => req(`/projects/${projectId}/sprints`),
-  createSprint: (projectId, body)  => req(`/projects/${projectId}/sprints`, { method: 'POST', body: JSON.stringify(body) }),
+  getSprints: ()                   => req('/sprints'),
+  createSprint: (body)             => req('/sprints', { method: 'POST', body: JSON.stringify(body) }),
   updateSprint: (id, body)         => req(`/sprints/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteSprint: (id)               => req(`/sprints/${id}`, { method: 'DELETE' }),
 }

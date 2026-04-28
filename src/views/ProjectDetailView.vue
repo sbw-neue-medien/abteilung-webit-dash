@@ -46,11 +46,6 @@
 
       <KanbanBoard :tasks="filteredTasks" @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
 
-      <!-- Sprint planning section -->
-      <div class="mt-8 max-w-7xl mx-auto">
-        <SprintPanel :tasks="tasks.list" />
-      </div>
-
       <div class="mt-8 max-w-7xl mx-auto">
         <TodoList />
       </div>
@@ -133,7 +128,6 @@ import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import TodoList from '../components/TodoList.vue'
-import SprintPanel from '../components/SprintPanel.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()
@@ -166,7 +160,7 @@ onMounted(async () => {
     projects.fetchOne(id),
     tasks.fetchForProject(id),
     todos.fetchForProject(id),
-    sprints.fetchForProject(id),
+    sprints.fetchAll(),
   ])
   if (auth.isLeiter) {
     await usersStore.fetchAll()
