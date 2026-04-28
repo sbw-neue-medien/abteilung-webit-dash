@@ -27,7 +27,6 @@
           <option v-for="p in projects.list" :key="p.id" :value="p.id">{{ p.name }}</option>
         </select>
       </div>
-      <button class="btn-secondary" @click="load">Anwenden</button>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -97,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
@@ -130,6 +129,9 @@ const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.
 
 function canEdit(e) { return auth.isLeiter || e.user_id === auth.user?.id }
 
+let autoApply = false
+watch(filter, () => { if (autoApply) load() }, { deep: true })
+
 onMounted(async () => {
   await Promise.all([projects.fetchAll(), usersStore.fetchAll(), sprints.fetchAll()])
   const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
@@ -138,6 +140,7 @@ onMounted(async () => {
     filter.value.to   = currentSprint.end_date
   }
   await load()
+  autoApply = true
 })
 
 async function load() {
