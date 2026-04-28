@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-8xl mx-auto px-4 py-8 space-y-6">
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Lernende</h1>
       <button class="btn-primary" @click="openCreate">
