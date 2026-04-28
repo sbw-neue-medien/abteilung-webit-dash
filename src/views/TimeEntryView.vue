@@ -65,7 +65,17 @@
               <span class="text-mid">{{ e.project_name }}</span>
               <span v-if="e.task_title" class="block text-xs text-lo mt-0.5">{{ e.task_title }}</span>
             </td>
-            <td class="px-4 py-3 font-medium text-hi">{{ formatMin(e.duration_min) }}</td>
+            <td class="px-4 py-3 font-medium">
+              <span v-if="Number(e.duration_min) === 0"
+                    class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Ausstehend
+              </span>
+              <span v-else class="text-hi">{{ formatMin(e.duration_min) }}</span>
+            </td>
             <td class="px-4 py-3 text-mid max-w-xs truncate">{{ e.description || '—' }}</td>
             <td class="px-4 py-3 flex gap-1 justify-end">
               <button v-if="canEdit(e)" class="btn btn-sm btn-secondary" @click="openEdit(e)">Bearbeiten</button>
