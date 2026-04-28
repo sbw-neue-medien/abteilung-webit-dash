@@ -24,7 +24,7 @@
       <div class="flex gap-2 items-center">
         <input v-model.number="hours" type="number" min="0" max="8" class="input w-20" placeholder="Std" />
         <span class="text-mid text-sm">h</span>
-        <input v-model.number="minutes" type="number" min="0" max="59" class="input w-20" placeholder="Min" />
+        <input v-model.number="minutes" type="number" min="0" max="59" step="5" class="input w-20" placeholder="Min" />
         <span class="text-mid text-sm">min</span>
       </div>
       <p class="mt-1 text-xs text-lo">Reguläre Arbeitszeit: 3h 35min — Ausnahmen möglich</p>
