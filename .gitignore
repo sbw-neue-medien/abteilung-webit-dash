@@ -21,3 +21,4 @@ api/config
 *.zip
 *.tar.gz
 server/.env
+backups
