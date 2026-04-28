@@ -114,10 +114,13 @@ const showModal = ref(false)
 const editing   = ref(null)
 const saving    = ref(false)
 
-const today  = new Date().toISOString().slice(0, 10)
-const monday = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return d.toISOString().slice(0, 10) })()
+function localDate(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+const today      = localDate()
+const monthStart = localDate(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
 
-const filter   = ref({ from: monday, to: today, user_id: '', project_id: '' })
+const filter   = ref({ from: monthStart, to: today, user_id: '', project_id: '' })
 const entries  = computed(() => timeStore.list)
 const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender'))
 const totalMin = computed(() => entries.value.reduce((s, e) => s + Number(e.duration_min), 0))
