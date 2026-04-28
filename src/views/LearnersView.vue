@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-8 space-y-6">
+  <div class="max-w-8xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Lernende</h1>
       <button class="btn-primary" @click="openCreate">
@@ -11,7 +11,7 @@
     </div>
 
     <div v-if="users.loading" class="text-center py-12 text-lo italic">Laden…</div>
-    <div v-else class="grid sm:grid-cols-2 gap-4">
+    <div v-else class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
       <div v-for="u in learners" :key="u.id" class="card flex items-center gap-4">
 
         <!-- Avatar with upload overlay -->
