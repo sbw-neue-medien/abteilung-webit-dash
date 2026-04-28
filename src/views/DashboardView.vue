@@ -61,37 +61,49 @@
       </div>
     </section>
 
-    <!-- Leiter only: project hours (total cost) -->
-    <section v-if="auth.isLeiter && projectHours.length">
-      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand pro Projekt</h2>
+    <!-- Leiter only: hours per learner -->
+    <section v-if="auth.isLeiter && learnerHours.length">
+      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand pro Lernende</h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
           <thead class="bg-lift border-b border-line">
             <tr>
-              <th class="px-4 py-3 text-left font-medium text-mid">Projekt</th>
-              <th class="px-4 py-3 text-left font-medium text-mid">Status</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Lernende/r</th>
               <th class="px-4 py-3 text-right font-medium text-mid">Stunden total</th>
-              <th class="px-4 py-3 text-right font-medium text-mid w-40"></th>
+              <th class="px-4 py-3 text-right font-medium text-mid">Ausstehend</th>
+              <th class="px-4 py-3 w-40"></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-groove">
-            <tr v-for="p in projectHours" :key="p.id" class="hover:bg-lift">
-              <td class="px-4 py-3 font-medium text-hi">{{ p.name }}</td>
-              <td class="px-4 py-3"><StatusBadge :status="p.status" /></td>
-              <td class="px-4 py-3 text-right font-semibold text-hi">{{ formatMin(p.total_min) }}</td>
-              <td class="px-4 py-2 w-40">
+            <tr v-for="l in learnerHours" :key="l.id" class="hover:bg-lift">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-brand-subtle text-brand-600 text-xs font-bold flex items-center justify-center shrink-0">
+                    {{ l.name.charAt(0) }}
+                  </div>
+                  <span class="font-medium text-hi">{{ l.name }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-right font-semibold text-hi">{{ formatMin(l.total_min) }}</td>
+              <td class="px-4 py-3 text-right">
+                <span v-if="Number(l.pending_count) > 0" class="text-amber-500 font-medium">
+                  {{ l.pending_count }} ×
+                </span>
+                <span v-else class="text-lo">—</span>
+              </td>
+              <td class="px-4 py-2">
                 <div class="h-1.5 bg-lift rounded-full overflow-hidden">
                   <div class="h-full bg-brand-500 rounded-full transition-all"
-                       :style="{ width: Math.min(100, (p.total_min / maxProjectMin) * 100) + '%' }" />
+                       :style="{ width: Math.min(100, (l.total_min / maxLearnerMin) * 100) + '%' }" />
                 </div>
               </td>
             </tr>
           </tbody>
           <tfoot class="bg-lift border-t border-line">
             <tr>
-              <td colspan="2" class="px-4 py-3 text-sm font-semibold text-mid">Total</td>
-              <td class="px-4 py-3 text-right font-bold text-hi">{{ formatMin(totalMin) }}</td>
-              <td />
+              <td class="px-4 py-3 text-sm font-semibold text-mid">Total</td>
+              <td class="px-4 py-3 text-right font-bold text-hi">{{ formatMin(totalLearnerMin) }}</td>
+              <td colspan="2" />
             </tr>
           </tfoot>
         </table>
@@ -170,7 +182,7 @@ const monday = (() => {
 const today = new Date().toISOString().slice(0, 10)
 
 const sprintStats  = ref([])
-const projectHours = ref([])
+const learnerHours = ref([])
 
 onMounted(async () => {
   const calls = [
@@ -180,7 +192,7 @@ onMounted(async () => {
   if (auth.isLeiter) calls.push(
     api.getDashboardStats().then(d => {
       sprintStats.value  = d.sprint_stats
-      projectHours.value = d.project_hours
+      learnerHours.value = d.learner_hours
     })
   )
   await Promise.all(calls)
@@ -197,8 +209,8 @@ const weekReport    = computed(() => timeStore.report.summary ?? [])
 const myWeekEntries = computed(() => timeStore.report.entries?.length ?? 0)
 const myWeekMin     = computed(() => (timeStore.report.entries ?? []).reduce((s, e) => s + Number(e.duration_min), 0))
 
-const totalMin      = computed(() => projectHours.value.reduce((s, p) => s + Number(p.total_min), 0))
-const maxProjectMin = computed(() => Math.max(1, ...projectHours.value.map(p => Number(p.total_min))))
+const totalLearnerMin = computed(() => learnerHours.value.reduce((s, l) => s + Number(l.total_min), 0))
+const maxLearnerMin   = computed(() => Math.max(1, ...learnerHours.value.map(l => Number(l.total_min))))
 
 function totalTasks(s) { return Number(s.offen) + Number(s.in_arbeit) + Number(s.review) + Number(s.erledigt) }
 function pct(val, s)   { const t = totalTasks(s); return t ? (Number(val) / t) * 100 : 0 }
