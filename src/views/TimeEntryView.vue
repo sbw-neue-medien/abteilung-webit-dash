@@ -129,9 +129,6 @@ const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.
 
 function canEdit(e) { return auth.isLeiter || e.user_id === auth.user?.id }
 
-let autoApply = false
-watch(filter, () => { if (autoApply) load() }, { deep: true })
-
 onMounted(async () => {
   await Promise.all([projects.fetchAll(), usersStore.fetchAll(), sprints.fetchAll()])
   const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
@@ -140,7 +137,7 @@ onMounted(async () => {
     filter.value.to   = currentSprint.end_date
   }
   await load()
-  autoApply = true
+  watch(filter, load, { deep: true })
 })
 
 async function load() {
