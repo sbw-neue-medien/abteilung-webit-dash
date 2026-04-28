@@ -130,7 +130,9 @@ const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.
 function canEdit(e) { return auth.isLeiter || e.user_id === auth.user?.id }
 
 onMounted(async () => {
-  await Promise.all([projects.fetchAll(), usersStore.fetchAll(), sprints.fetchAll()])
+  const calls = [projects.fetchAll(), sprints.fetchAll()]
+  if (auth.isLeiter) calls.push(usersStore.fetchAll())
+  await Promise.all(calls)
   const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
   if (currentSprint) {
     filter.value.from = currentSprint.start_date
