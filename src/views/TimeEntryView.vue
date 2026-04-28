@@ -102,6 +102,7 @@ import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
 import { useTimeEntriesStore } from '../stores/timeEntries.js'
+import { useSprintsStore } from '../stores/sprints.js'
 import Modal from '../components/Modal.vue'
 import TimeEntryForm from '../components/TimeEntryForm.vue'
 
@@ -109,6 +110,7 @@ const auth       = useAuthStore()
 const projects   = useProjectsStore()
 const usersStore = useUsersStore()
 const timeStore  = useTimeEntriesStore()
+const sprints    = useSprintsStore()
 
 const showModal = ref(false)
 const editing   = ref(null)
@@ -128,7 +130,15 @@ const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.
 
 function canEdit(e) { return auth.isLeiter || e.user_id === auth.user?.id }
 
-onMounted(async () => { await Promise.all([projects.fetchAll(), usersStore.fetchAll()]); await load() })
+onMounted(async () => {
+  await Promise.all([projects.fetchAll(), usersStore.fetchAll(), sprints.fetchAll()])
+  const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
+  if (currentSprint) {
+    filter.value.from = currentSprint.start_date
+    filter.value.to   = currentSprint.end_date
+  }
+  await load()
+})
 
 async function load() {
   const params = Object.fromEntries(Object.entries(filter.value).filter(([, v]) => v !== ''))
