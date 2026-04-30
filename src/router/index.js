@@ -9,7 +9,8 @@ const routes = [
   { path: '/projekte/:id', name: 'project',  component: () => import('../views/ProjectDetailView.vue') },
   { path: '/zeiterfassung',name: 'time',     component: () => import('../views/TimeEntryView.vue') },
   { path: '/sprints',      name: 'sprints',  component: () => import('../views/SprintsView.vue'),     meta: { leiter: true } },
-  { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { leiter: true } },
+  { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { leiterOrMentor: true } },
+  { path: '/mentoren',     name: 'mentors',  component: () => import('../views/MentorsView.vue'),     meta: { leiter: true } },
   { path: '/mein-bereich', name: 'my-area',  component: () => import('../views/MyAreaView.vue') },
 ]
 
@@ -22,6 +23,7 @@ router.beforeEach((to) => {
   const auth = useAuthStore()
   if (!to.meta.public && !auth.isLoggedIn) return '/login'
   if (to.meta.leiter && !auth.isLeiter)    return '/'
+  if (to.meta.leiterOrMentor && !auth.isLeiter && !auth.isMentor) return '/'
   if (to.path === '/login' && auth.isLoggedIn) return '/'
 })
 

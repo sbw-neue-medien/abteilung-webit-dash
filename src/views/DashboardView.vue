@@ -12,6 +12,77 @@
       </div>
     </section>
 
+    <!-- Mentor: assigned learner hours -->
+    <section v-if="auth.isMentor && learnerHours.length">
+      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand meiner Lernenden</h2>
+      <div class="card overflow-hidden p-0">
+        <table class="min-w-full text-sm">
+          <thead class="bg-lift border-b border-line">
+            <tr>
+              <th class="px-4 py-3 text-left font-medium text-mid">Lernende/r</th>
+              <th class="px-4 py-3 text-right font-medium text-mid">Stunden total</th>
+              <th class="px-4 py-3 text-right font-medium text-mid">Ausstehend</th>
+              <th class="px-4 py-3 w-40"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-groove">
+            <tr v-for="l in learnerHours" :key="l.id" class="hover:bg-lift">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <UserAvatar :userId="l.id" :name="l.name" :hasAvatar="l.avatar" size="sm" />
+                  <span class="font-medium text-hi">{{ l.name }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-right font-semibold text-hi">{{ formatMin(l.total_min) }}</td>
+              <td class="px-4 py-3 text-right">
+                <span v-if="Number(l.pending_count) > 0" class="text-amber-500 font-medium">
+                  {{ l.pending_count }} ×
+                </span>
+                <span v-else class="text-lo">—</span>
+              </td>
+              <td class="px-4 py-2">
+                <div class="h-1.5 bg-lift rounded-full overflow-hidden">
+                  <div class="h-full bg-brand-500 rounded-full transition-all"
+                       :style="{ width: Math.min(100, (l.total_min / maxLearnerMin) * 100) + '%' }" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Mentor: current sprint overview -->
+    <section v-if="auth.isMentor && sprintStats.length">
+      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aktueller Sprint</h2>
+      <div class="space-y-3">
+        <div v-for="s in sprintStats" :key="s.sprint_id" class="card">
+          <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <span class="font-semibold text-hi">{{ s.sprint_name }}</span>
+            <span class="text-xs text-lo">{{ formatDate(s.start_date) }} – {{ formatDate(s.end_date) }}</span>
+          </div>
+          <div class="grid grid-cols-4 gap-3 text-center">
+            <div class="bg-lift rounded-lg py-3">
+              <div class="text-2xl font-bold text-lo">{{ s.offen }}</div>
+              <div class="text-xs text-lo mt-1">Offen</div>
+            </div>
+            <div class="bg-amber-50 dark:bg-amber-900/20 rounded-lg py-3">
+              <div class="text-2xl font-bold text-amber-500">{{ s.in_arbeit }}</div>
+              <div class="text-xs text-lo mt-1">In Arbeit</div>
+            </div>
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg py-3">
+              <div class="text-2xl font-bold text-blue-500">{{ s.review }}</div>
+              <div class="text-xs text-lo mt-1">Review</div>
+            </div>
+            <div class="bg-brand-subtle rounded-lg py-3">
+              <div class="text-2xl font-bold text-brand-600">{{ s.erledigt }}</div>
+              <div class="text-xs text-lo mt-1">Erledigt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Leiter only: current sprint task status -->
     <section v-if="auth.isLeiter && sprintStats.length">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aktueller Sprint</h2>
@@ -108,7 +179,7 @@
       </div>
     </section>
 
-    <section v-if="!auth.isLeiter" class="card max-w-xs">
+    <section v-if="!auth.isLeiter && !auth.isMentor" class="card max-w-xs">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Stunden diese Woche</h2>
       <div class="text-3xl font-bold text-brand-600">{{ formatMin(myWeekMin) }}</div>
       <div class="text-sm text-mid mt-1">{{ myWeekEntries }} Einträge diese Woche</div>
@@ -116,7 +187,7 @@
 
     <section>
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">
-        {{ auth.isLeiter ? 'Projektübersicht' : 'Meine Projekte' }}
+        {{ auth.isLeiter ? 'Projektübersicht' : auth.isMentor ? 'Projekte meiner Lernenden' : 'Meine Projekte' }}
       </h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
@@ -170,12 +241,16 @@ const sprintStats  = ref([])
 const learnerHours = ref([])
 
 onMounted(async () => {
-  const calls = [
-    projects.fetchAll(),
-    timeStore.fetchReport({ from: monday, to: today }),
-  ]
+  const calls = [projects.fetchAll()]
+  if (!auth.isMentor) calls.push(timeStore.fetchReport({ from: monday, to: today }))
   if (auth.isLeiter) calls.push(
     api.getDashboardStats().then(d => {
+      sprintStats.value  = d.sprint_stats
+      learnerHours.value = d.learner_hours
+    })
+  )
+  if (auth.isMentor) calls.push(
+    api.getMentorStats().then(d => {
       sprintStats.value  = d.sprint_stats
       learnerHours.value = d.learner_hours
     })

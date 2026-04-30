@@ -45,6 +45,14 @@ const router = useRouter()
 const { isDark, toggle } = useDarkMode()
 
 const links = computed(() => {
+  if (auth.isMentor) {
+    return [
+      { to: '/',              label: 'Dashboard' },
+      { to: '/projekte',      label: 'Projekte' },
+      { to: '/zeiterfassung', label: 'Zeiterfassung' },
+      { to: '/lernende',      label: 'Lernende' },
+    ]
+  }
   const base = [
     { to: '/',              label: 'Dashboard' },
     { to: '/projekte',      label: 'Projekte' },
@@ -53,6 +61,7 @@ const links = computed(() => {
   ]
   if (auth.isLeiter) base.push({ to: '/sprints', label: 'Sprints' })
   if (auth.isLeiter) base.push({ to: '/lernende', label: 'Lernende' })
+  if (auth.isLeiter) base.push({ to: '/mentoren', label: 'Mentoren' })
   return base
 })
 

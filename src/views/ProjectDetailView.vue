@@ -14,7 +14,7 @@
         </div>
         <div class="flex gap-2 shrink-0">
           <button v-if="auth.isLeiter" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
-          <button class="btn-primary" @click="addTask('offen')">
+          <button v-if="!auth.isMentor" class="btn-primary" @click="addTask('offen')">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -44,7 +44,8 @@
         </button>
       </div>
 
-      <KanbanBoard :tasks="filteredTasks" @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
+      <KanbanBoard :tasks="filteredTasks" :readonly="auth.isMentor"
+                   @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
 
       <div class="mt-8 max-w-7xl mx-auto">
         <TodoList />
