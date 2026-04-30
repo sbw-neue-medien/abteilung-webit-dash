@@ -22,4 +22,3 @@ api/config
 *.tar.gz
 server/.env
 backups
-api/uploads/avatars/*
