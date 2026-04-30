@@ -45,6 +45,10 @@
         </div>
 
         <div class="flex gap-1 flex-wrap">
+          <button v-if="m.email" class="btn btn-sm btn-secondary" @click="sendReset(m)"
+                  title="Passwort-Reset-E-Mail senden">
+            Reset-E-Mail
+          </button>
           <button class="btn btn-sm btn-secondary" @click="openEdit(m)">Bearbeiten</button>
           <button class="btn btn-sm btn-danger" @click="remove(m)">Löschen</button>
         </div>
@@ -125,6 +129,16 @@ async function assign(mentor) {
   await api.assignLernender(mentor.id, lernenderId)
   assignTarget[mentor.id] = ''
   assignments[mentor.id] = await api.getMentorLernende(mentor.id)
+}
+
+async function sendReset(m) {
+  if (!confirm(`Passwort-Reset-E-Mail an „${m.name}" (${m.email}) senden?`)) return
+  try {
+    await api.sendResetEmail(m.id)
+    alert(`Reset-E-Mail an ${m.email} gesendet.`)
+  } catch (err) {
+    alert(err.message)
+  }
 }
 
 async function unassign(mentor, learner) {
