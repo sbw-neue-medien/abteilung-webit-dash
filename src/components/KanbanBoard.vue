@@ -3,10 +3,10 @@
     <div v-for="col in columns" :key="col.status"
       class="flex-shrink-0 w-72 flex flex-col gap-2"
       @dragover.prevent
-      @dragenter.prevent="dragOver = col.status"
+      @dragenter.prevent="if (!readonly) dragOver = col.status"
       @dragleave="dragOver = null"
-      @drop="onDrop($event, col.status)"
-      :class="{ 'ring-2 ring-brand-500 ring-offset-2 ring-offset-bg rounded-xl': dragOver === col.status }">
+      @drop="if (!readonly) onDrop($event, col.status)"
+      :class="{ 'ring-2 ring-brand-500 ring-offset-2 ring-offset-bg rounded-xl': !readonly && dragOver === col.status }">
 
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2">
@@ -16,7 +16,7 @@
             {{ tasksFor(col.status).length }}
           </span>
         </div>
-        <button @click="$emit('add', col.status)"
+        <button v-if="!readonly" @click="$emit('add', col.status)"
                 class="text-lo hover:text-brand-600 transition-colors" title="Aufgabe hinzufügen">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -29,6 +29,7 @@
           v-for="task in tasksFor(col.status)"
           :key="task.id"
           :task="task"
+          :readonly="readonly"
           @edit="$emit('edit', $event)"
           @delete="$emit('delete', $event)"
         />
@@ -45,7 +46,7 @@
 import { ref } from 'vue'
 import KanbanCard from './KanbanCard.vue'
 
-const props = defineProps({ tasks: Array })
+const props = defineProps({ tasks: Array, readonly: Boolean })
 const emit  = defineEmits(['move', 'add', 'edit', 'delete'])
 
 const columns = [

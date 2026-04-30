@@ -2,7 +2,7 @@
   <div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Zeiterfassung</h1>
-      <button class="btn-primary" @click="openCreate">
+      <button v-if="!auth.isMentor" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -13,7 +13,7 @@
     <div class="card flex flex-wrap gap-4 items-end">
       <div><label class="label">Von</label><input v-model="filter.from" type="date" class="input w-40" /></div>
       <div><label class="label">Bis</label><input v-model="filter.to" type="date" class="input w-40" /></div>
-      <div v-if="auth.isLeiter">
+      <div v-if="auth.isLeiter || auth.isMentor">
         <label class="label">Lernender</label>
         <select v-model="filter.user_id" class="input w-48">
           <option value="">Alle</option>
@@ -49,7 +49,7 @@
         <thead class="bg-lift border-b border-line">
           <tr>
             <th class="px-4 py-3 text-left font-medium text-mid">Datum</th>
-            <th v-if="auth.isLeiter" class="px-4 py-3 text-left font-medium text-mid">Person</th>
+            <th v-if="auth.isLeiter || auth.isMentor" class="px-4 py-3 text-left font-medium text-mid">Person</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Projekt / Aufgabe</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Dauer</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
@@ -59,7 +59,7 @@
         <tbody class="divide-y divide-groove">
           <tr v-for="e in entries" :key="e.id" class="hover:bg-lift transition-colors">
             <td class="px-4 py-3 text-mid">{{ formatDate(e.date) }}</td>
-            <td v-if="auth.isLeiter" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
+            <td v-if="auth.isLeiter || auth.isMentor" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
             <td class="px-4 py-3">
               <span class="text-mid">{{ e.project_name }}</span>
               <span v-if="e.task_title" class="block text-xs text-lo mt-0.5">{{ e.task_title }}</span>
@@ -77,12 +77,14 @@
             </td>
             <td class="px-4 py-3 text-mid max-w-xs truncate">{{ e.description || '—' }}</td>
             <td class="px-4 py-3 flex gap-1 justify-end">
-              <button v-if="canEdit(e)" class="btn btn-sm btn-secondary" @click="openEdit(e)">Bearbeiten</button>
-              <button v-if="canEdit(e)" class="btn btn-sm btn-danger" @click="remove(e.id)">Löschen</button>
+              <template v-if="!auth.isMentor && canEdit(e)">
+                <button class="btn btn-sm btn-secondary" @click="openEdit(e)">Bearbeiten</button>
+                <button class="btn btn-sm btn-danger" @click="remove(e.id)">Löschen</button>
+              </template>
             </td>
           </tr>
           <tr v-if="!entries.length">
-            <td :colspan="auth.isLeiter ? 6 : 5" class="px-4 py-8 text-center text-lo italic">Keine Einträge.</td>
+            <td :colspan="(auth.isLeiter || auth.isMentor) ? 6 : 5" class="px-4 py-8 text-center text-lo italic">Keine Einträge.</td>
           </tr>
         </tbody>
       </table>
@@ -131,7 +133,7 @@ function canEdit(e) { return auth.isLeiter || e.user_id === auth.user?.id }
 
 onMounted(async () => {
   const calls = [projects.fetchAll(), sprints.fetchAll()]
-  if (auth.isLeiter) calls.push(usersStore.fetchAll())
+  if (auth.isLeiter || auth.isMentor) calls.push(usersStore.fetchAll())
   await Promise.all(calls)
   const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
   if (currentSprint) {

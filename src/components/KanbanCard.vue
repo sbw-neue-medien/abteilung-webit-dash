@@ -1,15 +1,14 @@
 <template>
   <div
-    draggable="true"
-    @dragstart="onDragStart"
+    :draggable="!readonly"
+    @dragstart="readonly ? null : onDragStart($event)"
     @dragend="onDragEnd"
-    class="bg-surface rounded-lg shadow-sm ring-1 ring-line p-3 cursor-grab active:cursor-grabbing
-           hover:shadow-md transition-shadow select-none"
-    :class="{ 'opacity-50 scale-95': dragging }"
+    class="bg-surface rounded-lg shadow-sm ring-1 ring-line p-3 hover:shadow-md transition-shadow select-none"
+    :class="[readonly ? 'cursor-default' : 'cursor-grab active:cursor-grabbing', { 'opacity-50 scale-95': dragging }]"
   >
     <div class="flex items-start justify-between gap-2">
       <p class="text-sm font-medium text-hi leading-snug">{{ task.title }}</p>
-      <div class="flex gap-1 shrink-0">
+      <div v-if="!readonly" class="flex gap-1 shrink-0">
         <button @click.stop="$emit('edit', task)"
                 class="text-lo hover:text-brand-600 transition-colors">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,7 +70,7 @@
 import { ref, computed } from 'vue'
 import UserAvatar from './UserAvatar.vue'
 
-const props = defineProps({ task: Object })
+const props = defineProps({ task: Object, readonly: Boolean })
 defineEmits(['edit', 'delete'])
 
 const dragging = ref(false)

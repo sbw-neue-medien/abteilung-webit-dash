@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Lernende</h1>
-      <button class="btn-primary" @click="openCreate">
+      <button v-if="auth.isLeiter" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -16,8 +16,8 @@
 
         <!-- Top row: avatar + name/email -->
         <div class="flex items-center gap-4">
-          <!-- Avatar with upload overlay -->
-          <div class="relative shrink-0 group cursor-pointer" @click="triggerUpload(u)">
+          <!-- Avatar: clickable for leiter, static for mentor -->
+          <div v-if="auth.isLeiter" class="relative shrink-0 group cursor-pointer" @click="triggerUpload(u)">
             <UserAvatar :userId="u.id" :name="u.name" :hasAvatar="u.avatar" size="lg" />
             <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100
                         transition-opacity flex items-center justify-center">
@@ -28,19 +28,22 @@
               </svg>
             </div>
           </div>
+          <div v-else class="shrink-0">
+            <UserAvatar :userId="u.id" :name="u.name" :hasAvatar="u.avatar" size="lg" />
+          </div>
 
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-hi">{{ u.name }}</p>
             <p class="text-xs text-lo mt-0.5">{{ u.email || u.username }}</p>
-            <button v-if="u.avatar" @click.stop="removeAvatar(u)"
+            <button v-if="auth.isLeiter && u.avatar" @click.stop="removeAvatar(u)"
                     class="text-xs text-red-500 hover:underline mt-0.5">
               Foto entfernen
             </button>
           </div>
         </div>
 
-        <!-- Bottom row: buttons -->
-        <div class="flex gap-1 flex-wrap">
+        <!-- Bottom row: buttons (leiter only) -->
+        <div v-if="auth.isLeiter" class="flex gap-1 flex-wrap">
           <button v-if="u.email" class="btn btn-sm btn-secondary" @click="sendReset(u)"
                   title="Passwort-Reset-E-Mail senden">
             Reset-E-Mail
@@ -69,12 +72,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useAuthStore } from '../stores/auth.js'
 import { useUsersStore } from '../stores/users.js'
 import { api } from '../api/index.js'
 import Modal from '../components/Modal.vue'
 import UserForm from '../components/UserForm.vue'
 import UserAvatar from '../components/UserAvatar.vue'
 
+const auth      = useAuthStore()
 const users     = useUsersStore()
 const showModal = ref(false)
 const editing   = ref(null)
