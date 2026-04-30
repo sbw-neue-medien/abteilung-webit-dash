@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 
 const routes = [
-  { path: '/login',        name: 'login',    component: () => import('../views/LoginView.vue'),       meta: { public: true } },
+  { path: '/login',          name: 'login',          component: () => import('../views/LoginView.vue'),         meta: { public: true } },
+  { path: '/passwort-reset', name: 'password-reset', component: () => import('../views/PasswordResetView.vue'), meta: { public: true } },
   { path: '/',             name: 'dashboard',component: () => import('../views/DashboardView.vue') },
   { path: '/projekte',     name: 'projects', component: () => import('../views/ProjectsView.vue') },
   { path: '/projekte/:id', name: 'project',  component: () => import('../views/ProjectDetailView.vue') },

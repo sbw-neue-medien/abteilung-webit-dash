@@ -35,7 +35,11 @@
             Foto entfernen
           </button>
         </div>
-        <div class="flex gap-1 shrink-0">
+        <div class="flex gap-1 shrink-0 flex-wrap justify-end">
+          <button v-if="u.email" class="btn btn-sm btn-secondary" @click="sendReset(u)"
+                  title="Passwort-Reset-E-Mail senden">
+            Reset-E-Mail
+          </button>
           <button class="btn btn-sm btn-secondary" @click="openEdit(u)">Bearbeiten</button>
           <button class="btn btn-sm btn-danger" @click="remove(u)">Löschen</button>
         </div>
@@ -112,6 +116,16 @@ async function save(body) {
     else               await users.create(body)
     showModal.value = false
   } finally { saving.value = false }
+}
+
+async function sendReset(u) {
+  if (!confirm(`Passwort-Reset-E-Mail an „${u.name}" (${u.email}) senden?`)) return
+  try {
+    await api.sendResetEmail(u.id)
+    alert(`Reset-E-Mail an ${u.email} gesendet.`)
+  } catch (err) {
+    alert(err.message)
+  }
 }
 
 async function remove(u) {
