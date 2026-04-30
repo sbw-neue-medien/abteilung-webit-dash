@@ -36,6 +36,7 @@ src/
 ├── components/   # Wiederverwendbare Komponenten
 │   ├── KanbanBoard.vue
 │   ├── KanbanCard.vue
+│   ├── MentorForm.vue
 │   ├── SprintPanel.vue
 │   ├── TodoList.vue
 │   ├── ProjectForm.vue
@@ -55,6 +56,7 @@ src/
 │   ├── ProjectDetailView.vue
 │   ├── TimeEntryView.vue
 │   ├── LearnersView.vue
+│   ├── MentorsView.vue
 │   └── MyAreaView.vue
 └── router/       # Route-Definitionen
 ```
@@ -70,8 +72,9 @@ src/
 | `/projekte` | Projektübersicht | alle |
 | `/projekte/:id` | Projektdetail (Kanban + Sprints + Todos) | alle |
 | `/zeiterfassung` | Zeiterfassung | alle |
-| `/lernende` | Lernende verwalten | nur Leiter |
-| `/mein-bereich` | Eigenes Profil & Stunden | alle |
+| `/lernende` | Lernende verwalten | Leiter (voll), Mentor (read-only) |
+| `/mentoren` | Mentoren verwalten + Zuweisung | nur Leiter |
+| `/mein-bereich` | Eigenes Profil & Stunden | Leiter, Lernender |
 
 ---
 
@@ -82,7 +85,10 @@ src/
 - **Zeiterfassung** — Stunden pro Projekt/Aufgabe erfassen
 - **Todos** — einfache Aufgabenliste mit geplantem/effektivem Aufwand
 - **Eigenprojekte** — persönliche Projekte einem Lernenden zuordnen
-- **Rollen** — Leiter sieht alles, Lernender nur eigene Daten
+- **Rollen** — drei Rollen mit abgestuftem Zugriff:
+  - **Leiter** — Vollzugriff, verwaltet Benutzer, Projekte, Sprints und Mentoren
+  - **Lernender** — sieht eigene/zugewiesene Projekte und eigene Zeiterfassung
+  - **Mentor** — read-only Zugriff auf Daten der zugewiesenen Lernenden; kein Schreibzugriff
 
 ---
 
