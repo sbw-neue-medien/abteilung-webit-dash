@@ -3,9 +3,9 @@
     <div v-for="col in columns" :key="col.status"
       class="flex-shrink-0 w-72 flex flex-col gap-2"
       @dragover.prevent
-      @dragenter.prevent="if (!readonly) dragOver = col.status"
+      @dragenter.prevent="onDragEnter(col.status)"
       @dragleave="dragOver = null"
-      @drop="if (!readonly) onDrop($event, col.status)"
+      @drop="handleDrop($event, col.status)"
       :class="{ 'ring-2 ring-brand-500 ring-offset-2 ring-offset-bg rounded-xl': !readonly && dragOver === col.status }">
 
       <div class="flex items-center justify-between px-1">
@@ -62,7 +62,12 @@ function tasksFor(status) {
   return (props.tasks ?? []).filter(t => t.status === status)
 }
 
-function onDrop(e, status) {
+function onDragEnter(status) {
+  if (!props.readonly) dragOver.value = status
+}
+
+function handleDrop(e, status) {
+  if (props.readonly) return
   const id = Number(e.dataTransfer.getData('taskId'))
   dragOver.value = null
   if (id) emit('move', id, status)
