@@ -15,6 +15,9 @@
           <label class="label">Passwort</label>
           <input v-model="password" type="password" class="input" required autocomplete="current-password" />
         </div>
+        <p v-if="sessionExpired && !error" class="text-sm text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-400 rounded-lg px-3 py-2">
+          Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.
+        </p>
         <p v-if="error" class="text-sm text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-400 rounded-lg px-3 py-2">{{ error }}</p>
         <button type="submit" class="btn-primary w-full justify-center" :disabled="loading">
           {{ loading ? 'Anmelden…' : 'Anmelden' }}
@@ -53,13 +56,15 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { api } from '../api/index.js'
 import Modal from '../components/Modal.vue'
 
-const auth     = useAuthStore()
-const router   = useRouter()
+const auth           = useAuthStore()
+const router         = useRouter()
+const route          = useRoute()
+const sessionExpired = route.query.expired === '1'
 const username = ref('')
 const password = ref('')
 const loading  = ref(false)
