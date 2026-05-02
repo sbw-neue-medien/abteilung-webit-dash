@@ -32,7 +32,7 @@
             <p class="text-xs text-mid mt-1">
               {{ formatDate(sprint.start_date) }} – {{ formatDate(sprint.end_date) }}
             </p>
-            <p v-if="sprint.goal" class="text-sm text-mid mt-1">{{ sprint.goal }}</p>
+            <MarkdownRenderer v-if="sprint.goal" class="mt-1" :content="sprint.goal" />
           </div>
           <div class="flex items-center gap-3 shrink-0">
             <span class="text-xs text-lo">{{ sprint.task_count }} Aufgaben</span>
@@ -108,6 +108,7 @@ import { ref, computed } from 'vue'
 import { useSprintsStore } from '../stores/sprints.js'
 import { useAuthStore } from '../stores/auth.js'
 import Modal from './Modal.vue'
+import MarkdownRenderer from './MarkdownRenderer.vue'
 
 const props = defineProps({ tasks: { type: Array, default: () => [] } })
 
