@@ -1,0 +1,26 @@
+title: "[Ankündigung] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📣 Ankündigung
+        Neue Releases, geplante Wartungen, wichtige Änderungen am System.
+
+  - type: textarea
+    id: inhalt
+    attributes:
+      label: Was gibt es zu berichten?
+      description: Beschreibe die Ankündigung klar und präzise.
+      placeholder: "Beispiel: Version 1.5.0 ist live. Neu: Report-Export als PDF."
+    validations:
+      required: true
+
+  - type: textarea
+    id: auswirkungen
+    attributes:
+      label: Was ändert sich für die Nutzer?
+      description: Gibt es etwas, das Nutzer wissen oder tun müssen?
+      placeholder: "Beispiel: Bestehende Sitzungen werden nach dem Update einmalig abgemeldet."
+    validations:
+      required: false

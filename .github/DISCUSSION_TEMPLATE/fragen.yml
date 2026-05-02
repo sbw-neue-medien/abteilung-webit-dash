@@ -1,0 +1,40 @@
+title: "[Frage] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ❓ Frage zur Anwendung
+        Du weisst nicht wie etwas funktioniert, oder bist dir bei einem Verhalten nicht sicher? Hier ist der richtige Ort.
+
+  - type: textarea
+    id: frage
+    attributes:
+      label: Was möchtest du wissen?
+      description: Formuliere deine Frage so konkret wie möglich.
+      placeholder: "Beispiel: Wie kann ich eine Aufgabe einem anderen Lernenden zuweisen?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: kontext
+    attributes:
+      label: Was hast du bereits versucht?
+      description: Hast du schon etwas ausprobiert oder in der Dokumentation nachgeschaut?
+      placeholder: Optional, aber hilfreich
+    validations:
+      required: false
+
+  - type: dropdown
+    id: bereich
+    attributes:
+      label: Bereich
+      options:
+        - Projekte / Kanban
+        - Zeiterfassung
+        - Sprints
+        - Benutzerverwaltung
+        - Rollen & Berechtigungen
+        - Anderes
+    validations:
+      required: true

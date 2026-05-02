@@ -1,0 +1,35 @@
+title: "[Idee] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Feature-Wunsch oder Verbesserungsidee
+        Beschreibe deine Idee so konkret wie möglich. Kein Aufwand zu gross, kein Detail zu klein.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Was ist das Problem oder Bedürfnis?
+      description: Was fehlt dir aktuell, oder was nervt dich an der bestehenden Lösung?
+      placeholder: "Beispiel: Ich muss immer manuell nach abgelaufenen Sprints suchen, das kostet unnötig Zeit."
+    validations:
+      required: true
+
+  - type: textarea
+    id: loesung
+    attributes:
+      label: Welche Lösung schwebt dir vor?
+      description: Wie könnte das Feature aussehen oder funktionieren?
+      placeholder: "Beispiel: Ein automatischer Filter, der vergangene Sprints ausblendet."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternativen
+    attributes:
+      label: Alternativen überlegt?
+      description: Gibt es andere Wege, das Problem zu lösen?
+      placeholder: Optional
+    validations:
+      required: false

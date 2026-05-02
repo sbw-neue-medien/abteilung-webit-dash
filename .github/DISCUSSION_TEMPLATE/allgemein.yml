@@ -1,0 +1,16 @@
+title: ""
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💬 Allgemeine Diskussion
+        Passt dein Thema in keine andere Kategorie? Dann hier her damit.
+
+  - type: textarea
+    id: inhalt
+    attributes:
+      label: Worum geht es?
+      placeholder: Beschreibe dein Anliegen…
+    validations:
+      required: true
