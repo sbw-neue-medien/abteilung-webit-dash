@@ -11,6 +11,19 @@
       <button class="btn-secondary" @click="showPwModal = true">Passwort ändern</button>
     </div>
 
+    <div v-if="auth.isLeiter" class="card flex items-center justify-between gap-4">
+      <div>
+        <p class="text-sm font-medium text-hi">E-Mail-Benachrichtigungen</p>
+        <p class="text-xs text-lo mt-0.5">Benachrichtigung wenn eine Aufgabe zur Review verschoben wird</p>
+      </div>
+      <button @click="toggleNotifications"
+              :class="emailNotifications ? 'bg-brand-600' : 'bg-lift'"
+              class="relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ring-1 ring-line">
+        <span :class="emailNotifications ? 'translate-x-5' : 'translate-x-0'"
+              class="inline-block h-5 w-5 mt-0.5 ml-0.5 rounded-full bg-surface shadow transition-transform" />
+      </button>
+    </div>
+
     <section>
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Meine Projekte</h2>
       <div class="grid sm:grid-cols-2 gap-4">
@@ -112,6 +125,17 @@ import UserAvatar from '../components/UserAvatar.vue'
 const auth      = useAuthStore()
 const projects  = useProjectsStore()
 const timeStore = useTimeEntriesStore()
+
+const emailNotifications = ref(!!auth.user?.email_notifications)
+
+async function toggleNotifications() {
+  const next = !emailNotifications.value
+  try {
+    await api.updateUser(auth.user.id, { email_notifications: next })
+    emailNotifications.value = next
+    auth.user.email_notifications = next ? 1 : 0
+  } catch (e) { /* ignorieren, Toggle springt nicht um */ }
+}
 
 const showPwModal = ref(false)
 const currentPw   = ref('')
