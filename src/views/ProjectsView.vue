@@ -27,12 +27,18 @@
     </div>
 
     <template v-if="activeTab === 'projekte'">
-      <div class="flex flex-wrap gap-2 mb-5">
+      <div class="flex flex-wrap items-center gap-2 mb-5">
         <button v-for="f in filters" :key="f.value" class="btn btn-sm"
           :class="activeFilter === f.value ? 'btn-primary' : 'btn-secondary'"
           @click="activeFilter = f.value">
           {{ f.label }}
         </button>
+        <select v-if="auth.isLeiter && lernende.length"
+                v-model="learnerFilter"
+                class="ml-auto input py-1 text-sm w-auto">
+          <option :value="null">Alle Lernenden</option>
+          <option v-for="u in lernende" :key="u.id" :value="u.id">{{ u.name }}</option>
+        </select>
       </div>
 
       <div v-if="projects.loading" class="text-lo italic py-8 text-center">Laden…</div>
@@ -114,11 +120,12 @@ const projects = useProjectsStore()
 const users    = useUsersStore()
 const router   = useRouter()
 
-const showModal    = ref(false)
-const editing      = ref(null)
-const saving       = ref(false)
-const activeFilter = ref('alle')
-const activeTab    = ref('projekte')
+const showModal      = ref(false)
+const editing        = ref(null)
+const saving         = ref(false)
+const activeFilter   = ref('alle')
+const activeTab      = ref('projekte')
+const learnerFilter  = ref(null)
 
 const tabs = [
   { value: 'projekte', label: 'Projekte' },
@@ -133,9 +140,19 @@ const filters = [
   { value: 'abgeschlossen', label: 'Abgeschlossen' },
 ]
 
-const filtered = computed(() =>
-  activeFilter.value === 'alle' ? projects.list : projects.list.filter(p => p.status === activeFilter.value)
+const lernende = computed(() =>
+  users.list.filter(u => u.role === 'lernender').sort((a, b) => a.name.localeCompare(b.name))
 )
+
+const filtered = computed(() => {
+  let list = projects.list
+  if (activeFilter.value !== 'alle') list = list.filter(p => p.status === activeFilter.value)
+  if (learnerFilter.value) {
+    const id = learnerFilter.value
+    list = list.filter(p => p.owner_id === id || (p.member_ids ?? []).includes(id))
+  }
+  return list
+})
 
 const modalTitle = computed(() => {
   if (editing.value) return editing.value.is_template ? 'Vorlage bearbeiten' : 'Projekt bearbeiten'
