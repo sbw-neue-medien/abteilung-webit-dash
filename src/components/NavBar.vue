@@ -25,6 +25,14 @@
               d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
           </svg>
         </button>
+        <button @click="showHelp = true"
+          class="p-1.5 rounded-md text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
+          title="Hilfe">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </button>
         <button @click="logout"
           class="text-xs px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 transition-colors">
           Abmelden
@@ -32,17 +40,20 @@
       </div>
     </div>
   </nav>
+  <HelpModal v-model="showHelp" />
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useDarkMode } from '../composables/useDarkMode.js'
+import HelpModal from './HelpModal.vue'
 
-const auth   = useAuthStore()
-const router = useRouter()
+const auth     = useAuthStore()
+const router   = useRouter()
 const { isDark, toggle } = useDarkMode()
+const showHelp = ref(false)
 
 const links = computed(() => {
   if (auth.isMentor) {
