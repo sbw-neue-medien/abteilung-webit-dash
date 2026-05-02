@@ -75,4 +75,8 @@ export const api = {
   createSprint: (body)             => req('/sprints', { method: 'POST', body: JSON.stringify(body) }),
   updateSprint: (id, body)         => req(`/sprints/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteSprint: (id)               => req(`/sprints/${id}`, { method: 'DELETE' }),
+  getFooterLinks: ()               => req('/footer-links'),
+  createFooterLink: (body)         => req('/footer-links', { method: 'POST', body: JSON.stringify(body) }),
+  updateFooterLink: (id, body)     => req(`/footer-links/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteFooterLink: (id)           => req(`/footer-links/${id}`, { method: 'DELETE' }),
 }
