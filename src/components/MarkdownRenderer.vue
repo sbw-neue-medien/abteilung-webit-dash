@@ -7,7 +7,12 @@ import { computed } from 'vue'
 import { marked } from 'marked'
 
 const props = defineProps({ content: { type: String, default: '' } })
-const html = computed(() => marked.parse(props.content ?? ''))
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+const html = computed(() => marked.parse(escapeHtml(props.content ?? '')))
 </script>
 
 <style scoped>
