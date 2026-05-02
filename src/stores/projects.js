@@ -3,10 +3,16 @@ import { ref } from 'vue'
 import { api } from '../api/index.js'
 
 export const useProjectsStore = defineStore('projects', () => {
-  const list    = ref([])
-  const current = ref(null)
-  const loading = ref(false)
-  const error   = ref(null)
+  const list      = ref([])
+  const templates = ref([])
+  const current   = ref(null)
+  const loading   = ref(false)
+  const error     = ref(null)
+
+  async function fetchTemplates() {
+    try { templates.value = await api.getTemplates() }
+    catch (e) { /* leiter-only, ignorieren wenn kein Zugriff */ }
+  }
 
   async function fetchAll() {
     loading.value = true
@@ -41,5 +47,5 @@ export const useProjectsStore = defineStore('projects', () => {
     list.value = list.value.filter(p => p.id !== id)
   }
 
-  return { list, current, loading, error, fetchAll, fetchOne, create, update, remove }
+  return { list, templates, current, loading, error, fetchAll, fetchTemplates, fetchOne, create, update, remove }
 })

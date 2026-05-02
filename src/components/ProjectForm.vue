@@ -47,6 +47,22 @@
       </div>
     </div>
 
+    <template v-if="!project">
+      <div v-if="templates.length && !form.is_template">
+        <label class="label">Vorlage verwenden</label>
+        <select v-model="form.template_id" class="input">
+          <option :value="null">— Keine Vorlage —</option>
+          <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input id="is_template" type="checkbox" v-model="form.is_template"
+               class="rounded border-line text-brand-600" />
+        <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
+      </div>
+    </template>
+
     <div class="flex gap-2 justify-end pt-2">
       <button type="button" class="btn-secondary" @click="$emit('cancel')">Abbrechen</button>
       <button type="submit" class="btn-primary" :disabled="loading">
@@ -59,12 +75,18 @@
 <script setup>
 import { ref, watch } from 'vue'
 
-const props = defineProps({ project: Object, users: { type: Array, default: () => [] }, loading: Boolean })
-const emit  = defineEmits(['submit', 'cancel'])
+const props = defineProps({
+  project:   Object,
+  users:     { type: Array, default: () => [] },
+  templates: { type: Array, default: () => [] },
+  loading:   Boolean,
+})
+const emit = defineEmits(['submit', 'cancel'])
 
 const form = ref({
   name: '', client: '', description: '', status: 'geplant',
   is_personal: false, owner_id: null, member_ids: [],
+  is_template: false, template_id: null,
 })
 
 watch(() => props.project, (p) => {
@@ -77,17 +99,19 @@ watch(() => props.project, (p) => {
     is_personal: !!p.is_personal,
     owner_id:    p.is_personal ? (p.owner_id ?? null) : null,
     member_ids:  (p.members ?? []).map(m => m.id),
+    is_template: false,
+    template_id: null,
   }
 }, { immediate: true })
 
 function submit() {
   const payload = { ...form.value }
   if (payload.is_personal && payload.owner_id) {
-    // Auto-add the selected lernender as a member
     if (!payload.member_ids.includes(payload.owner_id)) {
       payload.member_ids = [payload.owner_id]
     }
   }
+  if (payload.is_template) payload.template_id = null
   emit('submit', payload)
 }
 </script>
