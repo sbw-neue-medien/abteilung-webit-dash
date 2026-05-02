@@ -10,7 +10,7 @@
             <StatusBadge :status="projects.current.status" />
             <span v-if="projects.current.client" class="text-sm text-lo">{{ projects.current.client }}</span>
           </div>
-          <p v-if="projects.current.description" class="mt-2 text-sm text-mid">{{ projects.current.description }}</p>
+          <MarkdownRenderer v-if="projects.current.description" class="mt-2" :content="projects.current.description" />
         </div>
         <div class="flex gap-2 shrink-0">
           <button v-if="auth.isLeiter" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
@@ -129,6 +129,7 @@ import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import TodoList from '../components/TodoList.vue'
+import MarkdownRenderer from '../components/MarkdownRenderer.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()

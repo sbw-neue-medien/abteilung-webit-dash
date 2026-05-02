@@ -33,7 +33,7 @@
           <p class="text-sm font-medium text-hi" :class="{ 'line-through text-lo': todo.done }">
             {{ todo.title }}
           </p>
-          <p v-if="todo.description" class="text-xs text-mid mt-0.5">{{ todo.description }}</p>
+          <MarkdownRenderer v-if="todo.description" class="mt-0.5 text-xs" :content="todo.description" />
           <div class="flex flex-wrap items-center gap-3 mt-1.5">
             <span class="text-xs text-lo">
               <span class="font-medium text-mid">Geplant:</span> {{ formatDuration(todo.planned_duration_min) }}
@@ -100,6 +100,7 @@ import { ref, computed } from 'vue'
 import { useTodosStore } from '../stores/todos.js'
 import { useAuthStore } from '../stores/auth.js'
 import Modal from './Modal.vue'
+import MarkdownRenderer from './MarkdownRenderer.vue'
 
 const todos = useTodosStore()
 const auth  = useAuthStore()

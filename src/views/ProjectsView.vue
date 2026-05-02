@@ -47,7 +47,7 @@
             </div>
             <StatusBadge :status="p.status" />
           </div>
-          <p v-if="p.description" class="text-sm text-mid line-clamp-2">{{ p.description }}</p>
+          <p v-if="p.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(p.description) }}</p>
           <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
             <span class="text-xs text-lo">{{ p.owner_name }}</span>
             <div v-if="auth.isLeiter" class="flex gap-1" @click.stop>
@@ -69,7 +69,7 @@
             <p class="font-semibold text-hi">{{ t.name }}</p>
             <span class="text-xs bg-brand-subtle text-brand-700 rounded-full px-2 py-0.5 shrink-0">Vorlage</span>
           </div>
-          <p v-if="t.description" class="text-sm text-mid line-clamp-2">{{ t.description }}</p>
+          <p v-if="t.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(t.description) }}</p>
           <div class="flex justify-end gap-1 mt-auto pt-2 border-t border-groove" @click.stop>
             <button class="btn btn-sm btn-secondary" @click="openEdit(t)">Bearbeiten</button>
             <button class="btn btn-sm btn-danger" @click="confirmDelete(t)">Löschen</button>
@@ -103,6 +103,11 @@ import { useUsersStore } from '../stores/users.js'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
+import { marked } from 'marked'
+
+function markdownPreview(text) {
+  return marked.parse(text ?? '').replace(/<[^>]*>/g, '')
+}
 
 const auth     = useAuthStore()
 const projects = useProjectsStore()

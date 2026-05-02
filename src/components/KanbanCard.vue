@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <p v-if="task.description" class="mt-1 text-xs text-mid line-clamp-2">{{ task.description }}</p>
+    <p v-if="task.description" class="mt-1 text-xs text-mid line-clamp-2">{{ markdownPreview(task.description) }}</p>
 
     <!-- Sprint badge -->
     <div v-if="task.sprint_name" class="mt-2">
@@ -69,6 +69,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import UserAvatar from './UserAvatar.vue'
+import { marked } from 'marked'
+
+function markdownPreview(text) {
+  return marked.parse(text ?? '').replace(/<[^>]*>/g, '')
+}
 
 const props = defineProps({ task: Object, readonly: Boolean })
 defineEmits(['edit', 'delete'])
