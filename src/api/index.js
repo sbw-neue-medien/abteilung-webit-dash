@@ -13,6 +13,12 @@ async function req(path, options = {}) {
     ...options,
     headers: { ...headers(), ...(options.headers ?? {}) },
   })
+  if (res.status === 401) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    window.location.href = '/login?expired=1'
+    return
+  }
   const data = await res.json()
   if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
   return data
@@ -20,6 +26,7 @@ async function req(path, options = {}) {
 
 export const api = {
   login: (body)                  => req('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+  refreshToken: ()               => req('/auth/refresh', { method: 'POST' }),
   forgotPassword: (body)         => req('/auth/forgot-password', { method: 'POST', body: JSON.stringify(body) }),
   resetPassword: (body)          => req('/auth/reset-password', { method: 'POST', body: JSON.stringify(body) }),
   sendResetEmail: (id)           => req(`/users/${id}/send-reset-email`, { method: 'POST' }),
