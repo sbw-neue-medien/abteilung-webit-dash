@@ -2,6 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
+**Version:** 1.4.0
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -81,6 +82,7 @@ src/
 ## Features
 
 - **Kanban-Board** mit Drag-and-Drop (Offen → In Arbeit → Review → Erledigt)
+- **Kanban-Vorlagen** — Projekte als Vorlage speichern; Tasks werden beim Erstellen eines neuen Projekts übernommen
 - **Sprint-Planung** — wöchentliche Sprints pro Projekt, Filter im Kanban
 - **Zeiterfassung** — Stunden pro Projekt/Aufgabe erfassen
 - **Todos** — einfache Aufgabenliste mit geplantem/effektivem Aufwand
@@ -112,3 +114,24 @@ Das Backend muss separat laufen (siehe `abteilung-webit-api`).
 - Jeder Datensatz-Typ hat einen eigenen Pinia-Store in `src/stores/`
 - Keine TypeScript — plain JavaScript + JSDoc bei Bedarf
 - Tailwind-Tokens: `text-hi`, `text-mid`, `text-lo`, `bg-surface`, `bg-lift`, `ring-line`, `text-brand-*`
+
+---
+
+## Changelog
+
+### 1.4.0
+- Kanban-Vorlagen: Projekte als Vorlage speichern, Tasks beim Erstellen übernehmen
+- Vorlagen-Tab in der Projektliste (nur Leiter)
+
+### 1.3.0
+- Mentor-Rolle: read-only Zugriff auf Lernenden-Daten, Mentor-Zuweisung durch Leiter
+
+### 1.2.0
+- Sprint-Planung mit Kanban-Filter
+- Footer mit konfigurierbaren Links
+
+### 1.1.0
+- Hilfe-Modal für Lernende und Mentoren
+
+### 1.0.0
+- Erstes Release: Kanban-Board, Zeiterfassung, Todos, Rollen
