@@ -40,6 +40,7 @@ export const api = {
     }).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error ?? `HTTP ${r.status}`); return d })
   },
   deleteAvatar: (id)             => req(`/users/${id}/avatar`, { method: 'DELETE' }),
+  getTemplates: ()               => req('/templates'),
   getProjects: ()                => req('/projects'),
   getProject: (id)               => req(`/projects/${id}`),
   createProject: (body)          => req('/projects', { method: 'POST', body: JSON.stringify(body) }),
