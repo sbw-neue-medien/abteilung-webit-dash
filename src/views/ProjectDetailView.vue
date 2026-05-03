@@ -44,11 +44,14 @@
         </button>
       </div>
 
-      <KanbanBoard :tasks="filteredTasks" :readonly="auth.isMentor"
-                   @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
-
-      <div class="mt-8 max-w-7xl mx-auto">
-        <TodoList />
+      <div class="flex flex-col xl:flex-row gap-6 max-w-7xl mx-auto">
+        <div class="flex-1 min-w-0">
+          <KanbanBoard :tasks="filteredTasks" :readonly="auth.isMentor"
+                       @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
+        </div>
+        <div class="xl:w-60 shrink-0">
+          <TodoList />
+        </div>
       </div>
 
       <div v-if="auth.isLeiter && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
