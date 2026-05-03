@@ -49,7 +49,7 @@
           <KanbanBoard :tasks="filteredTasks" :readonly="auth.isMentor"
                        @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
         </div>
-        <div class="xl:w-80 shrink-0">
+        <div class="xl:w-60 shrink-0">
           <TodoList />
         </div>
       </div>
