@@ -45,13 +45,11 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useDarkMode } from '../composables/useDarkMode.js'
 import HelpModal from './HelpModal.vue'
 
 const auth     = useAuthStore()
-const router   = useRouter()
 const { isDark, toggle } = useDarkMode()
 const showHelp = ref(false)
 
@@ -78,6 +76,6 @@ const links = computed(() => {
 
 function logout() {
   auth.logout()
-  router.push('/login')
+  window.location.href = '/login'
 }
 </script>
