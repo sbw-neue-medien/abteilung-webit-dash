@@ -6,7 +6,7 @@
       <UserAvatar :userId="auth.user?.id" :name="auth.user?.name" :hasAvatar="auth.user?.avatar" size="lg" class="w-16 h-16 text-2xl" />
       <div class="flex-1">
         <h2 class="text-xl font-semibold text-hi">{{ auth.user?.name }}</h2>
-        <p class="text-sm text-mid">{{ auth.user?.role === 'leiter' ? 'Abteilungsleiter' : 'Lernender' }}</p>
+        <p class="text-sm text-mid">{{ auth.user?.role === 'leiter' ? 'Abteilungsleiter' : auth.user?.role === 'mentor' ? 'Coach' : 'Lernpartner' }}</p>
       </div>
       <button class="btn-secondary" @click="showPwModal = true">Passwort ändern</button>
     </div>

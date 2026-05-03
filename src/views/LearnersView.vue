@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-hi">Lernende</h1>
+      <h1 class="text-2xl font-bold text-hi">Lernpartner</h1>
       <button v-if="auth.isLeiter" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Lernenden anlegen
+        Lernpartner anlegen
       </button>
     </div>
 
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div v-if="!learners.length" class="col-span-2 text-center py-12 text-lo italic">
-        Noch keine Lernenden erfasst.
+        Noch keine Lernpartner erfasst.
       </div>
     </div>
 
@@ -61,7 +61,7 @@
     <input ref="fileInput" type="file" accept="image/jpeg,image/png,image/webp"
            class="hidden" @change="onFileSelected" />
 
-    <Modal v-model="showModal" :title="editing ? 'Lernenden bearbeiten' : 'Lernenden anlegen'">
+    <Modal v-model="showModal" :title="editing ? 'Lernpartner bearbeiten' : 'Lernpartner anlegen'">
       <UserForm :user="editing" :loading="saving" @submit="save" @cancel="showModal = false" />
       <p v-if="!editing" class="mt-3 text-xs text-lo">
         Beim Anlegen wird automatisch ein Eigenprojekt erstellt.

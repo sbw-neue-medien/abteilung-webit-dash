@@ -25,11 +25,11 @@
     <div class="flex items-center gap-2">
       <input id="is_personal" type="checkbox" v-model="form.is_personal"
              class="rounded border-line text-brand-600" />
-      <label for="is_personal" class="text-sm text-hi cursor-pointer select-none">Eigenprojekt (einem Lernenden zuordnen)</label>
+      <label for="is_personal" class="text-sm text-hi cursor-pointer select-none">Eigenprojekt (einem Lernpartner zuordnen)</label>
     </div>
 
     <div v-if="form.is_personal && users.length">
-      <label class="label">Lernender *</label>
+      <label class="label">Lernpartner *</label>
       <select v-model="form.owner_id" class="input" required>
         <option :value="null">— Bitte wählen —</option>
         <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }}</option>
@@ -37,7 +37,7 @@
     </div>
 
     <div v-if="!form.is_personal && users.length">
-      <label class="label">Lernende zuweisen</label>
+      <label class="label">Lernpartner zuweisen</label>
       <div class="space-y-1 max-h-40 overflow-y-auto border border-line rounded-lg p-2 bg-lift">
         <label v-for="u in users" :key="u.id" class="flex items-center gap-2 text-sm cursor-pointer text-hi">
           <input type="checkbox" :value="u.id" v-model="form.member_ids"

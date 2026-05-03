@@ -14,12 +14,12 @@
 
     <!-- Mentor: assigned learner hours -->
     <section v-if="auth.isMentor && learnerHours.length">
-      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand meiner Lernenden</h2>
+      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand meiner Lernpartner</h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
           <thead class="bg-lift border-b border-line">
             <tr>
-              <th class="px-4 py-3 text-left font-medium text-mid">Lernende/r</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Lernpartner</th>
               <th class="px-4 py-3 text-right font-medium text-mid">Stunden total</th>
               <th class="px-4 py-3 text-right font-medium text-mid">Ausstehend</th>
               <th class="px-4 py-3 w-40"></th>
@@ -134,12 +134,12 @@
 
     <!-- Leiter only: hours per learner -->
     <section v-if="auth.isLeiter && learnerHours.length">
-      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand pro Lernende</h2>
+      <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand pro Lernpartner</h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
           <thead class="bg-lift border-b border-line">
             <tr>
-              <th class="px-4 py-3 text-left font-medium text-mid">Lernende/r</th>
+              <th class="px-4 py-3 text-left font-medium text-mid">Lernpartner</th>
               <th class="px-4 py-3 text-right font-medium text-mid">Stunden total</th>
               <th class="px-4 py-3 text-right font-medium text-mid">Ausstehend</th>
               <th class="px-4 py-3 w-40"></th>
@@ -187,7 +187,7 @@
 
     <section>
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">
-        {{ auth.isLeiter ? 'Projektübersicht' : auth.isMentor ? 'Projekte meiner Lernenden' : 'Meine Projekte' }}
+        {{ auth.isLeiter ? 'Projektübersicht' : auth.isMentor ? 'Projekte meiner Lernpartner' : 'Meine Projekte' }}
       </h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">

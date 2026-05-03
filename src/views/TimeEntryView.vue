@@ -14,7 +14,7 @@
       <div><label class="label">Von</label><input v-model="filter.from" type="date" class="input w-40" /></div>
       <div><label class="label">Bis</label><input v-model="filter.to" type="date" class="input w-40" /></div>
       <div v-if="auth.isLeiter || auth.isMentor">
-        <label class="label">Lernender</label>
+        <label class="label">Lernpartner</label>
         <select v-model="filter.user_id" class="input w-48">
           <option value="">Alle</option>
           <option v-for="u in learners" :key="u.id" :value="u.id">{{ u.name }}</option>
