@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-hi">Mentoren</h1>
+      <h1 class="text-2xl font-bold text-hi">Coaches</h1>
       <button class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Mentor anlegen
+        Coach anlegen
       </button>
     </div>
 
@@ -23,7 +23,7 @@
 
         <!-- Assigned learners -->
         <div>
-          <p class="text-xs font-medium text-lo uppercase tracking-wide mb-1">Zugewiesene Lernende</p>
+          <p class="text-xs font-medium text-lo uppercase tracking-wide mb-1">Zugewiesene Lernpartner</p>
           <div v-if="!assignments[m.id]?.length" class="text-xs text-lo italic">Keine zugewiesen</div>
           <div v-else class="flex flex-wrap gap-1">
             <span v-for="l in assignments[m.id]" :key="l.id"
@@ -37,7 +37,7 @@
         <!-- Assign learner -->
         <div class="flex gap-2 items-center">
           <select v-model="assignTarget[m.id]" class="input flex-1 text-sm py-1">
-            <option value="">Lernenden zuweisen…</option>
+            <option value="">Lernpartner zuweisen…</option>
             <option v-for="l in unassignedFor(m)" :key="l.id" :value="l.id">{{ l.name }}</option>
           </select>
           <button class="btn btn-sm btn-secondary" :disabled="!assignTarget[m.id]"
@@ -55,11 +55,11 @@
       </div>
 
       <div v-if="!mentors.length" class="col-span-3 text-center py-12 text-lo italic">
-        Noch keine Mentoren erfasst.
+        Noch keine Coaches erfasst.
       </div>
     </div>
 
-    <Modal v-model="showModal" :title="editing ? 'Mentor bearbeiten' : 'Mentor anlegen'">
+    <Modal v-model="showModal" :title="editing ? 'Coach bearbeiten' : 'Coach anlegen'">
       <MentorForm :mentor="editing" :loading="saving" @submit="save" @cancel="showModal = false" />
     </Modal>
   </div>
@@ -118,7 +118,7 @@ async function save(body) {
 }
 
 async function remove(m) {
-  if (!confirm(`Mentor „${m.name}" wirklich löschen?`)) return
+  if (!confirm(`Coach „${m.name}" wirklich löschen?`)) return
   await api.deleteMentor(m.id)
   await fetchMentors()
 }

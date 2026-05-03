@@ -61,7 +61,7 @@ const links = computed(() => {
       { to: '/',              label: 'Dashboard' },
       { to: '/projekte',      label: 'Projekte' },
       { to: '/zeiterfassung', label: 'Zeiterfassung' },
-      { to: '/lernende',      label: 'Lernende' },
+      { to: '/lernende',      label: 'Lernpartner' },
     ]
   }
   const base = [
@@ -71,8 +71,8 @@ const links = computed(() => {
     { to: '/mein-bereich',  label: 'Mein Bereich' },
   ]
   if (auth.isLeiter) base.push({ to: '/sprints', label: 'Sprints' })
-  if (auth.isLeiter) base.push({ to: '/lernende', label: 'Lernende' })
-  if (auth.isLeiter) base.push({ to: '/mentoren', label: 'Mentoren' })
+  if (auth.isLeiter) base.push({ to: '/lernende', label: 'Lernpartner' })
+  if (auth.isLeiter) base.push({ to: '/mentoren', label: 'Coaches' })
   return base
 })
 

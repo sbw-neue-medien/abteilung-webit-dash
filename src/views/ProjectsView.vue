@@ -36,7 +36,7 @@
         <select v-if="auth.isLeiter && lernende.length"
                 v-model="learnerFilter"
                 class="ml-auto input py-1 text-sm w-auto">
-          <option :value="null">Alle Lernenden</option>
+          <option :value="null">Alle Lernpartner</option>
           <option v-for="u in lernende" :key="u.id" :value="u.id">{{ u.name }}</option>
         </select>
       </div>
