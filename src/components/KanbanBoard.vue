@@ -1,7 +1,7 @@
 <template>
   <div class="flex gap-4 overflow-x-auto pb-4 min-h-[60vh]">
     <div v-for="col in columns" :key="col.status"
-      class="flex-shrink-0 w-72 flex flex-col gap-2"
+      class="flex-shrink-0 w-60 flex flex-col gap-2"
       @dragover.prevent
       @dragenter.prevent="onDragEnter(col.status)"
       @dragleave="dragOver = null"
