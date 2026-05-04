@@ -71,6 +71,7 @@ const links = computed(() => {
   if (auth.isLeiter) base.push({ to: '/sprints', label: 'Sprints' })
   if (auth.isLeiter) base.push({ to: '/lernende', label: 'Lernpartner' })
   if (auth.isLeiter) base.push({ to: '/mentoren', label: 'Coaches' })
+  if (auth.isLeiter) base.push({ to: '/werkstatt', label: 'Werkstatt' })
   return base
 })
 
