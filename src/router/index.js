@@ -11,6 +11,7 @@ const routes = [
   { path: '/sprints',      name: 'sprints',  component: () => import('../views/SprintsView.vue'),     meta: { leiter: true } },
   { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { leiterOrMentor: true } },
   { path: '/mentoren',     name: 'mentors',  component: () => import('../views/MentorsView.vue'),     meta: { leiter: true } },
+  { path: '/werkstatt',   name: 'werkstatt', component: () => import('../views/WerkstattView.vue'),  meta: { leiter: true } },
   { path: '/mein-bereich', name: 'my-area',  component: () => import('../views/MyAreaView.vue') },
 ]
 
