@@ -92,12 +92,34 @@
             <option v-for="m in projects.current.members" :key="m.id" :value="m.id">{{ m.name }}</option>
           </select>
         </div>
+        <div v-if="!editingTask">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" v-model="isSerie" class="rounded" />
+            <span class="label mb-0">Serienbuchung (über mehrere Sprints)</span>
+          </label>
+        </div>
         <div>
-          <label class="label">Sprint</label>
-          <select v-model="taskForm.sprint_id" class="input">
+          <label class="label">{{ isSerie && !editingTask ? 'Sprints' : 'Sprint' }}</label>
+          <select v-if="!isSerie || editingTask" v-model="taskForm.sprint_id" class="input">
             <option :value="null">— Kein Sprint (Backlog) —</option>
             <option v-for="s in sprints.list" :key="s.id" :value="s.id">{{ s.name }}</option>
           </select>
+          <template v-else>
+            <div class="border border-groove rounded-lg p-2 bg-surface max-h-44 overflow-y-auto space-y-1">
+              <label v-for="s in sprints.list" :key="s.id"
+                     class="flex items-center gap-2 cursor-pointer py-1 px-1 rounded hover:bg-lift">
+                <input type="checkbox" :value="s.id" v-model="serieSprintIds" class="rounded shrink-0" />
+                <span class="text-sm text-hi">{{ s.name }}</span>
+              </label>
+              <p v-if="!sprints.list.length" class="text-sm text-lo italic px-1">Keine Sprints vorhanden.</p>
+            </div>
+            <p v-if="serieSprintIds.length === 0" class="text-xs text-amber-600 mt-1">
+              Bitte mindestens einen Sprint auswählen.
+            </p>
+            <p v-else class="text-xs text-lo mt-1">
+              {{ serieSprintIds.length }} Sprint(s) ausgewählt — es werden {{ serieSprintIds.length }} Aufgaben erstellt.
+            </p>
+          </template>
         </div>
         <div>
           <label class="label">Geplante Zeit (Minuten)</label>
@@ -106,7 +128,12 @@
         </div>
         <div class="flex gap-2 justify-end pt-2">
           <button type="button" class="btn-secondary" @click="showTaskModal = false">Abbrechen</button>
-          <button type="submit" class="btn-primary">{{ editingTask ? 'Aktualisieren' : 'Erstellen' }}</button>
+          <button type="submit" class="btn-primary"
+                  :disabled="isSerie && !editingTask && serieSprintIds.length === 0">
+            <template v-if="editingTask">Aktualisieren</template>
+            <template v-else-if="isSerie && serieSprintIds.length > 1">{{ serieSprintIds.length }} Aufgaben erstellen</template>
+            <template v-else>Erstellen</template>
+          </button>
         </div>
       </form>
     </Modal>
@@ -127,6 +154,7 @@ import { useTasksStore } from '../stores/tasks.js'
 import { useUsersStore } from '../stores/users.js'
 import { useTodosStore } from '../stores/todos.js'
 import { useSprintsStore } from '../stores/sprints.js'
+import { api } from '../api/index.js'
 import KanbanBoard from '../components/KanbanBoard.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
@@ -142,13 +170,15 @@ const todos      = useTodosStore()
 const sprints    = useSprintsStore()
 const usersStore = useUsersStore()
 
-const showTaskModal = ref(false)
-const showEdit      = ref(false)
-const editingTask   = ref(null)
-const saving        = ref(false)
-const allUsers      = ref([])
-const sprintFilter  = ref(null)
-const taskForm      = ref({
+const showTaskModal  = ref(false)
+const showEdit       = ref(false)
+const editingTask    = ref(null)
+const saving         = ref(false)
+const allUsers       = ref([])
+const sprintFilter   = ref(null)
+const isSerie        = ref(false)
+const serieSprintIds = ref([])
+const taskForm       = ref({
   title: '', description: '', status: 'offen',
   assignee_id: null, sprint_id: null, planned_duration_min: null,
 })
@@ -174,9 +204,11 @@ onMounted(async () => {
 })
 
 function addTask(status) {
-  editingTask.value   = null
-  taskForm.value      = { title: '', description: '', status, assignee_id: null, sprint_id: null, planned_duration_min: null }
-  showTaskModal.value = true
+  editingTask.value    = null
+  isSerie.value        = false
+  serieSprintIds.value = []
+  taskForm.value       = { title: '', description: '', status, assignee_id: null, sprint_id: null, planned_duration_min: null }
+  showTaskModal.value  = true
 }
 
 function openEditTask(task) {
@@ -195,8 +227,16 @@ function openEditTask(task) {
 async function saveTask() {
   const payload = { ...taskForm.value }
   if (!payload.planned_duration_min) payload.planned_duration_min = null
-  if (editingTask.value) await tasks.update(editingTask.value.id, payload)
-  else                   await tasks.create(payload)
+  if (editingTask.value) {
+    await tasks.update(editingTask.value.id, payload)
+  } else if (isSerie.value && serieSprintIds.value.length > 0) {
+    await Promise.all(
+      serieSprintIds.value.map(sprintId => api.createTask(tasks.projectId, { ...payload, sprint_id: sprintId }))
+    )
+    await tasks.fetchForProject(tasks.projectId)
+  } else {
+    await tasks.create(payload)
+  }
   showTaskModal.value = false
 }
 
