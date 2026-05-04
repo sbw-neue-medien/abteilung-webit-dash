@@ -47,7 +47,7 @@
       <div class="flex flex-col xl:flex-row gap-6 max-w-7xl mx-auto">
         <div class="flex-1 min-w-0">
           <KanbanBoard :tasks="filteredTasks" :readonly="auth.isMentor"
-                       @move="moveTask" @add="addTask" @edit="openEditTask" @delete="deleteTask" />
+                       @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
         </div>
         <div class="xl:w-60 shrink-0">
           <TodoList />
@@ -209,6 +209,21 @@ function addTask(status) {
   serieSprintIds.value = []
   taskForm.value       = { title: '', description: '', status, assignee_id: null, sprint_id: null, planned_duration_min: null }
   showTaskModal.value  = true
+}
+
+function duplicateTask(task) {
+  editingTask.value    = null
+  isSerie.value        = false
+  serieSprintIds.value = []
+  taskForm.value       = {
+    title:                task.title,
+    description:          task.description ?? '',
+    status:               task.status,
+    assignee_id:          null,
+    sprint_id:            task.sprint_id   ?? null,
+    planned_duration_min: task.planned_duration_min ?? null,
+  }
+  showTaskModal.value = true
 }
 
 function openEditTask(task) {

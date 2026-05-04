@@ -30,6 +30,7 @@
           :key="task.id"
           :task="task"
           :readonly="readonly"
+          @duplicate="$emit('duplicate', $event)"
           @edit="$emit('edit', $event)"
           @delete="$emit('delete', $event)"
         />
@@ -47,7 +48,7 @@ import { ref } from 'vue'
 import KanbanCard from './KanbanCard.vue'
 
 const props = defineProps({ tasks: Array, readonly: Boolean })
-const emit  = defineEmits(['move', 'add', 'edit', 'delete'])
+const emit  = defineEmits(['move', 'add', 'duplicate', 'edit', 'delete'])
 
 const columns = [
   { status: 'offen',     label: 'Offen',    dot: 'bg-lo' },
