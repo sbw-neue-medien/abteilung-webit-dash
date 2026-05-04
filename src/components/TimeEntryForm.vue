@@ -50,7 +50,7 @@ const props = defineProps({ projects: Array, entry: Object, loading: Boolean })
 const emit  = defineEmits(['submit', 'cancel'])
 
 const today       = new Date().toISOString().slice(0, 10)
-const DEFAULT_MIN = 215
+const DEFAULT_MIN = 15
 
 const form         = ref({ date: today, project_id: '', task_id: null, description: '' })
 const hours        = ref(Math.floor(DEFAULT_MIN / 60))
