@@ -90,7 +90,7 @@
     <Modal v-model="showModal" :title="modalTitle">
       <ProjectForm
         :project="editing"
-        :users="users.list.filter(u => u.role === 'lernender')"
+        :users="users.list.filter(u => u.role === 'lernender' && u.active)"
         :templates="activeTab === 'projekte' ? projects.templates : []"
         :loading="saving"
         @submit="save"
@@ -141,7 +141,7 @@ const filters = [
 ]
 
 const lernende = computed(() =>
-  users.list.filter(u => u.role === 'lernender').sort((a, b) => a.name.localeCompare(b.name))
+  users.list.filter(u => u.role === 'lernender' && u.active).sort((a, b) => a.name.localeCompare(b.name))
 )
 
 const filtered = computed(() => {

@@ -125,7 +125,7 @@ const monday     = (() => { const d = new Date(); const day = d.getDay() || 7; d
 
 const filter   = ref({ from: monday, to: today, user_id: '', project_id: '' })
 const entries  = computed(() => timeStore.list)
-const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender'))
+const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender' && u.active))
 const totalMin = computed(() => entries.value.reduce((s, e) => s + Number(e.duration_min), 0))
 const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.date)).size; return days ? Math.round(totalMin.value / days) : 0 })
 

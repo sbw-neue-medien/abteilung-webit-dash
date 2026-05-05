@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.5.0
+**Version:** 1.5.3
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -43,6 +43,7 @@ src/
 │   ├── MentorForm.vue
 │   ├── Modal.vue
 │   ├── NavBar.vue
+│   ├── LearnerCard.vue
 │   ├── ProjectForm.vue
 │   ├── SprintPanel.vue
 │   ├── StatusBadge.vue
@@ -68,7 +69,8 @@ src/
 │   ├── ProjectDetailView.vue
 │   ├── ProjectsView.vue
 │   ├── SprintsView.vue
-│   └── TimeEntryView.vue
+│   ├── TimeEntryView.vue
+│   └── WerkstattView.vue
 └── router/       # Route-Definitionen
 ```
 
@@ -88,6 +90,7 @@ src/
 | `/sprints` | Sprint-Verwaltung | nur Leiter |
 | `/lernende` | Lernpartner verwalten | Leiter (voll), Coach (read-only) |
 | `/mentoren` | Coaches verwalten + Zuweisung | nur Leiter |
+| `/werkstatt` | Werkstatt-Übersicht (Stunden, Projekte, Sprint-Tasks pro Lernpartner) | nur Leiter |
 
 ---
 
@@ -102,6 +105,8 @@ src/
 - **Passwort-Reset** — per E-Mail anfordern und setzen
 - **Avatar-Upload** — Profilbild pro Benutzer
 - **E-Mail-Benachrichtigungen** — Leiter kann Benachrichtigungen bei Review-Aufgaben aktivieren
+- **Lernpartner deaktivieren** — Leiter kann Lernpartner inaktiv setzen (kein Login, aus allen Auswahllisten ausgeblendet, Eigenprojekte auf pausiert gesetzt); Reaktivierung jederzeit möglich
+- **Werkstatt-Übersicht** — tabellarische Übersicht pro Lernpartner: aktive Projekte, Sprint-Tasks, Stunden (aktueller Sprint oder Datumsbereich)
 - **Dark Mode** — System-/manuelles Umschalten
 - **Footer-Links** — konfigurierbare Links (verwaltet durch Leiter)
 - **Rollen** — drei Rollen mit abgestuftem Zugriff:
@@ -136,6 +141,12 @@ Das Backend muss separat laufen (siehe `abteilung-webit-api`).
 ---
 
 ## Changelog
+
+### 1.5.3
+- Lernpartner deaktivieren: Leiter kann Aktiv-Checkbox pro Lernpartner setzen
+- Inaktive Lernpartner: kein Login, aus allen Auswahllisten ausgeblendet, Eigenprojekte werden auf pausiert gesetzt
+- Lernenden-Verwaltung: aktive Lernpartner oben, inaktive separat gruppiert mit Reaktivierungs-Checkbox
+- Dashboard, Werkstatt-Übersicht: inaktive Lernpartner ausgeblendet
 
 ### 1.5.0
 - E-Mail-Benachrichtigungen: Toggle im Leiter-Profil bei Review-Aufgaben

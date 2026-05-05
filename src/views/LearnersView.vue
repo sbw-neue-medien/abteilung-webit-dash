@@ -11,51 +11,31 @@
     </div>
 
     <div v-if="users.loading" class="text-center py-12 text-lo italic">Laden…</div>
-    <div v-else class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-      <div v-for="u in learners" :key="u.id" class="card flex flex-col gap-3">
-
-        <!-- Top row: avatar + name/email -->
-        <div class="flex items-center gap-4">
-          <!-- Avatar: clickable for leiter, static for mentor -->
-          <div v-if="auth.isLeiter" class="relative shrink-0 group cursor-pointer" @click="triggerUpload(u)">
-            <UserAvatar :userId="u.id" :name="u.name" :hasAvatar="u.avatar" size="lg" />
-            <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100
-                        transition-opacity flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-            </div>
-          </div>
-          <div v-else class="shrink-0">
-            <UserAvatar :userId="u.id" :name="u.name" :hasAvatar="u.avatar" size="lg" />
-          </div>
-
-          <div class="flex-1 min-w-0">
-            <p class="font-semibold text-hi">{{ u.name }}</p>
-            <p class="text-xs text-lo mt-0.5">{{ u.email || u.username }}</p>
-            <button v-if="auth.isLeiter && u.avatar" @click.stop="removeAvatar(u)"
-                    class="text-xs text-red-500 hover:underline mt-0.5">
-              Foto entfernen
-            </button>
-          </div>
+    <template v-else>
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div v-for="u in activeLearners" :key="u.id" class="card flex flex-col gap-3">
+          <LearnerCard :u="u" :auth="auth"
+            @triggerUpload="triggerUpload" @removeAvatar="removeAvatar"
+            @sendReset="sendReset" @edit="openEdit" @remove="remove"
+            @toggleActive="handleToggleActive" />
         </div>
-
-        <!-- Bottom row: buttons (leiter only) -->
-        <div v-if="auth.isLeiter" class="flex gap-1 flex-wrap">
-          <button v-if="u.email" class="btn btn-sm btn-secondary" @click="sendReset(u)"
-                  title="Passwort-Reset-E-Mail senden">
-            Reset-E-Mail
-          </button>
-          <button class="btn btn-sm btn-secondary" @click="openEdit(u)">Bearbeiten</button>
-          <button class="btn btn-sm btn-danger" @click="remove(u)">Löschen</button>
+        <div v-if="!activeLearners.length" class="col-span-3 text-center py-12 text-lo italic">
+          Noch keine Lernpartner erfasst.
         </div>
       </div>
-      <div v-if="!learners.length" class="col-span-2 text-center py-12 text-lo italic">
-        Noch keine Lernpartner erfasst.
-      </div>
-    </div>
+
+      <template v-if="inactiveLearners.length">
+        <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mt-8 mb-3">Inaktive Lernpartner</h2>
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div v-for="u in inactiveLearners" :key="u.id" class="card flex flex-col gap-3 opacity-60">
+            <LearnerCard :u="u" :auth="auth"
+              @triggerUpload="triggerUpload" @removeAvatar="removeAvatar"
+              @sendReset="sendReset" @edit="openEdit" @remove="remove"
+              @toggleActive="handleToggleActive" />
+          </div>
+        </div>
+      </template>
+    </template>
 
     <!-- Hidden file input -->
     <input ref="fileInput" type="file" accept="image/jpeg,image/png,image/webp"
@@ -77,7 +57,7 @@ import { useUsersStore } from '../stores/users.js'
 import { api } from '../api/index.js'
 import Modal from '../components/Modal.vue'
 import UserForm from '../components/UserForm.vue'
-import UserAvatar from '../components/UserAvatar.vue'
+import LearnerCard from '../components/LearnerCard.vue'
 
 const auth      = useAuthStore()
 const users     = useUsersStore()
@@ -87,7 +67,8 @@ const saving    = ref(false)
 const fileInput = ref(null)
 const uploading = ref(null)
 
-const learners = computed(() => users.list.filter(u => u.role === 'lernender'))
+const activeLearners   = computed(() => users.list.filter(u => u.role === 'lernender' && u.active))
+const inactiveLearners = computed(() => users.list.filter(u => u.role === 'lernender' && !u.active))
 
 onMounted(() => users.fetchAll())
 
@@ -136,6 +117,11 @@ async function sendReset(u) {
   } catch (err) {
     alert(err.message)
   }
+}
+
+async function handleToggleActive(u, active) {
+  if (!active && !confirm(`„${u.name}" deaktivieren? Die Person kann sich danach nicht mehr einloggen.`)) return
+  await users.toggleActive(u.id, active)
 }
 
 async function remove(u) {

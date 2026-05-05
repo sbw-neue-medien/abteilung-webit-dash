@@ -83,7 +83,7 @@ const showModal   = ref(false)
 const editing     = ref(null)
 const saving      = ref(false)
 
-const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender'))
+const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender' && u.active))
 
 function unassignedFor(mentor) {
   const assigned = (assignments[mentor.id] ?? []).map(l => l.id)
