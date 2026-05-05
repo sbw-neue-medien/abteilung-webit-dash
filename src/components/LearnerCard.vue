@@ -2,7 +2,7 @@
   <div>
     <!-- Top row: avatar + name/email -->
     <div class="flex items-center gap-4">
-      <div v-if="auth.isLeiter && !inactive" class="relative shrink-0 group cursor-pointer" @click="$emit('triggerUpload', u)">
+      <div v-if="auth.isLeiter && u.active" class="relative shrink-0 group cursor-pointer" @click="$emit('triggerUpload', u)">
         <UserAvatar :userId="u.id" :name="u.name" :hasAvatar="u.avatar" size="lg" />
         <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100
                     transition-opacity flex items-center justify-center">
@@ -18,15 +18,9 @@
       </div>
 
       <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2">
-          <p class="font-semibold text-hi">{{ u.name }}</p>
-          <span v-if="inactive"
-                class="text-xs bg-surface border border-groove text-lo rounded-full px-2 py-0.5">
-            Inaktiv
-          </span>
-        </div>
+        <p class="font-semibold text-hi">{{ u.name }}</p>
         <p class="text-xs text-lo mt-0.5">{{ u.email || u.username }}</p>
-        <button v-if="auth.isLeiter && u.avatar && !inactive" @click.stop="$emit('removeAvatar', u)"
+        <button v-if="auth.isLeiter && u.avatar && u.active" @click.stop="$emit('removeAvatar', u)"
                 class="text-xs text-red-500 hover:underline mt-0.5">
           Foto entfernen
         </button>
@@ -34,19 +28,19 @@
     </div>
 
     <!-- Bottom row: buttons (leiter only) -->
-    <div v-if="auth.isLeiter" class="flex gap-1 flex-wrap mt-3">
-      <template v-if="inactive">
-        <button class="btn btn-sm btn-secondary" @click="$emit('activate', u)">Aktivieren</button>
-      </template>
-      <template v-else>
-        <button v-if="u.email" class="btn btn-sm btn-secondary" @click="$emit('sendReset', u)"
-                title="Passwort-Reset-E-Mail senden">
-          Reset-E-Mail
-        </button>
-        <button class="btn btn-sm btn-secondary" @click="$emit('edit', u)">Bearbeiten</button>
-        <button class="btn btn-sm btn-secondary" @click="$emit('deactivate', u)">Deaktivieren</button>
-        <button class="btn btn-sm btn-danger" @click="$emit('remove', u)">Löschen</button>
-      </template>
+    <div v-if="auth.isLeiter" class="flex gap-1 flex-wrap items-center mt-3">
+      <button v-if="u.email && u.active" class="btn btn-sm btn-secondary" @click="$emit('sendReset', u)"
+              title="Passwort-Reset-E-Mail senden">
+        Reset-E-Mail
+      </button>
+      <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('edit', u)">Bearbeiten</button>
+      <button v-if="u.active" class="btn btn-sm btn-danger" @click="$emit('remove', u)">Löschen</button>
+      <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer ml-auto select-none">
+        <input type="checkbox" :checked="!!u.active"
+               class="rounded border-line text-brand-600"
+               @change="$emit('toggleActive', u, $event.target.checked)" />
+        Aktiv
+      </label>
     </div>
   </div>
 </template>
@@ -55,9 +49,8 @@
 import UserAvatar from './UserAvatar.vue'
 
 defineProps({
-  u:        { type: Object, required: true },
-  auth:     { type: Object, required: true },
-  inactive: { type: Boolean, default: false },
+  u:    { type: Object, required: true },
+  auth: { type: Object, required: true },
 })
-defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'remove', 'deactivate', 'activate'])
+defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'remove', 'toggleActive'])
 </script>

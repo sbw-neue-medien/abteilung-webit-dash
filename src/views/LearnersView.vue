@@ -17,7 +17,7 @@
           <LearnerCard :u="u" :auth="auth"
             @triggerUpload="triggerUpload" @removeAvatar="removeAvatar"
             @sendReset="sendReset" @edit="openEdit" @remove="remove"
-            @deactivate="deactivate" />
+            @toggleActive="handleToggleActive" />
         </div>
         <div v-if="!activeLearners.length" class="col-span-3 text-center py-12 text-lo italic">
           Noch keine Lernpartner erfasst.
@@ -28,10 +28,10 @@
         <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mt-8 mb-3">Inaktive Lernpartner</h2>
         <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
           <div v-for="u in inactiveLearners" :key="u.id" class="card flex flex-col gap-3 opacity-60">
-            <LearnerCard :u="u" :auth="auth" :inactive="true"
+            <LearnerCard :u="u" :auth="auth"
               @triggerUpload="triggerUpload" @removeAvatar="removeAvatar"
               @sendReset="sendReset" @edit="openEdit" @remove="remove"
-              @activate="activate" />
+              @toggleActive="handleToggleActive" />
           </div>
         </div>
       </template>
@@ -119,13 +119,9 @@ async function sendReset(u) {
   }
 }
 
-async function deactivate(u) {
-  if (!confirm(`„${u.name}" deaktivieren? Die Person kann sich danach nicht mehr einloggen.`)) return
-  await users.toggleActive(u.id, false)
-}
-
-async function activate(u) {
-  await users.toggleActive(u.id, true)
+async function handleToggleActive(u, active) {
+  if (!active && !confirm(`„${u.name}" deaktivieren? Die Person kann sich danach nicht mehr einloggen.`)) return
+  await users.toggleActive(u.id, active)
 }
 
 async function remove(u) {
