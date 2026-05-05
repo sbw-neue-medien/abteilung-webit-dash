@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.5.3
+**Version:** 1.6.0
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -42,8 +42,9 @@ src/
 │   ├── MarkdownRenderer.vue
 │   ├── MentorForm.vue
 │   ├── Modal.vue
-│   ├── NavBar.vue
 │   ├── LearnerCard.vue
+│   ├── SideBar.vue
+│   ├── TopBar.vue
 │   ├── ProjectForm.vue
 │   ├── SprintPanel.vue
 │   ├── StatusBadge.vue
@@ -71,6 +72,9 @@ src/
 │   ├── SprintsView.vue
 │   ├── TimeEntryView.vue
 │   └── WerkstattView.vue
+├── composables/  # Wiederverwendbare Composition-Funktionen
+│   ├── useDarkMode.js
+│   └── useNavLinks.js
 └── router/       # Route-Definitionen
 ```
 
@@ -141,6 +145,14 @@ Das Backend muss separat laufen (siehe `abteilung-webit-api`).
 ---
 
 ## Changelog
+
+### 1.6.0
+- Dashboard-Layout: kollabierbare Sidebar-Navigation ersetzt die Top-Navigationsbar
+- Sidebar: Icon + Label (expanded) / nur Icon mit Tooltip (collapsed), Zustand in localStorage
+- TopBar: Logo, Werkstatt-Link (Leiter), Dark-Mode, Hilfe, Username, Logout
+- Werkstatt-Link aus Sidebar in TopBar verschoben (Leiter-only)
+- Mobile: Icon-Only Bottom-Navigation statt Sidebar (`sm:hidden`)
+- `useNavLinks.js`: geteiltes Composable für Sidebar und Bottom-Nav
 
 ### 1.5.3
 - Lernpartner deaktivieren: Leiter kann Aktiv-Checkbox pro Lernpartner setzen
