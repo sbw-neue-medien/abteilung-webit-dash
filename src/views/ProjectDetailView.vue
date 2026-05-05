@@ -199,7 +199,7 @@ onMounted(async () => {
   ])
   if (auth.isLeiter) {
     await usersStore.fetchAll()
-    allUsers.value = usersStore.list.filter(u => u.role === 'lernender')
+    allUsers.value = usersStore.list.filter(u => u.role === 'lernender' && u.active)
   }
 })
 

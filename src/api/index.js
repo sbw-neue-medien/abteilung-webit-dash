@@ -36,6 +36,7 @@ export const api = {
   updateUser: (id, body)         => req(`/users/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   changePassword: (id, body)    => req(`/users/${id}/password`, { method: 'PATCH', body: JSON.stringify(body) }),
   deleteUser: (id)               => req(`/users/${id}`, { method: 'DELETE' }),
+  setUserActive: (id, active)    => req(`/users/${id}/active`, { method: 'PATCH', body: JSON.stringify({ active }) }),
   uploadAvatar: (id, file)       => {
     const f = new FormData()
     f.append('avatar', file)
