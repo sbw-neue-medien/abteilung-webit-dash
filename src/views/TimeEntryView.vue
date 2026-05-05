@@ -11,8 +11,8 @@
     </div>
 
     <div class="card flex flex-wrap gap-4 items-end">
-      <div><label class="label">Von</label><input v-model="filter.from" type="date" class="input w-40" /></div>
-      <div><label class="label">Bis</label><input v-model="filter.to" type="date" class="input w-40" /></div>
+      <div><label class="label">Von</label><input v-model="filter.from" type="date" class="input w-24 md:w-40" /></div>
+      <div><label class="label">Bis</label><input v-model="filter.to" type="date" class="input w-24 md:w-40" /></div>
       <div v-if="auth.isLeiter || auth.isMentor">
         <label class="label">Lernpartner</label>
         <select v-model="filter.user_id" class="input w-48">
