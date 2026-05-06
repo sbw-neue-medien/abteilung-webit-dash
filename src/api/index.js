@@ -27,6 +27,7 @@ async function req(path, options = {}) {
 export const api = {
   login: (body)                  => req('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
   refreshToken: ()               => req('/auth/refresh', { method: 'POST' }),
+  getMyPermissions: ()           => req('/auth/permissions'),
   forgotPassword: (body)         => req('/auth/forgot-password', { method: 'POST', body: JSON.stringify(body) }),
   resetPassword: (body)          => req('/auth/reset-password', { method: 'POST', body: JSON.stringify(body) }),
   sendResetEmail: (id)           => req(`/users/${id}/send-reset-email`, { method: 'POST' }),

@@ -124,6 +124,7 @@ watch(() => props.modelValue, async (open) => {
     if (p.override !== null) overrides.value[p.key] = p.override ? '1' : '0'
   }
   loading.value = false
+}, { immediate: true })
 })
 
 function setOverride(key, value) {
