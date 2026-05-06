@@ -50,11 +50,22 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('token'))
   const user  = ref(JSON.parse(localStorage.getItem('user') ?? 'null'))
 
+  // Effective permissions fetched from API; falls back to role map until loaded
+  const storedPerms = localStorage.getItem('permissions')
+  const permissions = ref(
+    storedPerms ? new Set(JSON.parse(storedPerms)) : ROLE_PERMISSIONS[user.value?.role] ?? new Set()
+  )
+
   const isLoggedIn = computed(() => !!token.value)
   const isLeiter   = computed(() => user.value?.role === 'leiter')
   const isMentor   = computed(() => user.value?.role === 'mentor')
 
-  const can = (permission) => ROLE_PERMISSIONS[user.value?.role]?.has(permission) ?? false
+  const can = (permission) => permissions.value.has(permission)
+
+  function setPermissions(list) {
+    permissions.value = new Set(list)
+    localStorage.setItem('permissions', JSON.stringify(list))
+  }
 
   let refreshTimer = null
 
@@ -68,6 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
           const res = await api.refreshToken()
           token.value = res.token
           localStorage.setItem('token', res.token)
+          if (res.permissions) setPermissions(res.permissions)
         } catch { /* 401 wird von req() behandelt */ }
       }
     }, 5 * 60 * 1000)
@@ -84,6 +96,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value  = data.user
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
+    setPermissions(data.permissions ?? [])
     startRefreshInterval()
   }
 
@@ -91,11 +104,17 @@ export const useAuthStore = defineStore('auth', () => {
     stopRefreshInterval()
     token.value = null
     user.value  = null
+    permissions.value = new Set()
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    localStorage.removeItem('permissions')
   }
 
-  if (token.value) startRefreshInterval()
+  // Hydrate permissions from API on page load (ensures overrides are reflected)
+  if (token.value) {
+    startRefreshInterval()
+    api.getMyPermissions().then(data => setPermissions(data.permissions)).catch(() => {})
+  }
 
   return { token, user, isLoggedIn, isLeiter, isMentor, can, login, logout }
 })
