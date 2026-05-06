@@ -54,24 +54,16 @@ const { isDark, toggle } = useDarkMode()
 const showHelp = ref(false)
 
 const links = computed(() => {
-  if (auth.isMentor) {
-    return [
-      { to: '/',              label: 'Dashboard' },
-      { to: '/projekte',      label: 'Projekte' },
-      { to: '/zeiterfassung', label: 'Zeiterfassung' },
-      { to: '/lernende',      label: 'Lernpartner' },
-    ]
-  }
   const base = [
     { to: '/',              label: 'Dashboard' },
     { to: '/projekte',      label: 'Projekte' },
     { to: '/zeiterfassung', label: 'Zeiterfassung' },
-    { to: '/mein-bereich',  label: 'Mein Bereich' },
   ]
-  if (auth.isLeiter) base.push({ to: '/sprints', label: 'Sprints' })
-  if (auth.isLeiter) base.push({ to: '/lernende', label: 'Lernpartner' })
-  if (auth.isLeiter) base.push({ to: '/mentoren', label: 'Coaches' })
-  if (auth.isLeiter) base.push({ to: '/werkstatt', label: 'Werkstatt' })
+  if (!auth.isMentor)             base.push({ to: '/mein-bereich',  label: 'Mein Bereich' })
+  if (auth.can('sprints.manage')) base.push({ to: '/sprints',       label: 'Sprints' })
+  if (auth.can('users.list'))     base.push({ to: '/lernende',      label: 'Lernpartner' })
+  if (auth.can('mentors.manage')) base.push({ to: '/mentoren',      label: 'Coaches' })
+  if (auth.can('werkstatt.view')) base.push({ to: '/werkstatt',     label: 'Werkstatt' })
   return base
 })
 

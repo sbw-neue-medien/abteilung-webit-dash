@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold text-hi">Projekte</h1>
-      <button v-if="auth.isLeiter" class="btn-primary" @click="openCreate">
+      <button v-if="auth.can('projects.create')" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -10,7 +10,7 @@
       </button>
     </div>
 
-    <div v-if="auth.isLeiter" class="flex gap-1 mb-5 border-b border-groove">
+    <div v-if="auth.can('projects.create')" class="flex gap-1 mb-5 border-b border-groove">
       <button
         v-for="tab in tabs" :key="tab.value"
         class="px-4 py-2 text-sm font-medium transition-colors"
@@ -33,7 +33,7 @@
           @click="activeFilter = f.value">
           {{ f.label }}
         </button>
-        <select v-if="auth.isLeiter && lernende.length"
+        <select v-if="auth.can('projects.create') && lernende.length"
                 v-model="learnerFilter"
                 class="ml-auto input py-1 text-sm w-auto">
           <option :value="null">Alle Lernpartner</option>
@@ -56,7 +56,7 @@
           <p v-if="p.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(p.description) }}</p>
           <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
             <span class="text-xs text-lo">{{ p.owner_name }}</span>
-            <div v-if="auth.isLeiter" class="flex gap-1" @click.stop>
+            <div v-if="auth.can('projects.create')" class="flex gap-1" @click.stop>
               <button class="btn btn-sm btn-secondary" @click="openEdit(p)">Bearbeiten</button>
               <button class="btn btn-sm btn-danger" @click="confirmDelete(p)">Löschen</button>
             </div>
@@ -161,7 +161,7 @@ const modalTitle = computed(() => {
 
 onMounted(() => {
   projects.fetchAll()
-  if (auth.isLeiter) {
+  if (auth.can('projects.create')) {
     users.fetchAll()
     projects.fetchTemplates()
   }

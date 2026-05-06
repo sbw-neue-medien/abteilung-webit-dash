@@ -13,7 +13,7 @@
     </section>
 
     <!-- Mentor: assigned learner hours -->
-    <section v-if="auth.isMentor && learnerHours.length">
+    <section v-if="!auth.can('werkstatt.view') && auth.can('reports.view_all') && learnerHours.length">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand meiner Lernpartner</h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
@@ -53,7 +53,7 @@
     </section>
 
     <!-- Mentor: current sprint overview -->
-    <section v-if="auth.isMentor && sprintStats.length">
+    <section v-if="!auth.can('werkstatt.view') && auth.can('reports.view_all') && sprintStats.length">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aktueller Sprint</h2>
       <div class="space-y-3">
         <div v-for="s in sprintStats" :key="s.sprint_id" class="card">
@@ -84,7 +84,7 @@
     </section>
 
     <!-- Leiter only: current sprint task status -->
-    <section v-if="auth.isLeiter && sprintStats.length">
+    <section v-if="auth.can('werkstatt.view') && sprintStats.length">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aktueller Sprint</h2>
       <div class="space-y-3">
         <div v-for="s in sprintStats" :key="s.sprint_id" class="card">
@@ -133,7 +133,7 @@
     </section>
 
     <!-- Leiter only: hours per learner -->
-    <section v-if="auth.isLeiter && learnerHours.length">
+    <section v-if="auth.can('werkstatt.view') && learnerHours.length">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Aufwand pro Lernpartner</h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
@@ -179,7 +179,7 @@
       </div>
     </section>
 
-    <section v-if="!auth.isLeiter && !auth.isMentor" class="card max-w-xs">
+    <section v-if="!auth.can('reports.view_all')" class="card max-w-xs">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Stunden diese Woche</h2>
       <div class="text-3xl font-bold text-brand-600">{{ formatMin(myWeekMin) }}</div>
       <div class="text-sm text-mid mt-1">{{ myWeekEntries }} Einträge diese Woche</div>
@@ -187,7 +187,7 @@
 
     <section>
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">
-        {{ auth.isLeiter ? 'Projektübersicht' : auth.isMentor ? 'Projekte meiner Lernpartner' : 'Meine Projekte' }}
+        {{ auth.can('werkstatt.view') ? 'Projektübersicht' : auth.isMentor ? 'Projekte meiner Lernpartner' : 'Meine Projekte' }}
       </h2>
       <div class="card overflow-hidden p-0">
         <table class="min-w-full text-sm">
@@ -243,7 +243,7 @@ const learnerHours = ref([])
 onMounted(async () => {
   const calls = [projects.fetchAll()]
   if (!auth.isMentor) calls.push(timeStore.fetchReport({ from: monday, to: today }))
-  if (auth.isLeiter) calls.push(
+  if (auth.can('werkstatt.view')) calls.push(
     api.getDashboardStats().then(d => {
       sprintStats.value  = d.sprint_stats
       learnerHours.value = d.learner_hours

@@ -8,10 +8,10 @@ const routes = [
   { path: '/projekte',     name: 'projects', component: () => import('../views/ProjectsView.vue') },
   { path: '/projekte/:id', name: 'project',  component: () => import('../views/ProjectDetailView.vue') },
   { path: '/zeiterfassung',name: 'time',     component: () => import('../views/TimeEntryView.vue') },
-  { path: '/sprints',      name: 'sprints',  component: () => import('../views/SprintsView.vue'),     meta: { leiter: true } },
-  { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { leiterOrMentor: true } },
-  { path: '/mentoren',     name: 'mentors',  component: () => import('../views/MentorsView.vue'),     meta: { leiter: true } },
-  { path: '/werkstatt',   name: 'werkstatt', component: () => import('../views/WerkstattView.vue'),  meta: { leiter: true } },
+  { path: '/sprints',      name: 'sprints',  component: () => import('../views/SprintsView.vue'),     meta: { permission: 'sprints.manage' } },
+  { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { permission: 'users.list' } },
+  { path: '/mentoren',     name: 'mentors',  component: () => import('../views/MentorsView.vue'),     meta: { permission: 'mentors.manage' } },
+  { path: '/werkstatt',   name: 'werkstatt', component: () => import('../views/WerkstattView.vue'),  meta: { permission: 'werkstatt.view' } },
   { path: '/mein-bereich', name: 'my-area',  component: () => import('../views/MyAreaView.vue') },
 ]
 
@@ -23,8 +23,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   const auth = useAuthStore()
   if (!to.meta.public && !auth.isLoggedIn) return '/login'
-  if (to.meta.leiter && !auth.isLeiter)    return '/'
-  if (to.meta.leiterOrMentor && !auth.isLeiter && !auth.isMentor) return '/'
+  if (to.meta.permission && !auth.can(to.meta.permission)) return '/'
   if (to.path === '/login' && auth.isLoggedIn) return '/'
 })
 

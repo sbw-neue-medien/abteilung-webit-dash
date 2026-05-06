@@ -131,7 +131,7 @@ function formatDuration(min) {
 }
 
 function canModify(todo) {
-  return auth.isLeiter || Number(todo.created_by) === Number(auth.user?.id)
+  return auth.can('todos.update_all') || Number(todo.created_by) === Number(auth.user?.id)
 }
 
 function openAdd() {

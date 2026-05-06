@@ -13,7 +13,7 @@
       </div>
 
       <button
-        v-if="auth.isLeiter"
+        v-if="auth.can('settings.manage')"
         @click="showManage = true"
         class="hover:text-white transition-colors"
         title="Links verwalten"

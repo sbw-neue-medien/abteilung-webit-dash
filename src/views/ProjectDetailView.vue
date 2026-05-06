@@ -13,8 +13,8 @@
           <MarkdownRenderer v-if="projects.current.description" class="mt-2" :content="projects.current.description" />
         </div>
         <div class="flex gap-2 shrink-0">
-          <button v-if="auth.isLeiter" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
-          <button v-if="!auth.isMentor" class="btn-primary" @click="addTask('offen')">
+          <button v-if="auth.can('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
+          <button v-if="auth.can('tasks.create')" class="btn-primary" @click="addTask('offen')">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -46,7 +46,7 @@
 
       <div class="flex flex-col xl:flex-row gap-6 max-w-7xl mx-auto">
         <div class="flex-1 min-w-0">
-          <KanbanBoard :tasks="filteredTasks" :readonly="auth.isMentor"
+          <KanbanBoard :tasks="filteredTasks" :readonly="!auth.can('tasks.create')"
                        @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
         </div>
         <div class="xl:w-60 shrink-0">
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div v-if="auth.isLeiter && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
+      <div v-if="auth.can('projects.manage_members') && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
         <h3 class="text-sm font-semibold text-lo uppercase tracking-wide mb-2">Mitglieder</h3>
         <div class="flex flex-wrap gap-2">
           <span v-for="m in projects.current.members" :key="m.id"
@@ -197,7 +197,7 @@ onMounted(async () => {
     todos.fetchForProject(id),
     sprints.fetchAll(),
   ])
-  if (auth.isLeiter) {
+  if (auth.can('projects.manage_members')) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender' && u.active)
   }

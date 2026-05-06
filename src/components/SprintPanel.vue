@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-hi">Sprint-Planung</h2>
-      <button v-if="auth.isLeiter" class="btn-primary" @click="openNew">
+      <button v-if="auth.can('sprints.manage')" class="btn-primary" @click="openNew">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -36,7 +36,7 @@
           </div>
           <div class="flex items-center gap-3 shrink-0">
             <span class="text-xs text-lo">{{ sprint.task_count }} Aufgaben</span>
-            <template v-if="auth.isLeiter">
+            <template v-if="auth.can('sprints.manage')">
               <button @click="openEdit(sprint)" class="text-lo hover:text-brand-600 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -74,7 +74,7 @@
     </div>
 
     <!-- Modal (Leiter only) -->
-    <Modal v-if="auth.isLeiter" v-model="showModal" :title="editing ? 'Sprint bearbeiten' : 'Neuer Sprint'">
+    <Modal v-if="auth.can('sprints.manage')" v-model="showModal" :title="editing ? 'Sprint bearbeiten' : 'Neuer Sprint'">
       <form @submit.prevent="save" class="space-y-4">
         <div>
           <label class="label">Name *</label>

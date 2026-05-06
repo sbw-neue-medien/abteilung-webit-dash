@@ -16,23 +16,16 @@ export function useNavLinks() {
   const auth = useAuthStore()
 
   const links = computed(() => {
-    if (auth.isMentor) return [
-      { to: '/',              label: 'Dashboard',     icon: ICONS.dashboard     },
-      { to: '/projekte',      label: 'Projekte',      icon: ICONS.projekte      },
-      { to: '/zeiterfassung', label: 'Zeiterfassung', icon: ICONS.zeiterfassung },
-      { to: '/lernende',      label: 'Lernpartner',   icon: ICONS.lernende      },
-    ]
     const base = [
       { to: '/',              label: 'Dashboard',     icon: ICONS.dashboard     },
       { to: '/projekte',      label: 'Projekte',      icon: ICONS.projekte      },
       { to: '/zeiterfassung', label: 'Zeiterfassung', icon: ICONS.zeiterfassung },
-      { to: '/mein-bereich',  label: 'Mein Bereich',  icon: ICONS.bereich       },
     ]
-    if (auth.isLeiter) {
-      base.push({ to: '/sprints',  label: 'Sprints',     icon: ICONS.sprints  })
-      base.push({ to: '/lernende', label: 'Lernpartner', icon: ICONS.lernende })
-      base.push({ to: '/mentoren', label: 'Coaches',     icon: ICONS.coaches  })
-    }
+    if (!auth.isMentor)             base.push({ to: '/mein-bereich', label: 'Mein Bereich',  icon: ICONS.bereich  })
+    if (auth.can('sprints.manage')) base.push({ to: '/sprints',      label: 'Sprints',       icon: ICONS.sprints  })
+    if (auth.can('users.list'))     base.push({ to: '/lernende',     label: 'Lernpartner',   icon: ICONS.lernende })
+    if (auth.can('mentors.manage')) base.push({ to: '/mentoren',     label: 'Coaches',       icon: ICONS.coaches  })
+    if (auth.can('werkstatt.view')) base.push({ to: '/werkstatt',    label: 'Werkstatt',     icon: ICONS.werkstatt})
     return base
   })
 
