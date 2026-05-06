@@ -2,7 +2,7 @@
   <header class="h-14 bg-black dark:bg-zinc-950 text-white flex items-center justify-between px-4 shrink-0">
     <div class="flex items-center gap-4">
       <span class="font-bold text-lg tracking-tight">WebIT Abteilung</span>
-      <RouterLink v-if="auth.isLeiter" to="/werkstatt"
+      <RouterLink v-if="auth.can('werkstatt.view')" to="/werkstatt"
         class="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
         :class="{ '!text-white !bg-white/15': route.path === '/werkstatt' }">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

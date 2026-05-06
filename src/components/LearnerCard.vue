@@ -2,7 +2,7 @@
   <div>
     <!-- Top row: avatar + name/email -->
     <div class="flex items-center gap-4">
-      <div v-if="auth.isLeiter && u.active" class="relative shrink-0 group cursor-pointer" @click="$emit('triggerUpload', u)">
+      <div v-if="auth.can('users.update') && u.active" class="relative shrink-0 group cursor-pointer" @click="$emit('triggerUpload', u)">
         <UserAvatar :userId="u.id" :name="u.name" :hasAvatar="u.avatar" size="lg" />
         <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100
                     transition-opacity flex items-center justify-center">
@@ -20,7 +20,7 @@
       <div class="flex-1 min-w-0">
         <p class="font-semibold text-hi">{{ u.name }}</p>
         <p class="text-xs text-lo mt-0.5">{{ u.email || u.username }}</p>
-        <button v-if="auth.isLeiter && u.avatar && u.active" @click.stop="$emit('removeAvatar', u)"
+        <button v-if="auth.can('users.update') && u.avatar && u.active" @click.stop="$emit('removeAvatar', u)"
                 class="text-xs text-red-500 hover:underline mt-0.5">
           Foto entfernen
         </button>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Bottom row: buttons (leiter only) -->
-    <div v-if="auth.isLeiter" class="flex gap-1 flex-wrap items-center mt-3">
+    <div v-if="auth.can('users.update')" class="flex gap-1 flex-wrap items-center mt-3">
       <button v-if="u.email && u.active" class="btn btn-sm btn-secondary" @click="$emit('sendReset', u)"
               title="Passwort-Reset-E-Mail senden">
         Reset-E-Mail

@@ -11,7 +11,7 @@
       <button class="btn-secondary" @click="showPwModal = true">Passwort ändern</button>
     </div>
 
-    <div v-if="auth.isLeiter" class="card flex items-center justify-between gap-4">
+    <div v-if="auth.can('settings.manage')" class="card flex items-center justify-between gap-4">
       <div>
         <p class="text-sm font-medium text-hi">E-Mail-Benachrichtigungen</p>
         <p class="text-xs text-lo mt-0.5">Benachrichtigung wenn eine Aufgabe zur Review verschoben wird</p>
