@@ -34,6 +34,7 @@
         Reset-E-Mail
       </button>
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('edit', u)">Bearbeiten</button>
+      <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('editPermissions', u)" title="Berechtigungen anpassen">Berechtigungen</button>
       <button v-if="u.active" class="btn btn-sm btn-danger" @click="$emit('remove', u)">Löschen</button>
       <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer ml-auto select-none">
         <input type="checkbox" :checked="!!u.active"
@@ -52,5 +53,5 @@ defineProps({
   u:    { type: Object, required: true },
   auth: { type: Object, required: true },
 })
-defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'remove', 'toggleActive'])
+defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'editPermissions', 'remove', 'toggleActive'])
 </script>
