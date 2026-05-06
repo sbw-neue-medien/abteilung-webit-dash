@@ -16,7 +16,7 @@
         <div v-for="u in activeLearners" :key="u.id" class="card flex flex-col gap-3">
           <LearnerCard :u="u" :auth="auth"
             @triggerUpload="triggerUpload" @removeAvatar="removeAvatar"
-            @sendReset="sendReset" @edit="openEdit" @remove="remove"
+            @sendReset="sendReset" @edit="openEdit" @editPermissions="openPermissions" @remove="remove"
             @toggleActive="handleToggleActive" />
         </div>
         <div v-if="!activeLearners.length" class="col-span-3 text-center py-12 text-lo italic">
@@ -41,6 +41,9 @@
     <input ref="fileInput" type="file" accept="image/jpeg,image/png,image/webp"
            class="hidden" @change="onFileSelected" />
 
+    <UserPermissionsModal v-if="permTarget" v-model="showPermModal"
+      :user-id="permTarget.id" :user-name="permTarget.name" />
+
     <Modal v-model="showModal" :title="editing ? 'Lernpartner bearbeiten' : 'Lernpartner anlegen'">
       <UserForm :user="editing" :loading="saving" @submit="save" @cancel="showModal = false" />
       <p v-if="!editing" class="mt-3 text-xs text-lo">
@@ -58,12 +61,15 @@ import { api } from '../api/index.js'
 import Modal from '../components/Modal.vue'
 import UserForm from '../components/UserForm.vue'
 import LearnerCard from '../components/LearnerCard.vue'
+import UserPermissionsModal from '../components/UserPermissionsModal.vue'
 
 const auth      = useAuthStore()
 const users     = useUsersStore()
 const showModal = ref(false)
 const editing   = ref(null)
 const saving    = ref(false)
+const permTarget    = ref(null)
+const showPermModal = ref(false)
 const fileInput = ref(null)
 const uploading = ref(null)
 
@@ -72,8 +78,9 @@ const inactiveLearners = computed(() => users.list.filter(u => u.role === 'lerne
 
 onMounted(() => users.fetchAll())
 
-function openCreate() { editing.value = null; showModal.value = true }
-function openEdit(u)  { editing.value = u;    showModal.value = true }
+function openCreate()      { editing.value = null; showModal.value = true }
+function openEdit(u)       { editing.value = u;    showModal.value = true }
+function openPermissions(u){ permTarget.value = u; showPermModal.value = true }
 
 function triggerUpload(u) {
   uploading.value = u

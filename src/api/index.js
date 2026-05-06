@@ -89,6 +89,8 @@ export const api = {
   createFooterLink: (body)         => req('/footer-links', { method: 'POST', body: JSON.stringify(body) }),
   updateFooterLink: (id, body)     => req(`/footer-links/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteFooterLink: (id)           => req(`/footer-links/${id}`, { method: 'DELETE' }),
+  getUserPermissions: (id)          => req(`/users/${id}/permissions`),
+  updateUserPermissions: (id, overrides) => req(`/users/${id}/permissions`, { method: 'PUT', body: JSON.stringify({ overrides }) }),
   getRoles: ()                     => req('/roles'),
   updateRolePermissions: (role, permissions) => req(`/roles/${role}/permissions`, { method: 'PUT', body: JSON.stringify({ permissions }) }),
 }
