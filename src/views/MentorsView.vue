@@ -50,6 +50,7 @@
             Reset-E-Mail
           </button>
           <button class="btn btn-sm btn-secondary" @click="openEdit(m)">Bearbeiten</button>
+          <button class="btn btn-sm btn-secondary" @click="openPermissions(m)" title="Berechtigungen anpassen">Berechtigungen</button>
           <button class="btn btn-sm btn-danger" @click="remove(m)">Löschen</button>
         </div>
       </div>
@@ -58,6 +59,9 @@
         Noch keine Coaches erfasst.
       </div>
     </div>
+
+    <UserPermissionsModal v-if="permTarget" v-model="showPermModal"
+      :user-id="permTarget.id" :user-name="permTarget.name" />
 
     <Modal v-model="showModal" :title="editing ? 'Coach bearbeiten' : 'Coach anlegen'">
       <MentorForm :mentor="editing" :loading="saving" @submit="save" @cancel="showModal = false" />
@@ -72,6 +76,7 @@ import { useUsersStore } from '../stores/users.js'
 import Modal from '../components/Modal.vue'
 import UserAvatar from '../components/UserAvatar.vue'
 import MentorForm from '../components/MentorForm.vue'
+import UserPermissionsModal from '../components/UserPermissionsModal.vue'
 
 const usersStore = useUsersStore()
 
@@ -79,9 +84,11 @@ const loading     = ref(false)
 const mentors     = ref([])
 const assignments = reactive({})
 const assignTarget = reactive({})
-const showModal   = ref(false)
-const editing     = ref(null)
-const saving      = ref(false)
+const showModal     = ref(false)
+const editing       = ref(null)
+const saving        = ref(false)
+const permTarget    = ref(null)
+const showPermModal = ref(false)
 
 const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender' && u.active))
 
@@ -104,8 +111,9 @@ async function fetchMentors() {
 
 onMounted(() => { fetchMentors(); usersStore.fetchAll() })
 
-function openCreate() { editing.value = null; showModal.value = true }
-function openEdit(m)  { editing.value = m;    showModal.value = true }
+function openCreate()      { editing.value = null; showModal.value = true }
+function openEdit(m)       { editing.value = m;    showModal.value = true }
+function openPermissions(m){ permTarget.value = m; showPermModal.value = true }
 
 async function save(body) {
   saving.value = true
