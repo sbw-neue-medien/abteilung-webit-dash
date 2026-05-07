@@ -54,6 +54,12 @@
             <StatusBadge :status="p.status" />
           </div>
           <p v-if="p.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(p.description) }}</p>
+          <div v-if="p.member_ids?.length && auth.can('projects.create')" class="flex flex-wrap gap-1">
+            <span v-for="uid in p.member_ids" :key="uid"
+                  class="text-xs bg-brand-subtle text-brand-700 rounded-full px-2 py-0.5">
+              {{ users.list.find(u => u.id === uid)?.name ?? '?' }}
+            </span>
+          </div>
           <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
             <span class="text-xs text-lo">{{ p.owner_name }}</span>
             <div v-if="auth.can('projects.create')" class="flex gap-1" @click.stop>
