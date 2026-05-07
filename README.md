@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.6.0
+**Version:** 1.7.0
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -43,15 +43,17 @@ src/
 │   ├── MentorForm.vue
 │   ├── Modal.vue
 │   ├── LearnerCard.vue
-│   ├── SideBar.vue
-│   ├── TopBar.vue
 │   ├── ProjectForm.vue
+│   ├── ProjectPermissionsPanel.vue
+│   ├── SideBar.vue
 │   ├── SprintPanel.vue
 │   ├── StatusBadge.vue
 │   ├── TimeEntryForm.vue
 │   ├── TodoList.vue
+│   ├── TopBar.vue
 │   ├── UserAvatar.vue
-│   └── UserForm.vue
+│   ├── UserForm.vue
+│   └── UserPermissionsModal.vue
 ├── stores/       # Pinia Stores
 │   ├── auth.js
 │   ├── projects.js
@@ -69,6 +71,7 @@ src/
 │   ├── PasswordResetView.vue
 │   ├── ProjectDetailView.vue
 │   ├── ProjectsView.vue
+│   ├── RolesView.vue
 │   ├── SprintsView.vue
 │   ├── TimeEntryView.vue
 │   └── WerkstattView.vue
@@ -88,35 +91,38 @@ src/
 | `/passwort-reset` | Passwort zurücksetzen | öffentlich |
 | `/` | Dashboard | alle |
 | `/projekte` | Projektübersicht | alle |
-| `/projekte/:id` | Projektdetail (Kanban + Sprints + Todos) | alle |
+| `/projekte/:id` | Projektdetail (Kanban + Sprints + Todos + Projektberechtigungen) | alle |
 | `/zeiterfassung` | Zeiterfassung | alle |
-| `/mein-bereich` | Eigenes Profil & Stunden | Leiter, Lernpartner |
-| `/sprints` | Sprint-Verwaltung | nur Leiter |
-| `/lernende` | Lernpartner verwalten | Leiter (voll), Coach (read-only) |
-| `/mentoren` | Coaches verwalten + Zuweisung | nur Leiter |
-| `/werkstatt` | Werkstatt-Übersicht (Stunden, Projekte, Sprint-Tasks pro Lernpartner) | nur Leiter |
+| `/mein-bereich` | Eigenes Profil & Stunden | alle |
+| `/sprints` | Sprint-Verwaltung | `sprints.manage` |
+| `/lernende` | Lernpartner verwalten | `users.list` |
+| `/mentoren` | Coaches verwalten + Zuweisung | `mentors.manage` |
+| `/werkstatt` | Werkstatt-Übersicht | `werkstatt.view` |
+| `/rollen` | Berechtigungen (Rollen-Matrix + Projektberechtigungen) | `settings.manage` |
 
 ---
 
 ## Features
 
 - **Kanban-Board** mit Drag-and-Drop (Offen → In Arbeit → Review → Erledigt), TodoList als rechte Sidebar
-- **Kanban-Vorlagen** — Projekte als Vorlage speichern; Tasks werden beim Erstellen eines neuen Projekts übernommen
-- **Sprint-Planung** — wöchentliche Sprints, Filter im Kanban
+- **Kanban-Vorlagen** — Projekte als Vorlage speichern; Tasks beim Erstellen übernehmen
+- **Sprint-Planung** — wöchentliche Sprints, Filter im Kanban; Serienbuchung über mehrere Sprints
 - **Zeiterfassung** — Stunden pro Projekt/Aufgabe erfassen
-- **Todos** — einfache Aufgabenliste mit geplantem/effektivem Aufwand
+- **Todos** — Checklisten pro Projekt mit geplantem/effektivem Aufwand
 - **Eigenprojekte** — persönliche Projekte einem Lernpartner zuordnen
+- **Mitglieder-Übersicht** — Lernpartner-Chips in der Projektliste, Mitgliederliste im Projektdetail
+- **Berechtigungssystem** — granulare, dreistufige Rechteverwaltung:
+  - `auth.can('x.y')` — pruft server-seitige effektive Berechtigungen
+  - **Rollen-Matrix** (`/rollen`) — globale Berechtigungen pro Rolle konfigurieren
+  - **Per-User-Overrides** — individuelle Rechte-Grants oder -Entzüge pro Benutzer (in Lernpartner-Verwaltung)
+  - **Projektspezifische Grants** — Lernpartner für einzelne Projekte mit erweiterten Rechten ausstatten (Projektleiter-Muster)
 - **Passwort-Reset** — per E-Mail anfordern und setzen
 - **Avatar-Upload** — Profilbild pro Benutzer
-- **E-Mail-Benachrichtigungen** — Leiter kann Benachrichtigungen bei Review-Aufgaben aktivieren
-- **Lernpartner deaktivieren** — Leiter kann Lernpartner inaktiv setzen (kein Login, aus allen Auswahllisten ausgeblendet, Eigenprojekte auf pausiert gesetzt); Reaktivierung jederzeit möglich
-- **Werkstatt-Übersicht** — tabellarische Übersicht pro Lernpartner: aktive Projekte, Sprint-Tasks, Stunden (aktueller Sprint oder Datumsbereich)
+- **E-Mail-Benachrichtigungen** — bei Review-Aufgaben (Leiter), bei Projekterstellung (Leiter + Mitglieder), bei Aufgabenzuweisung (Assignee)
+- **Lernpartner deaktivieren** — kein Login, aus Auswahllisten ausgeblendet, Eigenprojekte pausiert
+- **Werkstatt-Übersicht** — Projekte, Sprint-Tasks, Stunden pro Lernpartner
 - **Dark Mode** — System-/manuelles Umschalten
-- **Footer-Links** — konfigurierbare Links (verwaltet durch Leiter)
-- **Rollen** — drei Rollen mit abgestuftem Zugriff:
-  - **Leiter** — Vollzugriff, verwaltet Benutzer, Projekte, Sprints und Coaches
-  - **Lernpartner** — sieht eigene/zugewiesene Projekte und eigene Zeiterfassung
-  - **Coach** — read-only Zugriff auf Daten der zugewiesenen Lernpartner; kein Schreibzugriff
+- **Footer-Links** — konfigurierbar durch Leiter
 
 ---
 
@@ -129,8 +135,6 @@ npm run debug        # Backend auf Port 9080
 npm run build        # Produktions-Build nach dist/
 ```
 
-Das Backend muss separat laufen (siehe `abteilung-webit-api`).
-
 ---
 
 ## Konventionen
@@ -138,50 +142,53 @@ Das Backend muss separat laufen (siehe `abteilung-webit-api`).
 - Alle Dauer-Werte in **Minuten** (z.B. 120 = 2h)
 - API-Calls ausschliesslich über `src/api/index.js`
 - Jeder Datensatz-Typ hat einen eigenen Pinia-Store in `src/stores/`
-- Keine TypeScript — plain JavaScript + JSDoc bei Bedarf
+- Keine TypeScript — plain JavaScript
 - Tailwind-Tokens: `text-hi`, `text-mid`, `text-lo`, `bg-surface`, `bg-lift`, `ring-line`, `border-groove`, `text-brand-*`
-- Logout via `window.location.href` (nicht `router.push`) — erzwingt Pinia-Store-Reset
+- Berechtigungsprüfungen im Template: `v-if="auth.can('x.y')"` — nie `auth.isLeiter` für Feature-Gates
+- Logout via `window.location.href` — erzwingt Pinia-Store-Reset
 
 ---
 
 ## Changelog
 
+### 1.7.0
+- **Berechtigungssystem UI** — `auth.can()` nutzt server-seitige effektive Permissions statt lokaler Rollenkarte
+- **Rollen-Matrix** (`/rollen`, neu: `RolesView.vue`) — Leiter konfiguriert Berechtigungen pro Rolle als Checkbox-Matrix; Abschnitt "Projektberechtigungen" mit Projekt-Selektor integriert
+- **Per-User-Overrides** (`UserPermissionsModal.vue`) — individuelle Berechtigungs-Grants oder -Entzüge direkt in der Lernpartner-Verwaltung
+- **Projektspezifische Grants** (`ProjectPermissionsPanel.vue`) — Leiter erteilt einem Lernpartner für ein einzelnes Projekt erweiterte Rechte (z.B. `tasks.create`, `projects.update`)
+- **Mitglieder-Chips** in der Projektübersicht — zeigt zugewiesene Lernpartner direkt auf der Projektkarte
+- **Bugfix:** Mitglieder-Chips fehlten beim ersten Laden nach dem Anmelden (Dashboard lädt Users jetzt vor)
+- **Bugfix:** Mitgliederliste im Bearbeiten-Formular war leer (nutzt nun `member_ids` aus der Liste wenn `members` fehlt)
+- Router-Guards nutzen `meta: { permission }` + `auth.can()` statt `leiter`/`leiterOrMentor`-Flags
+
 ### 1.6.0
 - Dashboard-Layout: kollabierbare Sidebar-Navigation ersetzt die Top-Navigationsbar
 - Sidebar: Icon + Label (expanded) / nur Icon mit Tooltip (collapsed), Zustand in localStorage
 - TopBar: Logo, Werkstatt-Link (Leiter), Dark-Mode, Hilfe, Username, Logout
-- Werkstatt-Link aus Sidebar in TopBar verschoben (Leiter-only)
-- Mobile: Icon-Only Bottom-Navigation statt Sidebar (`sm:hidden`)
+- Mobile: Icon-Only Bottom-Navigation statt Sidebar
 - `useNavLinks.js`: geteiltes Composable für Sidebar und Bottom-Nav
 
 ### 1.5.3
-- Lernpartner deaktivieren: Leiter kann Aktiv-Checkbox pro Lernpartner setzen
-- Inaktive Lernpartner: kein Login, aus allen Auswahllisten ausgeblendet, Eigenprojekte werden auf pausiert gesetzt
-- Lernenden-Verwaltung: aktive Lernpartner oben, inaktive separat gruppiert mit Reaktivierungs-Checkbox
-- Dashboard, Werkstatt-Übersicht: inaktive Lernpartner ausgeblendet
+- Lernpartner deaktivieren: Aktiv-Checkbox pro Lernpartner
+- Inaktive: kein Login, aus Auswahllisten ausgeblendet, Eigenprojekte pausiert
+- Dashboard, Werkstatt: inaktive Lernpartner ausgeblendet
 
 ### 1.5.0
 - E-Mail-Benachrichtigungen: Toggle im Leiter-Profil bei Review-Aufgaben
-- Kanban-Layout: Board zentriert, TodoList als rechte Sidebar auf breiten Screens
-- Terminologie: Mentor → Coach, Lernende → Lernpartner (nur UI-Labels)
-- Bugfix: Logout erzwingt Page-Reload (verhindert stale Pinia-Store nach Rollenwechsel)
-- Bugfix: Login-Fehler zeigte fälschlich „Sitzung abgelaufen" (401 → 400 im Backend)
+- Kanban zentriert, TodoList als rechte Sidebar
+- Terminologie: Mentor → Coach, Lernende → Lernpartner (nur Labels)
 
 ### 1.4.0
-- Kanban-Vorlagen: Projekte als Vorlage speichern, Tasks beim Erstellen übernehmen
-- Vorlagen-Tab in der Projektliste (nur Leiter)
+- Kanban-Vorlagen: als Vorlage speichern, Tasks beim Erstellen übernehmen
 
 ### 1.3.0
-- Coach-Rolle: read-only Zugriff auf Lernenden-Daten, Coach-Zuweisung durch Leiter
+- Coach-Rolle: read-only Zugriff, Coach-Zuweisung durch Leiter
 
 ### 1.2.0
-- Sprint-Planung mit Kanban-Filter
-- Footer mit konfigurierbaren Links
+- Sprint-Planung mit Kanban-Filter, Footer-Links
 
 ### 1.1.0
-- Hilfe-Modal für Lernpartner und Coaches
-- Passwort-Reset per E-Mail
-- Avatar-Upload
+- Hilfe-Modal, Passwort-Reset per E-Mail, Avatar-Upload
 
 ### 1.0.0
 - Erstes Release: Kanban-Board, Zeiterfassung, Todos, Rollen
