@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(wait)"
+      "Bash(wait)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import json,sys; print\\(json.load\\(sys.stdin\\)['body']\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d['title']\\); print\\(d['body']\\)\")"
     ]
   }
 }
