@@ -92,6 +92,9 @@ export const api = {
   deleteFooterLink: (id)           => req(`/footer-links/${id}`, { method: 'DELETE' }),
   getUserPermissions: (id)          => req(`/users/${id}/permissions`),
   updateUserPermissions: (id, overrides) => req(`/users/${id}/permissions`, { method: 'PUT', body: JSON.stringify({ overrides }) }),
+  getProjectPermissions: (id)                      => req(`/projects/${id}/permissions`),
+  updateProjectPermissions: (id, userId, perms)    => req(`/projects/${id}/permissions/${userId}`, { method: 'PUT', body: JSON.stringify({ permissions: perms }) }),
+  deleteProjectPermissions: (id, userId)           => req(`/projects/${id}/permissions/${userId}`, { method: 'DELETE' }),
   getRoles: ()                     => req('/roles'),
   updateRolePermissions: (role, permissions) => req(`/roles/${role}/permissions`, { method: 'PUT', body: JSON.stringify({ permissions }) }),
 }

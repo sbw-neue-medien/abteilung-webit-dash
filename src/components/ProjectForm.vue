@@ -98,7 +98,7 @@ watch(() => props.project, (p) => {
     status:      p.status,
     is_personal: !!p.is_personal,
     owner_id:    p.is_personal ? (p.owner_id ?? null) : null,
-    member_ids:  (p.members ?? []).map(m => m.id),
+    member_ids:  p.members ? p.members.map(m => m.id) : (p.member_ids ?? []),
     is_template: false,
     template_id: null,
   }

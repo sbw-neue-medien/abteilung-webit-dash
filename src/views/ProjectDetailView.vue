@@ -63,6 +63,11 @@
           </span>
         </div>
       </div>
+
+      <ProjectPermissionsPanel
+        v-if="auth.can('projects.manage_members')"
+        :project-id="Number(route.params.id)"
+        :users="allUsers" />
     </template>
     <div v-else class="text-center py-16 text-lo">Projekt nicht gefunden.</div>
 
@@ -161,6 +166,7 @@ import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import TodoList from '../components/TodoList.vue'
 import MarkdownRenderer from '../components/MarkdownRenderer.vue'
+import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()
