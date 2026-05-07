@@ -221,6 +221,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
+import { useUsersStore } from '../stores/users.js'
 import { useTimeEntriesStore } from '../stores/timeEntries.js'
 import { api } from '../api/index.js'
 import StatusBadge from '../components/StatusBadge.vue'
@@ -228,6 +229,7 @@ import UserAvatar from '../components/UserAvatar.vue'
 
 const auth      = useAuthStore()
 const projects  = useProjectsStore()
+const users     = useUsersStore()
 const timeStore = useTimeEntriesStore()
 const router    = useRouter()
 
@@ -242,6 +244,7 @@ const learnerHours = ref([])
 
 onMounted(async () => {
   const calls = [projects.fetchAll()]
+  if (auth.can('projects.create')) calls.push(users.fetchAll())
   if (!auth.isMentor) calls.push(timeStore.fetchReport({ from: monday, to: today }))
   if (auth.can('werkstatt.view')) calls.push(
     api.getDashboardStats().then(d => {
