@@ -22,7 +22,7 @@ export function useNavLinks() {
       { to: '/projekte',      label: 'Projekte',      icon: ICONS.projekte      },
       { to: '/zeiterfassung', label: 'Zeiterfassung', icon: ICONS.zeiterfassung },
     ]
-    if (!auth.isMentor)             base.push({ to: '/mein-bereich', label: 'Mein Bereich',  icon: ICONS.bereich  })
+    base.push({ to: '/mein-bereich', label: 'Mein Bereich',  icon: ICONS.bereich  })
     if (auth.can('sprints.manage')) base.push({ to: '/sprints',      label: 'Sprints',       icon: ICONS.sprints  })
     if (auth.can('users.list'))     base.push({ to: '/lernende',     label: 'Lernpartner',   icon: ICONS.lernende })
     if (auth.can('mentors.manage')) base.push({ to: '/mentoren',     label: 'Coaches',       icon: ICONS.coaches  })

@@ -11,7 +11,7 @@
       <button class="btn-secondary" @click="showPwModal = true">Passwort ändern</button>
     </div>
 
-    <div v-if="auth.can('settings.manage')" class="card flex items-center justify-between gap-4">
+    <div v-if="auth.can('settings.manage') || auth.isMentor" class="card flex items-center justify-between gap-4">
       <div>
         <p class="text-sm font-medium text-hi">E-Mail-Benachrichtigungen</p>
         <p class="text-xs text-lo mt-0.5">Benachrichtigung wenn eine Aufgabe zur Review verschoben wird</p>
@@ -24,7 +24,7 @@
       </button>
     </div>
 
-    <section>
+    <section v-if="!auth.isMentor">
       <h2 class="text-sm font-semibold text-lo uppercase tracking-wide mb-3">Meine Projekte</h2>
       <div class="grid sm:grid-cols-2 gap-4">
         <RouterLink v-for="p in projects.list" :key="p.id" :to="`/projekte/${p.id}`"
@@ -41,7 +41,7 @@
       </div>
     </section>
 
-    <section>
+    <section v-if="!auth.isMentor">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-semibold text-lo uppercase tracking-wide">Meine Stunden</h2>
         <RouterLink to="/zeiterfassung" class="text-sm text-brand-600 hover:underline">Alle anzeigen →</RouterLink>
@@ -159,7 +159,7 @@ const today      = localDate()
 const monday     = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return localDate(d) })()
 const monthStart = localDate(new Date(now.getFullYear(), now.getMonth(), 1))
 
-onMounted(() => Promise.all([projects.fetchAll(), timeStore.fetchAll()]))
+onMounted(() => { if (!auth.isMentor) Promise.all([projects.fetchAll(), timeStore.fetchAll()]) })
 
 const recentEntries = computed(() => timeStore.list.slice(0, 10))
 const weekMin  = computed(() => timeStore.list.filter(e => e.date >= monday && e.date <= today).reduce((s, e) => s + Number(e.duration_min), 0))
