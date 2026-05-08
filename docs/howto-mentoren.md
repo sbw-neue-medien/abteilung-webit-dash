@@ -36,12 +36,25 @@ Du kannst die Einträge nur lesen, nicht ändern.
 
 ---
 
+## Mein Bereich
+
+Unter **Mein Bereich** kannst du:
+
+- **Passwort ändern** – aktuelles Passwort eingeben, neues vergeben (min. 8 Zeichen)
+- **E-Mail-Benachrichtigungen** – ein-/ausschalten, ob du per Mail informiert wirst
+
+Du erhältst automatisch eine E-Mail-Benachrichtigung, wenn einer deiner Lernenden ein neues Eigenprojekt anlegt.
+
+---
+
 ## Hinweis zu Berechtigungen
 
 | Aktion | Möglich? |
 |--------|----------|
 | Projekte & Aufgaben ansehen | Ja |
 | Zeiteinträge der Lernenden ansehen | Ja |
+| Eigenes Passwort ändern | Ja |
+| E-Mail-Benachrichtigungen steuern | Ja |
 | Aufgaben erstellen / bearbeiten | Nein |
 | Zeiteinträge erstellen / bearbeiten | Nein |
 | Lernende verwalten | Nein |

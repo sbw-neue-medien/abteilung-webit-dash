@@ -8,9 +8,15 @@ Nach dem Login landest du auf deinem **Dashboard**. Dort siehst du eine Übersic
 
 ## Projekte
 
-Unter **Projekte** findest du alle Projekte, an denen du beteiligt bist – sowie ein persönliches Projekt für eigene Notizen und Aufgaben.
+Unter **Projekte** findest du alle Projekte, an denen du beteiligt bist – sowie ein persönliches **Eigenprojekt** für eigene Notizen und Aufgaben.
 
 Klicke auf ein Projekt, um die Detailansicht zu öffnen.
+
+### Eigenprojekt-Beschreibung bearbeiten
+
+In der Detailansicht deines Eigenprojekts erscheint die Schaltfläche **Beschreibung**. Damit kannst du die Projektbeschreibung selbst anpassen (Markdown wird unterstützt). Name, Status und weitere Felder werden vom Abteilungsleiter verwaltet.
+
+> Wenn du ein Eigenprojekt anlegst, werden dein Coach und die Abteilungsleitung automatisch per E-Mail benachrichtigt.
 
 ---
 
@@ -48,9 +54,14 @@ Einträge kannst du nachträglich bearbeiten oder löschen. Filtere die Liste na
 
 ---
 
-## Passwort ändern
+## Mein Bereich
 
-Unter **Mein Bereich** findest du die Möglichkeit, dein Passwort zu ändern.
+Unter **Mein Bereich** findest du:
+
+- **Passwort ändern** – aktuelles Passwort eingeben, neues vergeben (min. 8 Zeichen)
+- **E-Mail-Benachrichtigungen** – ein-/ausschalten, ob du per Mail informiert wirst (z. B. bei Aufgabenzuweisungen)
+- **Meine Projekte** – Schnellzugriff auf alle deine Projekte
+- **Meine Stunden** – Überblick über die zuletzt erfassten Zeiteinträge
 
 ## Arbeitszeiten SBW Neue Medien
 
