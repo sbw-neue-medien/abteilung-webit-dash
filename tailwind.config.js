@@ -6,12 +6,10 @@ export default {
     extend: {
       colors: {
         brand: {
-          50:     '#f3f8e8',
-          100:    '#e4f1c4',
           400:    '#9acf41',
-          500:    '#8cbf35',
-          600:    '#8cbf35',
-          700:    '#70992a',
+          500:    'var(--c-brand)',
+          600:    'var(--c-brand)',
+          700:    'var(--c-brand-700)',
           subtle: 'var(--c-brand-subtle)',
         },
         // Semantic tokens — change automatically in dark mode via CSS vars

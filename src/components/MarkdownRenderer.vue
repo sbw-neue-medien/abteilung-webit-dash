@@ -23,7 +23,7 @@ const html = computed(() => marked.parse(escapeHtml(props.content ?? '')))
 .markdown-content :deep(ul)          { list-style: disc; }
 .markdown-content :deep(ol)          { list-style: decimal; }
 .markdown-content :deep(li)          { margin-bottom: 0.125rem; }
-.markdown-content :deep(a)           { color: var(--color-brand-600); font-weight: 600; }
+.markdown-content :deep(a)           { color: var(--c-brand); font-weight: 600; }
 .markdown-content :deep(a:hover)     { text-decoration: underline; }
 .markdown-content :deep(strong)      { font-weight: 600; }
 .markdown-content :deep(em)          { font-style: italic; }
