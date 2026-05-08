@@ -13,6 +13,7 @@
           <MarkdownRenderer v-if="projects.current.description" class="mt-2" :content="projects.current.description" />
         </div>
         <div class="flex gap-2 shrink-0">
+          <button v-if="canEditOwnDescription" class="btn-secondary" @click="openDescEdit">Beschreibung</button>
           <button v-if="auth.can('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
           <button v-if="auth.can('tasks.create')" class="btn-primary" @click="addTask('offen')">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,6 +148,16 @@
       <ProjectForm :project="projects.current" :users="allUsers" :loading="saving"
         @submit="saveProject" @cancel="showEdit = false" />
     </Modal>
+
+    <Modal v-model="showDescEdit" title="Beschreibung bearbeiten">
+      <form @submit.prevent="saveDescription" class="space-y-4">
+        <textarea v-model="descDraft" class="input" rows="6" placeholder="Beschreibung (Markdown möglich)" />
+        <div class="flex gap-2 justify-end">
+          <button type="button" class="btn-secondary" @click="showDescEdit = false">Abbrechen</button>
+          <button type="submit" class="btn-primary" :disabled="saving">{{ saving ? 'Speichern…' : 'Speichern' }}</button>
+        </div>
+      </form>
+    </Modal>
   </div>
 </template>
 
@@ -178,8 +189,16 @@ const usersStore = useUsersStore()
 
 const showTaskModal  = ref(false)
 const showEdit       = ref(false)
+const showDescEdit   = ref(false)
+const descDraft      = ref('')
 const editingTask    = ref(null)
 const saving         = ref(false)
+
+const canEditOwnDescription = computed(() =>
+  !auth.can('projects.update') &&
+  !!projects.current?.is_personal &&
+  projects.current?.owner_id === auth.user?.id
+)
 const allUsers       = ref([])
 const sprintFilter   = ref(null)
 const isSerie        = ref(false)
@@ -272,5 +291,20 @@ async function saveProject(body) {
   saving.value = true
   try { await projects.update(Number(route.params.id), body); showEdit.value = false }
   finally { saving.value = false }
+}
+
+function openDescEdit() {
+  descDraft.value    = projects.current?.description ?? ''
+  showDescEdit.value = true
+}
+
+async function saveDescription() {
+  saving.value = true
+  try {
+    await projects.update(Number(route.params.id), { description: descDraft.value })
+    showDescEdit.value = false
+  } finally {
+    saving.value = false
+  }
 }
 </script>
