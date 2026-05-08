@@ -10,6 +10,8 @@
           rel="noopener noreferrer"
           class="hover:text-white transition-colors"
         >{{ link.label }}</a>
+        <a href="/management-summary.html" target="_blank" rel="noopener noreferrer"
+           class="hover:text-white transition-colors">Management Summary</a>
       </div>
 
       <button

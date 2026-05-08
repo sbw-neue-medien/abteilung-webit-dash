@@ -2,6 +2,7 @@
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
 date: "Mai 2026"
+version: "1.8.0"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt

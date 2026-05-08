@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$title$</title>
+  <style>
+    :root {
+      --bg:      #f4f4f4;
+      --surface: #ffffff;
+      --lift:    #f4f4f4;
+      --line:    #e0e0e0;
+      --hi:      #0d0d0d;
+      --mid:     #4a4a4a;
+      --lo:      #999999;
+      --brand:   #8cbf35;
+      --brand-d: #70992a;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:      #111111;
+        --surface: #1b1b1b;
+        --lift:    #252525;
+        --line:    #333333;
+        --hi:      #f0f0f0;
+        --mid:     #aaaaaa;
+        --lo:      #555555;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--mid);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ── Header bar ── */
+    header {
+      background: var(--hi);
+      color: var(--bg);
+      padding: 2rem 2rem 1.5rem;
+    }
+    header .label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: .35rem;
+    }
+    header h1 {
+      margin: 0 0 .5rem;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+    header .version {
+      display: inline-block;
+      background: var(--brand);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      padding: .2em .65em;
+      border-radius: 999px;
+    }
+
+    /* ── Content wrapper ── */
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── Typography ── */
+    h1 { display: none; } /* title is in header */
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--hi);
+      margin: 2.5rem 0 .75rem;
+      padding-bottom: .4rem;
+      border-bottom: 2px solid var(--brand);
+    }
+    h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--hi);
+      margin: 1.75rem 0 .5rem;
+    }
+
+    p { margin: 0 0 .85rem; }
+
+    ul {
+      margin: 0 0 .85rem;
+      padding-left: 1.4rem;
+    }
+    li { margin-bottom: .35rem; }
+
+    strong { color: var(--hi); font-weight: 600; }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: .75rem 0 1.25rem;
+      font-size: .875rem;
+      background: var(--surface);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px var(--line);
+    }
+    colgroup { display: none; }
+    thead tr { background: var(--lift); }
+    th {
+      text-align: left;
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--lo);
+      padding: .6rem 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+    td {
+      padding: .6rem 1rem;
+      color: var(--mid);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--lift); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--lo);
+      padding: 1.5rem;
+      border-top: 1px solid var(--line);
+    }
+
+    @media print {
+      body { background: white; color: #333; font-size: 11pt; }
+      header { background: #0d0d0d; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      table { box-shadow: none; border: 1px solid #ccc; }
+      th, td { border-color: #ccc; }
+      h2 { break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="label">webIT Abteilung</div>
+    <h1>Management Summary</h1>
+    <span class="version">$version$</span>
+  </header>
+  <main>
+    $body$
+  </main>
+  <footer>webIT Abteilungs-Dashboard &nbsp;·&nbsp; $date$</footer>
+</body>
+</html>

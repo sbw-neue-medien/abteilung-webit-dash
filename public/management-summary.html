@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webIT Abteilungs-Dashboard</title>
+  <style>
+    :root {
+      --bg:      #f4f4f4;
+      --surface: #ffffff;
+      --lift:    #f4f4f4;
+      --line:    #e0e0e0;
+      --hi:      #0d0d0d;
+      --mid:     #4a4a4a;
+      --lo:      #999999;
+      --brand:   #8cbf35;
+      --brand-d: #70992a;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:      #111111;
+        --surface: #1b1b1b;
+        --lift:    #252525;
+        --line:    #333333;
+        --hi:      #f0f0f0;
+        --mid:     #aaaaaa;
+        --lo:      #555555;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--mid);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ── Header bar ── */
+    header {
+      background: var(--hi);
+      color: var(--bg);
+      padding: 2rem 2rem 1.5rem;
+    }
+    header .label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: .35rem;
+    }
+    header h1 {
+      margin: 0 0 .5rem;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+    header .version {
+      display: inline-block;
+      background: var(--brand);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      padding: .2em .65em;
+      border-radius: 999px;
+    }
+
+    /* ── Content wrapper ── */
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── Typography ── */
+    h1 { display: none; } /* title is in header */
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--hi);
+      margin: 2.5rem 0 .75rem;
+      padding-bottom: .4rem;
+      border-bottom: 2px solid var(--brand);
+    }
+    h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--hi);
+      margin: 1.75rem 0 .5rem;
+    }
+
+    p { margin: 0 0 .85rem; }
+
+    ul {
+      margin: 0 0 .85rem;
+      padding-left: 1.4rem;
+    }
+    li { margin-bottom: .35rem; }
+
+    strong { color: var(--hi); font-weight: 600; }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: .75rem 0 1.25rem;
+      font-size: .875rem;
+      background: var(--surface);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px var(--line);
+    }
+    colgroup { display: none; }
+    thead tr { background: var(--lift); }
+    th {
+      text-align: left;
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--lo);
+      padding: .6rem 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+    td {
+      padding: .6rem 1rem;
+      color: var(--mid);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--lift); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--lo);
+      padding: 1.5rem;
+      border-top: 1px solid var(--line);
+    }
+
+    @media print {
+      body { background: white; color: #333; font-size: 11pt; }
+      header { background: #0d0d0d; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      table { box-shadow: none; border: 1px solid #ccc; }
+      th, td { border-color: #ccc; }
+      h2 { break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="label">webIT Abteilung</div>
+    <h1>Management Summary</h1>
+    <span class="version">1.8.0</span>
+  </header>
+  <main>
+    <h1 id="stand-der-anwendung-version-1.8.0">Stand der Anwendung —
+    Version 1.8.0</h1>
+    <h2 id="worum-geht-es">Worum geht es?</h2>
+    <p>Das webIT Abteilungs-Dashboard ist eine interne Webanwendung zur
+    Verwaltung der Abteilungsarbeit. Es ermöglicht Lernenden, Leitern
+    und Coaches, Projekte, Aufgaben und Arbeitszeiten strukturiert zu
+    erfassen und einzusehen — alles an einem Ort, ohne externe
+    Tools.</p>
+    <h2 id="wer-nutzt-die-anwendung">Wer nutzt die Anwendung?</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%" />
+    <col style="width: 50%" />
+    </colgroup>
+    <thead>
+    <tr>
+    <th>Rolle</th>
+    <th>Zugang</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td><strong>Leiter</strong></td>
+    <td>Vollzugriff — verwaltet Benutzer, Projekte, Sprints, Coaches und
+    Berechtigungen</td>
+    </tr>
+    <tr>
+    <td><strong>Lernpartner</strong></td>
+    <td>Sieht eigene und zugewiesene Projekte, erfasst seine
+    Arbeitszeiten</td>
+    </tr>
+    <tr>
+    <td><strong>Coach</strong></td>
+    <td>Lesezugriff auf die Daten der zugewiesenen Lernpartner, kein
+    Schreibzugriff</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="was-kann-die-anwendung">Was kann die Anwendung?</h2>
+    <ul>
+    <li><strong>Projektverwaltung</strong> — Projekte anlegen,
+    Lernpartner zuweisen, Status verfolgen (Geplant / Aktiv / Pausiert /
+    Abgeschlossen)</li>
+    <li><strong>Kanban-Board</strong> — Aufgaben visuell in vier Phasen
+    verwalten: Offen → In Arbeit → Review → Erledigt</li>
+    <li><strong>Kanban-Vorlagen</strong> — Wiederkehrende
+    Projektstrukturen einmalig als Vorlage speichern und beim Erstellen
+    neuer Projekte automatisch übernehmen</li>
+    <li><strong>Serienbuchung</strong> — Wiederkehrende Aufgaben über
+    mehrere Sprints hinweg mit wenigen Klicks anlegen</li>
+    <li><strong>Sprint-Planung</strong> — Wöchentliche Arbeitspakete pro
+    Projekt definieren und im Kanban filtern</li>
+    <li><strong>Zeiterfassung</strong> — Arbeitszeiten pro Projekt und
+    Aufgabe erfassen; Auswertung nach Lernpartner</li>
+    <li><strong>Todo-Listen</strong> — Einfache Checklisten pro Projekt
+    mit geplantem und tatsächlichem Aufwand</li>
+    <li><strong>Eigenprojekte</strong> — Persönliche Projekte einem
+    Lernpartner zuordnen</li>
+    <li><strong>Werkstatt-Übersicht</strong> — Tabellarische Übersicht
+    pro Lernpartner: aktive Projekte, Sprint-Tasks, Stunden</li>
+    <li><strong>Benutzerverwaltung</strong> — Konten anlegen, Passwörter
+    zurücksetzen, Profilbilder hochladen, Lernpartner deaktivieren</li>
+    <li><strong>Coach-System</strong> — Coaches werden Lernpartner
+    zugewiesen und erhalten automatisch Lesezugriff</li>
+    </ul>
+    <h3 id="neu-in-version-1.7.0-granulares-berechtigungssystem">Neu in
+    Version 1.7.0: Granulares Berechtigungssystem</h3>
+    <p>Die Rechteverwaltung wurde grundlegend modernisiert und bietet
+    jetzt drei Stufen:</p>
+    <table>
+    <colgroup>
+    <col style="width: 50%" />
+    <col style="width: 50%" />
+    </colgroup>
+    <thead>
+    <tr>
+    <th>Stufe</th>
+    <th>Beschreibung</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td><strong>Rollen-Berechtigungen</strong></td>
+    <td>Standardrechte pro Rolle (Leiter, Lernpartner, Coach) —
+    konfigurierbar ohne Codeänderung</td>
+    </tr>
+    <tr>
+    <td><strong>Individuelle Overrides</strong></td>
+    <td>Einzelne Berechtigungen können pro Benutzer gewährt oder
+    entzogen werden</td>
+    </tr>
+    <tr>
+    <td><strong>Projektspezifische Grants</strong></td>
+    <td>Einem Lernpartner können für ein bestimmtes Projekt erweiterte
+    Rechte erteilt werden — z.B. als Projektleiter</td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Damit ist es möglich, einen Lernpartner als
+    <strong>Projektleiter</strong> für ein bestimmtes Projekt
+    einzusetzen: Er erhält für dieses Projekt Schreibrechte auf Aufgaben
+    und Mitgliederverwaltung, ohne global erweiterte Rechte zu
+    erhalten.</p>
+    <h3 id="neu-in-version-1.7.0-e-mail-benachrichtigungen">Neu in
+    Version 1.7.0: E-Mail-Benachrichtigungen</h3>
+    <table>
+    <colgroup>
+    <col style="width: 50%" />
+    <col style="width: 50%" />
+    </colgroup>
+    <thead>
+    <tr>
+    <th>Ereignis</th>
+    <th>Empfänger</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>Projekt erstellt</td>
+    <td>Alle Leiter + zugewiesene Mitglieder</td>
+    </tr>
+    <tr>
+    <td>Eigenprojekt erstellt</td>
+    <td>Alle Leiter + zugewiesene Coaches + Lernpartner selbst</td>
+    </tr>
+    <tr>
+    <td>Aufgabe zur Review verschoben</td>
+    <td>Alle Leiter</td>
+    </tr>
+    <tr>
+    <td>Aufgabe zugewiesen</td>
+    <td>Der zugewiesene Lernpartner</td>
+    </tr>
+    </tbody>
+    </table>
+    <h3 id="neu-in-version-1.8.0">Neu in Version 1.8.0</h3>
+    <ul>
+    <li><strong>Eigenprojekt-Beschreibung</strong> — Lernpartner können
+    die Beschreibung ihres persönlichen Projekts selbst bearbeiten</li>
+    <li><strong>Coach: Mein Bereich</strong> — Coaches können ihr
+    Passwort und ihre E-Mail-Benachrichtigungen selbst verwalten</li>
+    <li><strong>Erweiterte E-Mail-Benachrichtigungen</strong> — Leiter
+    und Coaches werden bei neuen Eigenprojekten benachrichtigt</li>
+    </ul>
+    <h2 id="aktueller-stand">Aktueller Stand</h2>
+    <p>Die Anwendung ist produktiv im Einsatz. Version 1.8.0 wurde im
+    Mai 2026 veröffentlicht.</p>
+    <p><strong>Produktions-Hinweis:</strong> Beim Deployment einer neuen
+    Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server
+    eingespielt werden, bevor der Code aktiviert wird.</p>
+  </main>
+  <footer>webIT Abteilungs-Dashboard &nbsp;·&nbsp; Mai 2026</footer>
+</body>
+</html>

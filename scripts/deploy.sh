@@ -3,7 +3,14 @@ set -euo pipefail
 
 FTP_HOST="palladius.sui-inter.net"
 FTP_USER="ftp.webit"
+
 FTP_REMOTE="/"   # HTTP-Root auf dem Server
+
+# ── Management Summary ─────────────────────────────────────
+echo "→ Management Summary generieren…"
+pandoc management_summary.md \
+  --template scripts/management-summary-template.html \
+  -o public/management-summary.html
 
 # ── Build ──────────────────────────────────────────────────
 echo "→ Build starten…"
