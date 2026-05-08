@@ -2,11 +2,11 @@
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold text-hi">Projekte</h1>
-      <button v-if="auth.can('projects.create')" class="btn-primary" @click="openCreate">
+      <button v-if="auth.can('projects.create') || auth.can('projects.create_own')" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        {{ activeTab === 'vorlagen' ? 'Neue Vorlage' : 'Neues Projekt' }}
+        {{ activeTab === 'vorlagen' ? 'Neue Vorlage' : (auth.can('projects.create') ? 'Neues Projekt' : 'Neues Eigenprojekt') }}
       </button>
     </div>
 
@@ -62,7 +62,7 @@
           </div>
           <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
             <span class="text-xs text-lo">{{ p.owner_name }}</span>
-            <div v-if="auth.can('projects.create')" class="flex gap-1" @click.stop>
+            <div v-if="canEditProject(p)" class="flex gap-1" @click.stop>
               <button class="btn btn-sm btn-secondary" @click="openEdit(p)">Bearbeiten</button>
               <button class="btn btn-sm btn-danger" @click="confirmDelete(p)">Löschen</button>
             </div>
@@ -96,9 +96,10 @@
     <Modal v-model="showModal" :title="modalTitle">
       <ProjectForm
         :project="editing"
-        :users="users.list.filter(u => u.role === 'lernender' && u.active)"
+        :users="auth.can('projects.create') ? users.list.filter(u => u.role === 'lernender' && u.active) : []"
         :templates="activeTab === 'projekte' ? projects.templates : []"
         :loading="saving"
+        :personal-only="!auth.can('projects.create')"
         @submit="save"
         @cancel="showModal = false"
       />
@@ -164,6 +165,11 @@ const modalTitle = computed(() => {
   if (editing.value) return editing.value.is_template ? 'Vorlage bearbeiten' : 'Projekt bearbeiten'
   return activeTab.value === 'vorlagen' ? 'Neue Vorlage' : 'Neues Projekt'
 })
+
+function canEditProject(p) {
+  if (auth.can('projects.create')) return true
+  return auth.can('projects.update_own') && p.is_personal && p.owner_id === auth.user?.id
+}
 
 onMounted(() => {
   projects.fetchAll()

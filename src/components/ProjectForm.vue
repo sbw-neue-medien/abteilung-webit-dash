@@ -22,45 +22,47 @@
       </select>
     </div>
 
-    <div class="flex items-center gap-2">
-      <input id="is_personal" type="checkbox" v-model="form.is_personal"
-             class="rounded border-line text-brand-600" />
-      <label for="is_personal" class="text-sm text-hi cursor-pointer select-none">Eigenprojekt (einem Lernpartner zuordnen)</label>
-    </div>
-
-    <div v-if="form.is_personal && users.length">
-      <label class="label">Lernpartner *</label>
-      <select v-model="form.owner_id" class="input" required>
-        <option :value="null">— Bitte wählen —</option>
-        <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }}</option>
-      </select>
-    </div>
-
-    <div v-if="!form.is_personal && users.length">
-      <label class="label">Lernpartner zuweisen</label>
-      <div class="space-y-1 max-h-40 overflow-y-auto border border-line rounded-lg p-2 bg-lift">
-        <label v-for="u in users" :key="u.id" class="flex items-center gap-2 text-sm cursor-pointer text-hi">
-          <input type="checkbox" :value="u.id" v-model="form.member_ids"
-                 class="rounded border-line text-brand-600" />
-          {{ u.name }}
-        </label>
+    <template v-if="!personalOnly">
+      <div class="flex items-center gap-2">
+        <input id="is_personal" type="checkbox" v-model="form.is_personal"
+               class="rounded border-line text-brand-600" />
+        <label for="is_personal" class="text-sm text-hi cursor-pointer select-none">Eigenprojekt (einem Lernpartner zuordnen)</label>
       </div>
-    </div>
 
-    <template v-if="!project">
-      <div v-if="templates.length && !form.is_template">
-        <label class="label">Vorlage verwenden</label>
-        <select v-model="form.template_id" class="input">
-          <option :value="null">— Keine Vorlage —</option>
-          <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
+      <div v-if="form.is_personal && users.length">
+        <label class="label">Lernpartner *</label>
+        <select v-model="form.owner_id" class="input" required>
+          <option :value="null">— Bitte wählen —</option>
+          <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }}</option>
         </select>
       </div>
 
-      <div class="flex items-center gap-2">
-        <input id="is_template" type="checkbox" v-model="form.is_template"
-               class="rounded border-line text-brand-600" />
-        <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
+      <div v-if="!form.is_personal && users.length">
+        <label class="label">Lernpartner zuweisen</label>
+        <div class="space-y-1 max-h-40 overflow-y-auto border border-line rounded-lg p-2 bg-lift">
+          <label v-for="u in users" :key="u.id" class="flex items-center gap-2 text-sm cursor-pointer text-hi">
+            <input type="checkbox" :value="u.id" v-model="form.member_ids"
+                   class="rounded border-line text-brand-600" />
+            {{ u.name }}
+          </label>
+        </div>
       </div>
+
+      <template v-if="!project">
+        <div v-if="templates.length && !form.is_template">
+          <label class="label">Vorlage verwenden</label>
+          <select v-model="form.template_id" class="input">
+            <option :value="null">— Keine Vorlage —</option>
+            <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input id="is_template" type="checkbox" v-model="form.is_template"
+                 class="rounded border-line text-brand-600" />
+          <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
+        </div>
+      </template>
     </template>
 
     <div class="flex gap-2 justify-end pt-2">
@@ -76,10 +78,11 @@
 import { ref, watch } from 'vue'
 
 const props = defineProps({
-  project:   Object,
-  users:     { type: Array, default: () => [] },
-  templates: { type: Array, default: () => [] },
-  loading:   Boolean,
+  project:      Object,
+  users:        { type: Array, default: () => [] },
+  templates:    { type: Array, default: () => [] },
+  loading:      Boolean,
+  personalOnly: { type: Boolean, default: false },
 })
 const emit = defineEmits(['submit', 'cancel'])
 
