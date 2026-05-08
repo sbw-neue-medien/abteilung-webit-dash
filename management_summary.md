@@ -10,7 +10,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.7.0
+# Stand der Anwendung — Version 1.8.0
 
 ## Worum geht es?
 
@@ -55,11 +55,18 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 | Ereignis | Empfänger |
 |---|---|
 | Projekt erstellt | Alle Leiter + zugewiesene Mitglieder |
+| Eigenprojekt erstellt | Alle Leiter + zugewiesene Coaches + Lernpartner selbst |
 | Aufgabe zur Review verschoben | Alle Leiter |
 | Aufgabe zugewiesen | Der zugewiesene Lernpartner |
 
+### Neu in Version 1.8.0
+
+- **Eigenprojekt-Beschreibung** — Lernpartner können die Beschreibung ihres persönlichen Projekts selbst bearbeiten
+- **Coach: Mein Bereich** — Coaches können ihr Passwort und ihre E-Mail-Benachrichtigungen selbst verwalten
+- **Erweiterte E-Mail-Benachrichtigungen** — Leiter und Coaches werden bei neuen Eigenprojekten benachrichtigt
+
 ## Aktueller Stand
 
-Die Anwendung ist produktiv im Einsatz. Version 1.7.0 wurde im Mai 2026 veröffentlicht und bringt das granulare Berechtigungssystem sowie erweiterte E-Mail-Benachrichtigungen.
+Die Anwendung ist produktiv im Einsatz. Version 1.8.0 wurde im Mai 2026 veröffentlicht.
 
 **Produktions-Hinweis:** Beim Deployment einer neuen Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server eingespielt werden, bevor der Code aktiviert wird.

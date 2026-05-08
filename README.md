@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.7.0
+**Version:** 1.8.0
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -118,7 +118,7 @@ src/
   - **Projektspezifische Grants** — Lernpartner für einzelne Projekte mit erweiterten Rechten ausstatten (Projektleiter-Muster)
 - **Passwort-Reset** — per E-Mail anfordern und setzen
 - **Avatar-Upload** — Profilbild pro Benutzer
-- **E-Mail-Benachrichtigungen** — bei Review-Aufgaben (Leiter), bei Projekterstellung (Leiter + Mitglieder), bei Aufgabenzuweisung (Assignee)
+- **E-Mail-Benachrichtigungen** — bei Review-Aufgaben (Leiter), bei Projekterstellung (Leiter + Mitglieder), bei Aufgabenzuweisung (Assignee), bei Eigenprojekt-Erstellung (Leiter + zugewiesene Coaches)
 - **Lernpartner deaktivieren** — kein Login, aus Auswahllisten ausgeblendet, Eigenprojekte pausiert
 - **Werkstatt-Übersicht** — Projekte, Sprint-Tasks, Stunden pro Lernpartner
 - **Dark Mode** — System-/manuelles Umschalten
@@ -150,6 +150,14 @@ npm run build        # Produktions-Build nach dist/
 ---
 
 ## Changelog
+
+### 1.8.0
+- **Eigenprojekt-Beschreibung bearbeiten** — Lernpartner können die Beschreibung ihres Eigenprojekts selbst bearbeiten (Markdown); alle anderen Felder bleiben Leiter-only
+- **Coach: Mein Bereich** — Coaches haben jetzt Zugriff auf «Mein Bereich» und können Passwort und E-Mail-Benachrichtigungen selbst verwalten
+- **E-Mail bei Eigenprojekt-Erstellung** — Leiter und zugewiesene Coaches werden benachrichtigt, wenn ein Lernpartner ein neues Eigenprojekt anlegt
+- **MailTemplate-System** — zentrales Template-System für alle E-Mails (`MailTemplate::render(name, vars)`); Wording und Struktur an einer Stelle änderbar
+- **Markdown-Links** — Links in `MarkdownRenderer` werden in der Brandfarbe und fett dargestellt
+- **Farb-Token-System** — alle Farbwerte zentralisiert in CSS-Variablen (`src/style.css`); `tailwind.config.js` referenziert nur noch Variablen, keine Hex-Werte
 
 ### 1.7.0
 - **Berechtigungssystem UI** — `auth.can()` nutzt server-seitige effektive Permissions statt lokaler Rollenkarte
