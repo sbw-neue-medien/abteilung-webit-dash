@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.8.0
+**Version:** 1.9.0
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -44,18 +44,22 @@ src/
 │   ├── Modal.vue
 │   ├── LearnerCard.vue
 │   ├── ProjectForm.vue
+│   ├── ConfirmButton.vue
+│   ├── NotificationBell.vue
 │   ├── ProjectPermissionsPanel.vue
 │   ├── SideBar.vue
 │   ├── SprintPanel.vue
 │   ├── StatusBadge.vue
 │   ├── TimeEntryForm.vue
 │   ├── TodoList.vue
+│   ├── ToastContainer.vue
 │   ├── TopBar.vue
 │   ├── UserAvatar.vue
 │   ├── UserForm.vue
 │   └── UserPermissionsModal.vue
 ├── stores/       # Pinia Stores
 │   ├── auth.js
+│   ├── notifications.js
 │   ├── projects.js
 │   ├── tasks.js
 │   ├── sprints.js
@@ -77,7 +81,8 @@ src/
 │   └── WerkstattView.vue
 ├── composables/  # Wiederverwendbare Composition-Funktionen
 │   ├── useDarkMode.js
-│   └── useNavLinks.js
+│   ├── useNavLinks.js
+│   └── useToast.js
 └── router/       # Route-Definitionen
 ```
 
@@ -104,11 +109,11 @@ src/
 
 ## Features
 
-- **Kanban-Board** mit Drag-and-Drop (Offen → In Arbeit → Review → Erledigt), TodoList als rechte Sidebar
+- **Kanban-Board** mit Drag-and-Drop (Offen → In Arbeit → Review → Erledigt)
 - **Kanban-Vorlagen** — Projekte als Vorlage speichern; Tasks beim Erstellen übernehmen
 - **Sprint-Planung** — wöchentliche Sprints, Filter im Kanban; Serienbuchung über mehrere Sprints
 - **Zeiterfassung** — Stunden pro Projekt/Aufgabe erfassen
-- **Todos** — Checklisten pro Projekt mit geplantem/effektivem Aufwand
+- **Todos** — Checklisten pro Projekt mit geplantem/effektivem Aufwand (in Sidebar)
 - **Eigenprojekte** — persönliche Projekte einem Lernpartner zuordnen
 - **Mitglieder-Übersicht** — Lernpartner-Chips in der Projektliste, Mitgliederliste im Projektdetail
 - **Berechtigungssystem** — granulare, dreistufige Rechteverwaltung:
@@ -122,6 +127,10 @@ src/
 - **Lernpartner deaktivieren** — kein Login, aus Auswahllisten ausgeblendet, Eigenprojekte pausiert
 - **Werkstatt-Übersicht** — Projekte, Sprint-Tasks, Stunden pro Lernpartner
 - **Dark Mode** — System-/manuelles Umschalten
+- **Todos** — Checklisten pro Projekt in der linken Sidebar (sichtbar auf `/projekte/:id`)
+- **Benachrichtigungsglocke** — gruppierende Event-Feed in der TopBar (ein Eintrag pro Ereignis via `correlation_id`)
+- **Toast-Benachrichtigungen** — nicht-blockierende Erfolgs-/Fehlermeldungen statt `alert()`
+- **Inline-Bestätigung** — `ConfirmButton` ersetzt `window.confirm()` bei allen Lösch-Aktionen
 - **Footer-Links** — konfigurierbar durch Leiter
 
 ---
@@ -150,6 +159,17 @@ npm run build        # Produktions-Build nach dist/
 ---
 
 ## Changelog
+
+### 1.9.0
+- **Benachrichtigungsglocke** (`NotificationBell.vue`) — gruppierter Event-Feed in der TopBar; ein Eintrag pro Ereignis (via `correlation_id`); unseen-Badge (localStorage); relative Zeitangaben
+- **Toast-System** (`useToast`, `ToastContainer`) — ersetzt alle `alert()`-Aufrufe; rot für Fehler, grün für Erfolg, neutral für Info; auto-dismiss nach 4 s
+- **`ConfirmButton`** — ersetzt alle `window.confirm()`-Dialoge; zweistufiger Inline-Button mit auto-reset nach 3 s
+- **TodoList in Sidebar** — erscheint als unterer Abschnitt der linken Sidebar auf `/projekte/:id`; Sidebar wird auf `w-72` verbreitert; rechte Kanban-Spalte entfernt
+- **Aktivieren/Deaktivieren via Toast** — `confirm()` entfernt, Feedback via Toast
+- **Passwort-Reset via Toast** — `confirm()` vor dem Senden entfernt, Feedback via Toast
+- **Schweizer Anführungszeichen** — `„"` durch `«»` ersetzt
+- Neue Pinia-Store: `notifications.js`
+- Neue Composable: `useToast.js`
 
 ### 1.8.0
 - **Eigenprojekt-Beschreibung bearbeiten** — Lernpartner können die Beschreibung ihres Eigenprojekts selbst bearbeiten (Markdown); alle anderen Felder bleiben Leiter-only
