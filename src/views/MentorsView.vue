@@ -29,7 +29,7 @@
             <span v-for="l in assignments[m.id]" :key="l.id"
                   class="inline-flex items-center gap-1 text-xs bg-brand-subtle text-brand-700 rounded-full px-2 py-0.5">
               {{ l.name }}
-              <button @click="unassign(m, l)" class="hover:text-red-500 transition-colors" title="Zuweisung aufheben">×</button>
+              <ConfirmButton :label="`Zuweisung von «${l.name}» aufheben?`" @confirm="unassign(m, l)" class="hover:text-red-500 transition-colors" title="Zuweisung aufheben">×</ConfirmButton>
             </span>
           </div>
         </div>
@@ -51,7 +51,7 @@
           </button>
           <button class="btn btn-sm btn-secondary" @click="openEdit(m)">Bearbeiten</button>
           <button class="btn btn-sm btn-secondary" @click="openPermissions(m)" title="Berechtigungen anpassen">Berechtigungen</button>
-          <button class="btn btn-sm btn-danger" @click="remove(m)">Löschen</button>
+          <ConfirmButton class="btn btn-sm btn-danger" :label="`Coach «${m.name}» wirklich löschen?`" @confirm="remove(m)">Löschen</ConfirmButton>
         </div>
       </div>
 
@@ -72,6 +72,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useToast } from '../composables/useToast.js'
+import ConfirmButton from '../components/ConfirmButton.vue'
 import { api } from '../api/index.js'
 import { useUsersStore } from '../stores/users.js'
 import Modal from '../components/Modal.vue'
@@ -128,7 +129,6 @@ async function save(body) {
 }
 
 async function remove(m) {
-  if (!confirm(`Coach „${m.name}" wirklich löschen?`)) return
   await api.deleteMentor(m.id)
   await fetchMentors()
 }
@@ -151,7 +151,6 @@ async function sendReset(m) {
 }
 
 async function unassign(mentor, learner) {
-  if (!confirm(`Zuweisung von „${learner.name}" zu „${mentor.name}" aufheben?`)) return
   await api.unassignLernender(mentor.id, learner.id)
   assignments[mentor.id] = await api.getMentorLernende(mentor.id)
 }

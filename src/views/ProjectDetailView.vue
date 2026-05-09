@@ -283,7 +283,6 @@ async function saveTask() {
 async function moveTask(id, status) { await tasks.move(id, status) }
 
 async function deleteTask(id) {
-  if (!confirm('Aufgabe wirklich löschen?')) return
   await tasks.remove(id)
 }
 

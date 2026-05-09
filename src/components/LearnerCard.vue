@@ -20,10 +20,12 @@
       <div class="flex-1 min-w-0">
         <p class="font-semibold text-hi">{{ u.name }}</p>
         <p class="text-xs text-lo mt-0.5">{{ u.email || u.username }}</p>
-        <button v-if="auth.can('users.update') && u.avatar && u.active" @click.stop="$emit('removeAvatar', u)"
-                class="text-xs text-red-500 hover:underline mt-0.5">
+        <ConfirmButton v-if="auth.can('users.update') && u.avatar && u.active"
+                       label="Foto wirklich entfernen?"
+                       @confirm="$emit('removeAvatar', u)"
+                       class="text-xs text-red-500 hover:underline mt-0.5">
           Foto entfernen
-        </button>
+        </ConfirmButton>
       </div>
     </div>
 
@@ -35,7 +37,7 @@
       </button>
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('edit', u)">Bearbeiten</button>
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('editPermissions', u)" title="Berechtigungen anpassen">Berechtigungen</button>
-      <button v-if="u.active" class="btn btn-sm btn-danger" @click="$emit('remove', u)">Löschen</button>
+      <ConfirmButton v-if="u.active" class="btn btn-sm btn-danger" :label="`«${u.name}» wirklich löschen?`" @confirm="$emit('remove', u)">Löschen</ConfirmButton>
       <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer ml-auto select-none">
         <input type="checkbox" :checked="!!u.active"
                class="rounded border-line text-brand-600"
@@ -48,6 +50,7 @@
 
 <script setup>
 import UserAvatar from './UserAvatar.vue'
+import ConfirmButton from './ConfirmButton.vue'
 
 defineProps({
   u:    { type: Object, required: true },

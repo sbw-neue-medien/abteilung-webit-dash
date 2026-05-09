@@ -104,7 +104,6 @@ async function onFileSelected(e) {
 }
 
 async function removeAvatar(u) {
-  if (!confirm(`Foto von „${u.name}" entfernen?`)) return
   await api.deleteAvatar(u.id)
   await users.fetchAll()
 }
@@ -129,11 +128,10 @@ async function sendReset(u) {
 
 async function handleToggleActive(u, active) {
   await users.toggleActive(u.id, active)
-  toast(active ? `„${u.name}" wurde aktiviert.` : `„${u.name}" wurde deaktiviert.`)
+  toast(active ? `«${u.name}» wurde aktiviert.` : `«${u.name}» wurde deaktiviert.`)
 }
 
 async function remove(u) {
-  if (!confirm(`„${u.name}" und alle zugehörigen Daten löschen?`)) return
   await users.remove(u.id)
 }
 </script>
