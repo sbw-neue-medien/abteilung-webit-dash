@@ -10,6 +10,8 @@
         </main>
       </div>
 
+      <ToastContainer />
+
       <!-- Mobile bottom nav -->
       <nav class="sm:hidden flex shrink-0 bg-black dark:bg-zinc-950 border-t border-white/10">
         <RouterLink
@@ -39,6 +41,7 @@ import { useRoute } from 'vue-router'
 import TopBar from './components/TopBar.vue'
 import SideBar from './components/SideBar.vue'
 import Footer from './components/Footer.vue'
+import ToastContainer from './components/ToastContainer.vue'
 import { useAuthStore } from './stores/auth.js'
 import { useNavLinks } from './composables/useNavLinks.js'
 

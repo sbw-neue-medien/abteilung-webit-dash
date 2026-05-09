@@ -71,6 +71,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useToast } from '../composables/useToast.js'
 import { api } from '../api/index.js'
 import { useUsersStore } from '../stores/users.js'
 import Modal from '../components/Modal.vue'
@@ -79,6 +80,7 @@ import MentorForm from '../components/MentorForm.vue'
 import UserPermissionsModal from '../components/UserPermissionsModal.vue'
 
 const usersStore = useUsersStore()
+const { toastSuccess, toastError } = useToast()
 
 const loading     = ref(false)
 const mentors     = ref([])
@@ -143,9 +145,9 @@ async function sendReset(m) {
   if (!confirm(`Passwort-Reset-E-Mail an „${m.name}" (${m.email}) senden?`)) return
   try {
     await api.sendResetEmail(m.id)
-    alert(`Reset-E-Mail an ${m.email} gesendet.`)
+    toastSuccess(`Reset-E-Mail an ${m.email} gesendet.`)
   } catch (err) {
-    alert(err.message)
+    toastError(err.message)
   }
 }
 
