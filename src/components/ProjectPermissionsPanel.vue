@@ -55,6 +55,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useToast } from '../composables/useToast.js'
 import { api } from '../api/index.js'
 
+const allPerms = ref([]) // session-level cache — fetched once, shared across mounts
+
 const PERM_GROUPS = {
   projects:     'Projekte',
   tasks:        'Aufgaben',
@@ -77,7 +79,6 @@ const loading    = ref(false)
 const saving     = ref(false)
 const grants     = ref([])
 const { toastError } = useToast()
-const allPerms   = ref([])
 const form       = ref({ userId: '', permission: '' })
 
 const permGroups = computed(() => {
@@ -97,11 +98,11 @@ async function load() {
   loading.value = true
   try {
     const [permsData, grantsData] = await Promise.all([
-      api.getRoles(),
+      allPerms.value.length ? Promise.resolve(null) : api.getRoles(),
       api.getProjectPermissions(props.projectId),
     ])
-    allPerms.value = permsData.permissions
-    grants.value   = grantsData
+    if (permsData) allPerms.value = permsData.permissions
+    grants.value = grantsData
   } finally {
     loading.value = false
   }
