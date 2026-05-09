@@ -54,8 +54,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from '../composables/useToast.js'
 import { api } from '../api/index.js'
-
-const allPerms = ref([]) // session-level cache — fetched once, shared across mounts
+import { allPerms } from '../composables/usePermissionsCache.js'
 
 const PERM_GROUPS = {
   projects:     'Projekte',
