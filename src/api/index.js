@@ -98,4 +98,5 @@ export const api = {
   getRoles: ()                     => req('/roles'),
   updateRolePermissions: (role, permissions) => req(`/roles/${role}/permissions`, { method: 'PUT', body: JSON.stringify({ permissions }) }),
   getNotifications: ()             => req('/notifications'),
+  getNotificationFeedUrl: ()       => req('/notifications/feed-url'),
 }

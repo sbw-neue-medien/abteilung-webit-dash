@@ -20,7 +20,13 @@
            :style="panelStyle">
         <div class="flex items-center justify-between px-4 py-3 border-b border-groove shrink-0">
           <span class="text-sm font-semibold text-hi">Benachrichtigungen</span>
-          <span v-if="notifications.loading" class="text-xs text-lo">Laden…</span>
+          <div class="flex items-center gap-2">
+            <span v-if="notifications.loading" class="text-xs text-lo">Laden…</span>
+            <a v-if="auth.isLeiter && feedUrl" :href="feedUrl" target="_blank" rel="noopener"
+               class="text-xs text-lo hover:text-brand-600 transition-colors" title="RSS Feed abonnieren">
+              RSS
+            </a>
+          </div>
         </div>
 
         <ul v-if="notifications.list.length" class="overflow-y-auto divide-y divide-groove">
@@ -42,13 +48,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useNotificationsStore } from '../stores/notifications.js'
+import { useAuthStore } from '../stores/auth.js'
+import { api } from '../api/index.js'
 
 const notifications = useNotificationsStore()
-const open = ref(false)
-const root = ref(null)
+const auth     = useAuthStore()
+const open     = ref(false)
+const root     = ref(null)
 const panelStyle = ref({})
+const feedUrl  = ref(null)
 
 function toggle() {
   open.value = !open.value
@@ -82,8 +92,12 @@ function formatDate(iso) {
   return d.toLocaleDateString('de-CH', { day: 'numeric', month: 'short' })
 }
 
-onMounted(() => {
+onMounted(async () => {
   notifications.fetchAll()
+  if (auth.isLeiter) {
+    const res = await api.getNotificationFeedUrl()
+    feedUrl.value = res?.url ?? null
+  }
   document.addEventListener('click', onClickOutside)
 })
 onUnmounted(() => document.removeEventListener('click', onClickOutside))
