@@ -45,14 +45,9 @@
         </button>
       </div>
 
-      <div class="flex flex-col xl:flex-row gap-6 max-w-7xl mx-auto">
-        <div class="flex-1 min-w-0">
-          <KanbanBoard :tasks="filteredTasks" :readonly="!auth.can('tasks.create')"
-                       @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
-        </div>
-        <div class="xl:w-60 shrink-0">
-          <TodoList />
-        </div>
+      <div class="max-w-7xl mx-auto">
+        <KanbanBoard :tasks="filteredTasks" :readonly="!auth.can('tasks.create')"
+                     @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
       </div>
 
       <div v-if="auth.can('projects.manage_members') && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
@@ -175,7 +170,6 @@ import KanbanBoard from '../components/KanbanBoard.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
-import TodoList from '../components/TodoList.vue'
 import MarkdownRenderer from '../components/MarkdownRenderer.vue'
 import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 

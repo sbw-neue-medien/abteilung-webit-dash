@@ -1,5 +1,5 @@
 <template>
-  <aside :class="['hidden sm:flex flex-col bg-black dark:bg-zinc-950 text-white shrink-0 transition-[width] duration-200 overflow-hidden', expanded ? 'w-52' : 'w-14']">
+  <aside :class="['hidden sm:flex flex-col bg-black dark:bg-zinc-950 text-white shrink-0 transition-[width] duration-200 overflow-hidden', sidebarWidth]">
     <nav class="flex-1 py-3 flex flex-col gap-0.5 px-2 overflow-y-auto overflow-x-hidden">
       <RouterLink
         v-for="link in links"
@@ -19,6 +19,10 @@
       </RouterLink>
     </nav>
 
+    <div v-if="expanded && isProjectRoute" class="border-t border-white/10 overflow-y-auto p-3 max-h-[50vh]">
+      <TodoList />
+    </div>
+
     <button
       @click="toggleExpanded"
       :title="expanded ? 'Einklappen' : 'Ausklappen'"
@@ -32,14 +36,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useNavLinks } from '../composables/useNavLinks.js'
+import TodoList from './TodoList.vue'
 
 const route = useRoute()
 const { links } = useNavLinks()
 
 const expanded = ref(localStorage.getItem('sidebar-expanded') !== 'false')
+const isProjectRoute = computed(() => route.name === 'project')
+const sidebarWidth = computed(() => {
+  if (!expanded.value) return 'w-14'
+  return isProjectRoute.value ? 'w-72' : 'w-52'
+})
 
 function toggleExpanded() {
   expanded.value = !expanded.value
