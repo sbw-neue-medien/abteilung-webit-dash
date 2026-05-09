@@ -119,7 +119,6 @@ async function save(body) {
 }
 
 async function sendReset(u) {
-  if (!confirm(`Passwort-Reset-E-Mail an „${u.name}" (${u.email}) senden?`)) return
   try {
     await api.sendResetEmail(u.id)
     toastSuccess(`Reset-E-Mail an ${u.email} gesendet.`)

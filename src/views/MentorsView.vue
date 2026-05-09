@@ -142,7 +142,6 @@ async function assign(mentor) {
 }
 
 async function sendReset(m) {
-  if (!confirm(`Passwort-Reset-E-Mail an „${m.name}" (${m.email}) senden?`)) return
   try {
     await api.sendResetEmail(m.id)
     toastSuccess(`Reset-E-Mail an ${m.email} gesendet.`)
