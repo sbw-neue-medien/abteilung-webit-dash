@@ -66,7 +66,7 @@ import UserPermissionsModal from '../components/UserPermissionsModal.vue'
 
 const auth              = useAuthStore()
 const users             = useUsersStore()
-const { toastSuccess, toastError } = useToast()
+const { toast, toastSuccess, toastError } = useToast()
 const showModal = ref(false)
 const editing   = ref(null)
 const saving    = ref(false)
@@ -129,8 +129,8 @@ async function sendReset(u) {
 }
 
 async function handleToggleActive(u, active) {
-  if (!active && !confirm(`„${u.name}" deaktivieren? Die Person kann sich danach nicht mehr einloggen.`)) return
   await users.toggleActive(u.id, active)
+  toast(active ? `„${u.name}" wurde aktiviert.` : `„${u.name}" wurde deaktiviert.`)
 }
 
 async function remove(u) {
