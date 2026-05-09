@@ -5,14 +5,18 @@
       <button type="button" class="btn btn-xs btn-danger" @click.stop="confirm">✓</button>
       <button type="button" class="btn btn-xs btn-secondary" @click.stop="reset">✕</button>
     </template>
-    <button v-else type="button" v-bind="$attrs" @click.stop="ask">
+    <button v-else type="button" v-bind="attrs" @click.stop="ask">
       <slot />
     </button>
   </span>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, useAttrs } from 'vue'
+
+defineOptions({ inheritAttrs: false })
+
+const attrs = useAttrs()
 
 const props = defineProps({
   label: { type: String, default: 'Wirklich?' },
