@@ -97,4 +97,5 @@ export const api = {
   deleteProjectPermissions: (id, userId)           => req(`/projects/${id}/permissions/${userId}`, { method: 'DELETE' }),
   getRoles: ()                     => req('/roles'),
   updateRolePermissions: (role, permissions) => req(`/roles/${role}/permissions`, { method: 'PUT', body: JSON.stringify({ permissions }) }),
+  getNotifications: ()             => req('/notifications'),
 }
