@@ -64,7 +64,7 @@
             <span class="text-xs text-lo">{{ p.owner_name }}</span>
             <div v-if="canEditProject(p)" class="flex gap-1" @click.stop>
               <button class="btn btn-sm btn-secondary" @click="openEdit(p)">Bearbeiten</button>
-              <button class="btn btn-sm btn-danger" @click="confirmDelete(p)">Löschen</button>
+              <ConfirmButton class="btn btn-sm btn-danger" :label="`Projekt «${p.name}» wirklich löschen?`" @confirm="confirmDelete(p)">Löschen</ConfirmButton>
             </div>
           </div>
         </div>
@@ -84,11 +84,11 @@
           <p v-if="t.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(t.description) }}</p>
           <div class="flex justify-end gap-1 mt-auto pt-2 border-t border-groove" @click.stop>
             <button class="btn btn-sm btn-secondary" @click="openEdit(t)">Bearbeiten</button>
-            <button class="btn btn-sm btn-danger" @click="confirmDelete(t)">Löschen</button>
+            <ConfirmButton class="btn btn-sm btn-danger" :label="`Vorlage «${t.name}» wirklich löschen?`" @confirm="confirmDelete(t)">Löschen</ConfirmButton>
           </div>
         </div>
         <div v-if="!projects.templates.length" class="col-span-full text-center py-12 text-lo italic">
-          Noch keine Vorlagen. Erstelle ein Projekt und aktiviere „Als Vorlage speichern".
+          Noch keine Vorlagen. Erstelle ein Projekt und aktiviere «Als Vorlage speichern».
         </div>
       </div>
     </template>
@@ -113,6 +113,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
+import ConfirmButton from '../components/ConfirmButton.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
@@ -198,8 +199,6 @@ async function save(body) {
 }
 
 async function confirmDelete(p) {
-  const label = p.is_template ? 'Vorlage' : 'Projekt'
-  if (!confirm(`${label} „${p.name}" wirklich löschen?`)) return
   await projects.remove(p.id)
   if (p.is_template) await projects.fetchTemplates()
 }

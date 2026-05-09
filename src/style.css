@@ -51,6 +51,9 @@
   .btn-sm {
     @apply px-2.5 py-1 text-xs;
   }
+  .btn-xs {
+    @apply px-1.5 py-0.5 text-xs rounded-md;
+  }
   .card {
     @apply bg-surface rounded-xl shadow-sm ring-1 ring-line p-5;
   }

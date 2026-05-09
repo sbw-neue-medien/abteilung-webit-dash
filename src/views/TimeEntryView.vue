@@ -79,7 +79,7 @@
             <td class="px-4 py-3 flex gap-1 justify-end">
               <template v-if="canEdit(e)">
                 <button class="btn btn-sm btn-secondary" @click="openEdit(e)">Bearbeiten</button>
-                <button class="btn btn-sm btn-danger" @click="remove(e.id)">Löschen</button>
+                <ConfirmButton class="btn btn-sm btn-danger" label="Eintrag wirklich löschen?" @confirm="remove(e.id)">Löschen</ConfirmButton>
               </template>
             </td>
           </tr>
@@ -104,6 +104,7 @@ import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
 import { useTimeEntriesStore } from '../stores/timeEntries.js'
 import { useSprintsStore } from '../stores/sprints.js'
+import ConfirmButton from '../components/ConfirmButton.vue'
 import Modal from '../components/Modal.vue'
 import TimeEntryForm from '../components/TimeEntryForm.vue'
 
@@ -162,7 +163,6 @@ async function save(body) {
 }
 
 async function remove(id) {
-  if (!confirm('Eintrag wirklich löschen?')) return
   await timeStore.remove(id)
 }
 
