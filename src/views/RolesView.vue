@@ -80,6 +80,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useToast } from '../composables/useToast.js'
 import { api } from '../api/index.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
@@ -106,6 +107,7 @@ const GROUP_LABELS = {
 
 const projectsStore = useProjectsStore()
 const usersStore    = useUsersStore()
+const { toastError } = useToast()
 
 const loading          = ref(true)
 const roles            = ref([])
@@ -164,7 +166,7 @@ async function toggle(role, key, granted) {
     } else {
       perm.grants.push(role)
     }
-    alert('Fehler beim Speichern: ' + err.message)
+    toastError('Fehler beim Speichern: ' + err.message)
   } finally {
     saving.value[role] = false
   }

@@ -67,6 +67,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useToast } from '../composables/useToast.js'
 import Modal from './Modal.vue'
 import { api } from '../api/index.js'
 
@@ -94,6 +95,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const loading     = ref(false)
 const saving      = ref(false)
+const { toastError } = useToast()
 const roleName    = ref('')
 const permissions = ref([])
 const overrides   = ref({})
@@ -144,7 +146,7 @@ async function save() {
     await api.updateUserPermissions(props.userId, payload)
     emit('update:modelValue', false)
   } catch (err) {
-    alert('Fehler beim Speichern: ' + err.message)
+    toastError('Fehler beim Speichern: ' + err.message)
   } finally {
     saving.value = false
   }

@@ -52,6 +52,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useToast } from '../composables/useToast.js'
 import { api } from '../api/index.js'
 
 const PERM_GROUPS = {
@@ -75,6 +76,7 @@ const props = defineProps({
 const loading    = ref(false)
 const saving     = ref(false)
 const grants     = ref([])
+const { toastError } = useToast()
 const allPerms   = ref([])
 const form       = ref({ userId: '', permission: '' })
 
@@ -119,7 +121,7 @@ async function addPermission() {
     form.value.permission = ''
     await load()
   } catch (err) {
-    alert(err.message)
+    toastError(err.message)
   } finally {
     saving.value = false
   }

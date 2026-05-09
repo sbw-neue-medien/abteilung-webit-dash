@@ -55,6 +55,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useToast } from '../composables/useToast.js'
 import { useAuthStore } from '../stores/auth.js'
 import { useUsersStore } from '../stores/users.js'
 import { api } from '../api/index.js'
@@ -63,8 +64,9 @@ import UserForm from '../components/UserForm.vue'
 import LearnerCard from '../components/LearnerCard.vue'
 import UserPermissionsModal from '../components/UserPermissionsModal.vue'
 
-const auth      = useAuthStore()
-const users     = useUsersStore()
+const auth              = useAuthStore()
+const users             = useUsersStore()
+const { toastSuccess, toastError } = useToast()
 const showModal = ref(false)
 const editing   = ref(null)
 const saving    = ref(false)
@@ -95,7 +97,7 @@ async function onFileSelected(e) {
     await api.uploadAvatar(uploading.value.id, file)
     await users.fetchAll()
   } catch (err) {
-    alert(err.message)
+    toastError(err.message)
   } finally {
     uploading.value = null
   }
@@ -120,9 +122,9 @@ async function sendReset(u) {
   if (!confirm(`Passwort-Reset-E-Mail an „${u.name}" (${u.email}) senden?`)) return
   try {
     await api.sendResetEmail(u.id)
-    alert(`Reset-E-Mail an ${u.email} gesendet.`)
+    toastSuccess(`Reset-E-Mail an ${u.email} gesendet.`)
   } catch (err) {
-    alert(err.message)
+    toastError(err.message)
   }
 }
 
