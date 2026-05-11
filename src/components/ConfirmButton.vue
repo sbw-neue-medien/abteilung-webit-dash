@@ -3,7 +3,7 @@
     <button type="button" v-bind="attrs" :class="{ invisible: pending }" @click.stop="ask">
       <slot />
     </button>
-    <span v-if="pending" class="absolute top-0 left-0 z-20 flex items-center gap-1 whitespace-nowrap rounded-lg bg-surface ring-1 ring-line shadow-lg px-2 py-1">
+    <span v-if="pending" class="absolute top-0 right-0 z-20 flex items-center gap-1 whitespace-nowrap rounded-lg bg-surface ring-1 ring-line shadow-lg px-2 py-1">
       <span class="text-xs text-mid">{{ label }}</span>
       <button type="button" class="btn btn-xs btn-danger" @click.stop="confirm">✓</button>
       <button type="button" class="btn btn-xs btn-secondary" @click.stop="reset">✕</button>
