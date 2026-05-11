@@ -33,6 +33,7 @@
           @duplicate="$emit('duplicate', $event)"
           @edit="$emit('edit', $event)"
           @delete="$emit('delete', $event)"
+          @zoom="zoomedTask = $event"
         />
         <div v-if="tasksFor(col.status).length === 0"
              class="flex-1 flex items-center justify-center text-xs text-lo italic py-4">
@@ -41,11 +42,14 @@
       </div>
     </div>
   </div>
+
+  <TaskZoomModal :task="zoomedTask" @close="zoomedTask = null" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import KanbanCard from './KanbanCard.vue'
+import TaskZoomModal from './TaskZoomModal.vue'
 
 const props = defineProps({ tasks: Array, readonly: Boolean })
 const emit  = defineEmits(['move', 'add', 'duplicate', 'edit', 'delete'])
@@ -57,7 +61,8 @@ const columns = [
   { status: 'erledigt',  label: 'Erledigt',  dot: 'bg-brand-500' },
 ]
 
-const dragOver = ref(null)
+const dragOver  = ref(null)
+const zoomedTask = ref(null)
 
 function tasksFor(status) {
   return (props.tasks ?? []).filter(t => t.status === status)

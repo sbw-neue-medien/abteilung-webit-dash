@@ -3,6 +3,7 @@
     :draggable="!readonly"
     @dragstart="readonly ? null : onDragStart($event)"
     @dragend="onDragEnd"
+    @click="$emit('zoom', task)"
     class="bg-surface rounded-lg shadow-sm ring-1 ring-line p-3 hover:shadow-md transition-shadow select-none"
     :class="[readonly ? 'cursor-default' : 'cursor-grab active:cursor-grabbing', { 'opacity-50 scale-95': dragging }]"
   >
@@ -80,7 +81,7 @@ import UserAvatar from './UserAvatar.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
 
 const props = defineProps({ task: Object, readonly: Boolean })
-defineEmits(['duplicate', 'edit', 'delete'])
+defineEmits(['duplicate', 'edit', 'delete', 'zoom'])
 
 const dragging = ref(false)
 
