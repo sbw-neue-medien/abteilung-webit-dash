@@ -30,8 +30,7 @@
       <p class="mt-1 text-xs text-lo">Reguläre Arbeitszeit: 3h 35min — Ausnahmen möglich</p>
     </div>
     <div>
-      <label class="label">Tätigkeit</label>
-      <textarea v-model="form.description" class="input" rows="3" placeholder="Was wurde erledigt?" />
+      <MarkdownTextarea label="Tätigkeit" v-model="form.description" placeholder="Was wurde erledigt?" />
     </div>
     <div class="flex gap-2 justify-end pt-2">
       <button type="button" class="btn-secondary" @click="$emit('cancel')">Abbrechen</button>
@@ -45,6 +44,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { api } from '../api/index.js'
+import MarkdownTextarea from './MarkdownTextarea.vue'
 
 const props = defineProps({ projects: Array, entry: Object, loading: Boolean })
 const emit  = defineEmits(['submit', 'cancel'])

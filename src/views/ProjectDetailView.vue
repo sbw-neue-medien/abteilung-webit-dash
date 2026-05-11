@@ -73,10 +73,7 @@
           <label class="label">Titel *</label>
           <input v-model="taskForm.title" class="input" required />
         </div>
-        <div>
-          <label class="label">Beschreibung</label>
-          <textarea v-model="taskForm.description" class="input" rows="3" />
-        </div>
+        <MarkdownTextarea label="Beschreibung" v-model="taskForm.description" />
         <div>
           <label class="label">Spalte</label>
           <select v-model="taskForm.status" class="input">
@@ -146,7 +143,7 @@
 
     <Modal v-model="showDescEdit" title="Beschreibung bearbeiten">
       <form @submit.prevent="saveDescription" class="space-y-4">
-        <textarea v-model="descDraft" class="input" rows="6" placeholder="Beschreibung (Markdown möglich)" />
+        <MarkdownTextarea label="Beschreibung" v-model="descDraft" :rows="6" placeholder="Beschreibung (Markdown möglich)" />
         <div class="flex gap-2 justify-end">
           <button type="button" class="btn-secondary" @click="showDescEdit = false">Abbrechen</button>
           <button type="submit" class="btn-primary" :disabled="saving">{{ saving ? 'Speichern…' : 'Speichern' }}</button>
@@ -171,6 +168,7 @@ import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import MarkdownRenderer from '../components/MarkdownRenderer.vue'
+import MarkdownTextarea from '../components/MarkdownTextarea.vue'
 import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 
 const route      = useRoute()
