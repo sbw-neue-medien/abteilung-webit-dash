@@ -33,6 +33,10 @@
           @click="activeFilter = f.value">
           {{ f.label }}
         </button>
+        <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer select-none ml-1">
+          <input type="checkbox" v-model="showPersonal" class="rounded accent-brand-600" />
+          Eigenprojekte
+        </label>
         <select v-if="auth.can('projects.create') && lernende.length"
                 v-model="learnerFilter"
                 class="ml-auto input py-1 text-sm w-auto">
@@ -134,6 +138,7 @@ const saving         = ref(false)
 const activeFilter   = ref('alle')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
+const showPersonal   = ref(true)
 
 const tabs = [
   { value: 'projekte', label: 'Projekte' },
@@ -154,6 +159,7 @@ const lernende = computed(() =>
 
 const filtered = computed(() => {
   let list = projects.list
+  if (!showPersonal.value) list = list.filter(p => !p.is_personal)
   if (activeFilter.value !== 'alle') list = list.filter(p => p.status === activeFilter.value)
   if (learnerFilter.value) {
     const id = learnerFilter.value
