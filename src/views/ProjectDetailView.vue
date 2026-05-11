@@ -74,7 +74,6 @@
           <input v-model="taskForm.title" class="input" required />
         </div>
         <MarkdownTextarea label="Beschreibung" v-model="taskForm.description" />
-        </div>
         <div>
           <label class="label">Spalte</label>
           <select v-model="taskForm.status" class="input">
