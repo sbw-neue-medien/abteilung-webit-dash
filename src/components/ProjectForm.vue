@@ -11,9 +11,9 @@
     <div>
       <div class="flex items-center gap-1 mb-1">
         <label class="label mb-0">Beschreibung</label>
-        <MarkdownHint />
+        <MarkdownHint :target="descRef" />
       </div>
-      <textarea v-model="form.description" class="input" rows="3" />
+      <textarea ref="descRef" v-model="form.description" class="input" rows="3" />
     </div>
     <div>
       <label class="label">Status</label>
@@ -80,6 +80,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import MarkdownHint from './MarkdownHint.vue'
+
+const descRef = ref(null)
 
 const props = defineProps({
   project:      Object,

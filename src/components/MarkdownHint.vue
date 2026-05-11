@@ -1,4 +1,4 @@
-<template>
+w <template>
   <div class="relative inline-block">
     <button
       type="button"
@@ -17,7 +17,10 @@
       <p class="font-semibold text-hi mb-2">Markdown</p>
       <table class="w-full border-collapse">
         <tbody>
-          <tr v-for="row in hints" :key="row.label" class="border-b border-groove last:border-0">
+          <tr v-for="row in hints" :key="row.label"
+              class="border-b border-groove last:border-0"
+              :class="target ? 'cursor-pointer hover:bg-lift' : ''"
+              @click="insert(row.syntax)">
             <td class="py-1 pr-2 text-lo whitespace-nowrap">{{ row.label }}</td>
             <td class="py-1 font-mono text-mid">{{ row.syntax }}</td>
           </tr>
@@ -30,7 +33,21 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
+const props = defineProps({ target: { type: Object, default: null } })
+
 const open = ref(false)
+
+function insert(syntax) {
+  if (!props.target) return
+  const el = props.target.$el ?? props.target
+  const start = el.selectionStart
+  const end   = el.selectionEnd
+  el.value = el.value.slice(0, start) + syntax + el.value.slice(end)
+  el.selectionStart = el.selectionEnd = start + syntax.length
+  el.dispatchEvent(new Event('input'))
+  el.focus()
+  open.value = false
+}
 
 const hints = [
   { label: 'Überschrift', syntax: '# Titel' },

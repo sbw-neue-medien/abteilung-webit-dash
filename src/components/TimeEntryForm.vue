@@ -32,9 +32,9 @@
     <div>
       <div class="flex items-center gap-1 mb-1">
         <label class="label mb-0">Tätigkeit</label>
-        <MarkdownHint />
+        <MarkdownHint :target="descRef" />
       </div>
-      <textarea v-model="form.description" class="input" rows="3" placeholder="Was wurde erledigt?" />
+      <textarea ref="descRef" v-model="form.description" class="input" rows="3" placeholder="Was wurde erledigt?" />
     </div>
     <div class="flex gap-2 justify-end pt-2">
       <button type="button" class="btn-secondary" @click="$emit('cancel')">Abbrechen</button>
@@ -49,6 +49,8 @@
 import { ref, computed, watch } from 'vue'
 import { api } from '../api/index.js'
 import MarkdownHint from './MarkdownHint.vue'
+
+const descRef = ref(null)
 
 const props = defineProps({ projects: Array, entry: Object, loading: Boolean })
 const emit  = defineEmits(['submit', 'cancel'])

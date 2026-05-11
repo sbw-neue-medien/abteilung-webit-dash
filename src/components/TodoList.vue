@@ -70,9 +70,9 @@
         <div>
           <div class="flex items-center gap-1 mb-1">
             <label class="label mb-0">Beschreibung</label>
-            <MarkdownHint />
+            <MarkdownHint :target="descRef" />
           </div>
-          <textarea v-model="form.description" class="input" rows="2" />
+          <textarea ref="descRef" v-model="form.description" class="input" rows="2" />
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
@@ -106,6 +106,8 @@ import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
 import MarkdownHint from './MarkdownHint.vue'
+
+const descRef = ref(null)
 
 const todos = useTodosStore()
 const auth  = useAuthStore()

@@ -93,9 +93,9 @@
         <div>
           <div class="flex items-center gap-1 mb-1">
             <label class="label mb-0">Sprint-Ziel</label>
-            <MarkdownHint />
+            <MarkdownHint :target="goalRef" />
           </div>
-          <textarea v-model="form.goal" class="input" rows="2" placeholder="Was soll dieser Sprint erreichen?" />
+          <textarea ref="goalRef" v-model="form.goal" class="input" rows="2" placeholder="Was soll dieser Sprint erreichen?" />
         </div>
         <div class="flex gap-2 justify-end pt-2">
           <button type="button" class="btn-secondary" @click="showModal = false">Abbrechen</button>
@@ -114,6 +114,8 @@ import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
 import MarkdownHint from './MarkdownHint.vue'
+
+const goalRef = ref(null)
 
 const props = defineProps({ tasks: { type: Array, default: () => [] } })
 

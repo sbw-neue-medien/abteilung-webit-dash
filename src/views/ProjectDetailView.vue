@@ -76,9 +76,9 @@
         <div>
           <div class="flex items-center gap-1 mb-1">
             <label class="label mb-0">Beschreibung</label>
-            <MarkdownHint />
+            <MarkdownHint :target="taskDescRef" />
           </div>
-          <textarea v-model="taskForm.description" class="input" rows="3" />
+          <textarea ref="taskDescRef" v-model="taskForm.description" class="input" rows="3" />
         </div>
         <div>
           <label class="label">Spalte</label>
@@ -151,9 +151,9 @@
       <form @submit.prevent="saveDescription" class="space-y-4">
         <div class="flex items-center gap-1 mb-1">
           <label class="label mb-0">Beschreibung</label>
-          <MarkdownHint />
+          <MarkdownHint :target="projDescRef" />
         </div>
-        <textarea v-model="descDraft" class="input" rows="6" placeholder="Beschreibung (Markdown möglich)" />
+        <textarea ref="projDescRef" v-model="descDraft" class="input" rows="6" placeholder="Beschreibung (Markdown möglich)" />
         <div class="flex gap-2 justify-end">
           <button type="button" class="btn-secondary" @click="showDescEdit = false">Abbrechen</button>
           <button type="submit" class="btn-primary" :disabled="saving">{{ saving ? 'Speichern…' : 'Speichern' }}</button>
@@ -179,6 +179,9 @@ import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import MarkdownRenderer from '../components/MarkdownRenderer.vue'
 import MarkdownHint from '../components/MarkdownHint.vue'
+
+const taskDescRef = ref(null)
+const projDescRef = ref(null)
 import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 
 const route      = useRoute()
