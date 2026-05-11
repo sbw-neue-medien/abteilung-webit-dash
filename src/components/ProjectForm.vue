@@ -9,11 +9,7 @@
       <input v-model="form.client" class="input" placeholder="optional" />
     </div>
     <div>
-      <div class="flex items-center gap-1 mb-1">
-        <label class="label mb-0">Beschreibung</label>
-        <MarkdownHint :target="descRef" />
-      </div>
-      <textarea ref="descRef" v-model="form.description" class="input" rows="3" />
+      <MarkdownTextarea label="Beschreibung" v-model="form.description" />
     </div>
     <div>
       <label class="label">Status</label>
@@ -79,9 +75,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import MarkdownHint from './MarkdownHint.vue'
-
-const descRef = ref(null)
+import MarkdownTextarea from './MarkdownTextarea.vue'
 
 const props = defineProps({
   project:      Object,

@@ -91,11 +91,7 @@
           </div>
         </div>
         <div>
-          <div class="flex items-center gap-1 mb-1">
-            <label class="label mb-0">Sprint-Ziel</label>
-            <MarkdownHint :target="goalRef" />
-          </div>
-          <textarea ref="goalRef" v-model="form.goal" class="input" rows="2" placeholder="Was soll dieser Sprint erreichen?" />
+          <MarkdownTextarea label="Sprint-Ziel" v-model="form.goal" :rows="2" placeholder="Was soll dieser Sprint erreichen?" />
         </div>
         <div class="flex gap-2 justify-end pt-2">
           <button type="button" class="btn-secondary" @click="showModal = false">Abbrechen</button>
@@ -113,9 +109,7 @@ import { useAuthStore } from '../stores/auth.js'
 import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
-import MarkdownHint from './MarkdownHint.vue'
-
-const goalRef = ref(null)
+import MarkdownTextarea from './MarkdownTextarea.vue'
 
 const props = defineProps({ tasks: { type: Array, default: () => [] } })
 

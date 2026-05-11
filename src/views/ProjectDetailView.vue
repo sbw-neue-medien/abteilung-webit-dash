@@ -73,12 +73,7 @@
           <label class="label">Titel *</label>
           <input v-model="taskForm.title" class="input" required />
         </div>
-        <div>
-          <div class="flex items-center gap-1 mb-1">
-            <label class="label mb-0">Beschreibung</label>
-            <MarkdownHint :target="taskDescRef" />
-          </div>
-          <textarea ref="taskDescRef" v-model="taskForm.description" class="input" rows="3" />
+        <MarkdownTextarea label="Beschreibung" v-model="taskForm.description" />
         </div>
         <div>
           <label class="label">Spalte</label>
@@ -149,11 +144,7 @@
 
     <Modal v-model="showDescEdit" title="Beschreibung bearbeiten">
       <form @submit.prevent="saveDescription" class="space-y-4">
-        <div class="flex items-center gap-1 mb-1">
-          <label class="label mb-0">Beschreibung</label>
-          <MarkdownHint :target="projDescRef" />
-        </div>
-        <textarea ref="projDescRef" v-model="descDraft" class="input" rows="6" placeholder="Beschreibung (Markdown möglich)" />
+        <MarkdownTextarea label="Beschreibung" v-model="descDraft" :rows="6" placeholder="Beschreibung (Markdown möglich)" />
         <div class="flex gap-2 justify-end">
           <button type="button" class="btn-secondary" @click="showDescEdit = false">Abbrechen</button>
           <button type="submit" class="btn-primary" :disabled="saving">{{ saving ? 'Speichern…' : 'Speichern' }}</button>
@@ -178,10 +169,7 @@ import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import MarkdownRenderer from '../components/MarkdownRenderer.vue'
-import MarkdownHint from '../components/MarkdownHint.vue'
-
-const taskDescRef = ref(null)
-const projDescRef = ref(null)
+import MarkdownTextarea from '../components/MarkdownTextarea.vue'
 import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 
 const route      = useRoute()
