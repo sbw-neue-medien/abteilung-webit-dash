@@ -91,7 +91,10 @@
           </div>
         </div>
         <div>
-          <label class="label">Sprint-Ziel</label>
+          <div class="flex items-center gap-1 mb-1">
+            <label class="label mb-0">Sprint-Ziel</label>
+            <MarkdownHint />
+          </div>
           <textarea v-model="form.goal" class="input" rows="2" placeholder="Was soll dieser Sprint erreichen?" />
         </div>
         <div class="flex gap-2 justify-end pt-2">
@@ -110,6 +113,7 @@ import { useAuthStore } from '../stores/auth.js'
 import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
+import MarkdownHint from './MarkdownHint.vue'
 
 const props = defineProps({ tasks: { type: Array, default: () => [] } })
 

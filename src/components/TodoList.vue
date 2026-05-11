@@ -68,7 +68,10 @@
           <input v-model="form.title" class="input" required />
         </div>
         <div>
-          <label class="label">Beschreibung</label>
+          <div class="flex items-center gap-1 mb-1">
+            <label class="label mb-0">Beschreibung</label>
+            <MarkdownHint />
+          </div>
           <textarea v-model="form.description" class="input" rows="2" />
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -102,6 +105,7 @@ import { useAuthStore } from '../stores/auth.js'
 import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
+import MarkdownHint from './MarkdownHint.vue'
 
 const todos = useTodosStore()
 const auth  = useAuthStore()
