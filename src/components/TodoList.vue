@@ -35,11 +35,9 @@
           </p>
           <MarkdownRenderer v-if="todo.description" class="mt-0.5 text-xs" :content="todo.description" />
           <div class="flex flex-wrap items-center gap-3 mt-1.5">
-            <span class="text-xs text-lo">
-              <span class="font-medium text-mid">Geplant:</span> {{ formatDuration(todo.planned_duration_min) }}
-            </span>
-            <span v-if="todo.actual_duration_min" class="text-xs text-lo">
-              <span class="font-medium text-mid">Realisiert:</span> {{ formatDuration(todo.actual_duration_min) }}
+            <span class="flex items-center gap-1" :class="priorityColor(todo.priority)" :title="priorityLabel(todo.priority)">
+              <PriorityIcon :level="Number(todo.priority)" class="w-4 h-4" />
+              <span class="text-xs">{{ priorityLabel(todo.priority) }}</span>
             </span>
             <span class="text-xs text-lo">{{ todo.creator_name }}</span>
           </div>
@@ -70,19 +68,21 @@
         <div>
           <MarkdownTextarea label="Beschreibung" v-model="form.description" :rows="2" />
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="label">Geplanter Aufwand *</label>
-            <select v-model.number="form.planned_duration_min" class="input" required>
-              <option v-for="opt in durationOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-            </select>
-          </div>
-          <div v-if="editing">
-            <label class="label">Realisierter Aufwand</label>
-            <select v-model.number="form.actual_duration_min" class="input">
-              <option :value="null">— noch offen —</option>
-              <option v-for="opt in durationOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-            </select>
+        <div>
+          <label class="label">Priorität</label>
+          <div class="flex gap-2 mt-1">
+            <button
+              v-for="lvl in [1,2,3,4,5]" :key="lvl"
+              type="button"
+              @click="form.priority = lvl"
+              class="flex-1 flex flex-col items-center gap-1 py-2 rounded-lg ring-1 transition-colors"
+              :class="form.priority === lvl
+                ? 'ring-2 ring-brand-500 bg-brand-subtle ' + priorityColor(lvl)
+                : 'ring-line text-lo hover:text-mid'"
+            >
+              <PriorityIcon :level="lvl" class="w-4 h-4" />
+              <span class="text-xs">{{ lvl }}</span>
+            </button>
           </div>
         </div>
         <div class="flex gap-2 justify-end pt-2">
@@ -95,59 +95,44 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useTodosStore } from '../stores/todos.js'
 import { useAuthStore } from '../stores/auth.js'
 import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
 import MarkdownTextarea from './MarkdownTextarea.vue'
+import PriorityIcon from './PriorityIcon.vue'
 
 const todos = useTodosStore()
 const auth  = useAuthStore()
 
 const showModal = ref(false)
 const editing   = ref(null)
-const form      = ref({ title: '', description: '', planned_duration_min: 30, actual_duration_min: null })
+const form      = ref({ title: '', description: '', priority: 3 })
 
-const durationOptions = computed(() => {
-  const opts = []
-  for (let min = 15; min <= 480; min += 15) {
-    const h = Math.floor(min / 60)
-    const m = min % 60
-    const label = h > 0 && m > 0 ? `${h} Std. ${m} Min.`
-                : h > 0          ? `${h} Std.`
-                :                  `${m} Min.`
-    opts.push({ value: min, label })
-  }
-  return opts
-})
+const PRIORITY_LABELS = ['', 'Niedrig', 'Gering', 'Mittel', 'Hoch', 'Kritisch']
+const PRIORITY_COLORS = ['', 'text-lo', 'text-blue-400', 'text-amber-400', 'text-orange-500', 'text-red-500']
 
-function formatDuration(min) {
-  const h = Math.floor(min / 60)
-  const m = min % 60
-  if (h > 0 && m > 0) return `${h} Std. ${m} Min.`
-  if (h > 0)           return `${h} Std.`
-  return `${m} Min.`
-}
+function priorityLabel(p) { return PRIORITY_LABELS[Number(p)] ?? 'Mittel' }
+function priorityColor(p) { return PRIORITY_COLORS[Number(p)] ?? 'text-lo' }
 
 function canModify(todo) {
   return auth.can('todos.update_all') || Number(todo.created_by) === Number(auth.user?.id)
 }
 
 function openAdd() {
-  editing.value = null
-  form.value    = { title: '', description: '', planned_duration_min: 30, actual_duration_min: null }
+  editing.value   = null
+  form.value      = { title: '', description: '', priority: 3 }
   showModal.value = true
 }
 
 function openEdit(todo) {
   editing.value = todo
   form.value = {
-    title:                todo.title,
-    description:          todo.description ?? '',
-    planned_duration_min: Number(todo.planned_duration_min),
-    actual_duration_min:  todo.actual_duration_min ? Number(todo.actual_duration_min) : null,
+    title:       todo.title,
+    description: todo.description ?? '',
+    priority:    Number(todo.priority) || 3,
   }
   showModal.value = true
 }
@@ -162,11 +147,7 @@ async function save() {
 }
 
 async function toggleDone(todo) {
-  const patch = { done: !todo.done }
-  if (!todo.done && !todo.actual_duration_min) {
-    patch.actual_duration_min = todo.planned_duration_min
-  }
-  await todos.update(todo.id, patch)
+  await todos.update(todo.id, { done: !todo.done })
 }
 
 async function remove(id) {
