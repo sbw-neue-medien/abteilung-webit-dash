@@ -23,6 +23,9 @@ set ftp:ssl-allow yes
 set net:max-retries 3
 set net:timeout 10
 
+# Alte Assets entfernen (Hashes ändern bei jedem Build)
+glob rm -rf /assets/*
+
 # Ohne --delete: api/, uploads/ und alles andere auf dem Server bleibt unangetastet
 mirror --reverse --parallel=4 --verbose dist/ /
 
