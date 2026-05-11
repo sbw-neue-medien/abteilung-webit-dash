@@ -47,6 +47,14 @@
         </div>
       </div>
 
+      <div v-if="mentors.length">
+        <label class="label">Mentor (optional)</label>
+        <select v-model="form.mentor_id" class="input">
+          <option :value="null">— Kein Mentor —</option>
+          <option v-for="m in mentors" :key="m.id" :value="m.id">{{ m.name }}</option>
+        </select>
+      </div>
+
       <template v-if="!project">
         <div v-if="templates.length && !form.is_template">
           <label class="label">Vorlage verwenden</label>
@@ -80,6 +88,7 @@ import MarkdownTextarea from './MarkdownTextarea.vue'
 const props = defineProps({
   project:      Object,
   users:        { type: Array, default: () => [] },
+  mentors:      { type: Array, default: () => [] },
   templates:    { type: Array, default: () => [] },
   loading:      Boolean,
   personalOnly: { type: Boolean, default: false },
@@ -88,7 +97,7 @@ const emit = defineEmits(['submit', 'cancel'])
 
 const form = ref({
   name: '', client: '', description: '', status: 'geplant',
-  is_personal: false, owner_id: null, member_ids: [],
+  is_personal: false, owner_id: null, member_ids: [], mentor_id: null,
   is_template: false, template_id: null,
 })
 
@@ -102,6 +111,7 @@ watch(() => props.project, (p) => {
     is_personal: !!p.is_personal,
     owner_id:    p.is_personal ? (p.owner_id ?? null) : null,
     member_ids:  p.members ? p.members.map(m => m.id) : (p.member_ids ?? []),
+    mentor_id:   p.mentor_id ?? null,
     is_template: false,
     template_id: null,
   }
