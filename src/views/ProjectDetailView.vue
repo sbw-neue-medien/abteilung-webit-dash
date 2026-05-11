@@ -137,7 +137,7 @@
     </Modal>
 
     <Modal v-model="showEdit" title="Projekt bearbeiten">
-      <ProjectForm :project="projects.current" :users="allUsers" :loading="saving"
+      <ProjectForm :project="projects.current" :users="allUsers" :mentors="mentors" :loading="saving"
         @submit="saveProject" @cancel="showEdit = false" />
     </Modal>
 
@@ -192,6 +192,7 @@ const canEditOwnDescription = computed(() =>
   projects.current?.owner_id === auth.user?.id
 )
 const allUsers       = ref([])
+const mentors        = ref([])
 const sprintFilter   = ref(null)
 const isSerie        = ref(false)
 const serieSprintIds = ref([])
@@ -217,6 +218,9 @@ onMounted(async () => {
   if (auth.can('projects.manage_members')) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender' && u.active)
+  }
+  if (auth.can('projects.update')) {
+    mentors.value = await api.getMentors()
   }
 })
 

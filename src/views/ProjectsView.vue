@@ -65,7 +65,10 @@
             </span>
           </div>
           <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
-            <span class="text-xs text-lo">{{ p.owner_name }}</span>
+            <div class="flex flex-col gap-0.5">
+              <span class="text-xs text-lo">{{ p.owner_name }}</span>
+              <span v-if="p.mentor_name" class="text-xs text-lo">Mentor: {{ p.mentor_name }}</span>
+            </div>
             <div v-if="canEditProject(p)" class="flex gap-1" @click.stop>
               <button class="btn btn-sm btn-secondary" @click="openEdit(p)">Bearbeiten</button>
               <ConfirmButton class="btn btn-sm btn-danger" :label="`Projekt «${p.name}» wirklich löschen?`" @confirm="confirmDelete(p)">Löschen</ConfirmButton>
@@ -101,6 +104,7 @@
       <ProjectForm
         :project="editing"
         :users="auth.can('projects.create') ? users.list.filter(u => u.role === 'lernender' && u.active) : []"
+        :mentors="auth.can('projects.create') ? mentors : []"
         :templates="activeTab === 'projekte' ? projects.templates : []"
         :loading="saving"
         :personal-only="!auth.can('projects.create')"
@@ -117,6 +121,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
+import { api } from '../api/index.js'
 import ConfirmButton from '../components/ConfirmButton.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
@@ -132,6 +137,7 @@ const projects = useProjectsStore()
 const users    = useUsersStore()
 const router   = useRouter()
 
+const mentors        = ref([])
 const showModal      = ref(false)
 const editing        = ref(null)
 const saving         = ref(false)
@@ -178,11 +184,12 @@ function canEditProject(p) {
   return auth.can('projects.update_own') && p.is_personal && p.owner_id === auth.user?.id
 }
 
-onMounted(() => {
+onMounted(async () => {
   projects.fetchAll()
   if (auth.can('projects.create')) {
     users.fetchAll()
     projects.fetchTemplates()
+    mentors.value = await api.getMentors()
   }
 })
 
