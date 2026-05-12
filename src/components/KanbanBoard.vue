@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative max-w-7xl mx-auto">
     <button
       v-if="canScrollLeft"
       @click="scrollBy(-1)"
