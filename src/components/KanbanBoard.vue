@@ -17,7 +17,7 @@
       @scroll.passive="onScroll"
     >
       <div v-for="col in columns" :key="col.status"
-        class="flex-shrink-0 w-60 flex flex-col gap-2 snap-center"
+        class="flex-shrink-0 w-72 flex flex-col gap-2 snap-center"
         @dragover.prevent
         @dragenter.prevent="onDragEnter(col.status)"
         @dragleave="dragOver = null"
@@ -109,7 +109,7 @@ function onScroll() {
 function scrollBy(dir) {
   const el = scrollEl.value
   if (!el) return
-  const colWidth = 240 + 16 // w-60 (240px) + gap-4 (16px)
+  const colWidth = 288 + 16 // w-72 (288px) + gap-4 (16px)
   el.scrollBy({ left: dir * colWidth, behavior: 'smooth' })
 }
 
