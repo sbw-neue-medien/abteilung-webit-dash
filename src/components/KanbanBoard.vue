@@ -13,11 +13,11 @@
 
     <div
       ref="scrollEl"
-      class="flex gap-4 overflow-x-auto pb-4 min-h-[60vh] snap-x snap-mandatory scrollbar-hide"
+      class="flex gap-2 overflow-x-auto pb-4 min-h-[60vh] snap-x snap-mandatory scrollbar-hide"
       @scroll.passive="onScroll"
     >
       <div v-for="col in columns" :key="col.status"
-        class="flex-shrink-0 w-72 flex flex-col gap-2 snap-center"
+        class="flex-shrink-0 w-[19rem] flex flex-col gap-2 snap-center"
         @dragover.prevent
         @dragenter.prevent="onDragEnter(col.status)"
         @dragleave="dragOver = null"
@@ -109,7 +109,7 @@ function onScroll() {
 function scrollBy(dir) {
   const el = scrollEl.value
   if (!el) return
-  const colWidth = 288 + 16 // w-72 (288px) + gap-4 (16px)
+  const colWidth = 304 + 8 // w-[19rem] (304px) + gap-2 (8px)
   el.scrollBy({ left: dir * colWidth, behavior: 'smooth' })
 }
 
