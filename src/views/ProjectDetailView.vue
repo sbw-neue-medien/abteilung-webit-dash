@@ -192,6 +192,12 @@ const canEditOwnDescription = computed(() =>
 const allUsers       = ref([])
 const mentors        = ref([])
 const sprintFilter   = ref(null)
+
+function currentSprintId() {
+  const today = new Date().toISOString().slice(0, 10)
+  const active = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
+  return active?.id ?? null
+}
 const isSerie        = ref(false)
 const serieSprintIds = ref([])
 const taskForm       = ref({
@@ -213,6 +219,7 @@ onMounted(async () => {
     todos.fetchForProject(id),
     sprints.fetchAll(),
   ])
+  sprintFilter.value = currentSprintId()
   if (auth.can('projects.manage_members')) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender' && u.active)
