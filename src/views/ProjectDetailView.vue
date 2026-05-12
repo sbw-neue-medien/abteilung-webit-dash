@@ -45,10 +45,8 @@
         </button>
       </div>
 
-      <div class="max-w-7xl mx-auto">
-        <KanbanBoard :tasks="filteredTasks" :readonly="!auth.can('tasks.create')"
-                     @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
-      </div>
+      <KanbanBoard :tasks="filteredTasks" :readonly="!auth.can('tasks.create')"
+                   @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
 
       <div v-if="auth.can('projects.manage_members') && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
         <h3 class="text-sm font-semibold text-lo uppercase tracking-wide mb-2">Mitglieder</h3>
