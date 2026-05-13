@@ -34,7 +34,7 @@
           {{ f.label }}
         </button>
         <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer select-none ml-1">
-          <input type="checkbox" v-model="showPersonal" class="rounded accent-brand-600" />
+          <input type="checkbox" :checked="showPersonal" @change="togglePersonal" class="rounded accent-brand-600" />
           Eigenprojekte
         </label>
         <select v-if="auth.can('projects.create') && lernende.length"
@@ -144,7 +144,7 @@ const saving         = ref(false)
 const activeFilter   = ref('alle')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
-const showPersonal   = ref(true)
+const showPersonal   = ref(localStorage.getItem("show-personal") !== "false");
 
 const tabs = [
   { value: 'projekte', label: 'Projekte' },
@@ -195,7 +195,14 @@ onMounted(async () => {
 
 function openCreate() { editing.value = null; showModal.value = true }
 function openEdit(p)  { editing.value = p;    showModal.value = true }
-
+function showPersonal(value) {
+  showPersonal = !showPersonal;
+  localStorage.setItem( "showPersonal", showPersonal);
+}
+function toggleShowPersonal() {
+  showPersonal.value = !showPersonal.value
+  localStorage.setItem('show-personal', String(showPersonal.value))
+}
 async function save(body) {
   saving.value = true
   try {
