@@ -45,7 +45,7 @@ jobs:
         path: new-deploy
 
     - name: Install lftp
-      run: sudo apt-get update && sudo apt-get install -y lftp
+      run: sudo apt-get install -y lftp
 
     - name: SFTP Deploy with backup and rollback capability
       env:
@@ -93,7 +93,7 @@ jobs:
 
     steps:
     - name: Install lftp
-      run: sudo apt-get update && sudo apt-get install -y lftp
+      run: sudo apt-get install -y lftp
 
     - name: List available backups
       id: list-backups
@@ -162,7 +162,7 @@ jobs:
 
     steps:
     - name: Install lftp
-      run: sudo apt-get update && sudo apt-get install -y lftp
+      run: sudo apt-get install -y lftp
 
     - name: Clean old backups (keep last 10)
       env:
