@@ -53,18 +53,15 @@ jobs:
     
     - name: Install lftp
       run: sudo apt-get update && sudo apt-get install -y lftp
-    - name: Dump vars context
-      env:
-          VARS_JSON: ${{ toJSON(vars) }}
-      run: echo "${VARS_JSON}"
+
     - name: SFTP Deploy with backup and rollback capability
       env:
-        SFTP_HOST: ${{ secrets.SFTP_HOST }}
-        SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+        SFTP_HOST: ${{ vars.SFTP_HOST }}
+        SFTP_USERNAME: ${{ vars.SFTP_USERNAME }}
         SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-        SFTP_PORT: ${{ secrets.SFTP_PORT || '22' }}
-        SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
-        BACKUP_PATH: ${{ secrets.SFTP_BACKUP_PATH || 'backups' }}
+        SFTP_PORT: ${{ vars.SFTP_PORT || '22' }}
+        SFTP_REMOTE_PATH: ${{ vars.SFTP_REMOTE_PATH }}
+        BACKUP_PATH: ${{ vars.SFTP_BACKUP_PATH || 'backups' }}
         TIMESTAMP: ${{ github.run_number }}-${{ github.sha }}-$(date +'%Y%m%d-%H%M%S')
       run: |
         # Create timestamp for this deployment
