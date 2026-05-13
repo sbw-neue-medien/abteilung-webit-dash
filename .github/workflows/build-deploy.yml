@@ -64,6 +64,7 @@ jobs:
         echo "Backup name: ${BACKUP_NAME}"
         echo "New deployment from commit: ${GITHUB_SHA}"
         echo "Local source: ${NEW_DEPLOY_PATH}"
+        echo "SFTP target: sftp://${SFTP_HOST}:${SFTP_PORT}${SFTP_REMOTE_PATH} (user: ${SFTP_USERNAME})"
 
         lftp -c "
         set sftp:auto-confirm yes;
