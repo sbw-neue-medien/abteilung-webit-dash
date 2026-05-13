@@ -195,7 +195,7 @@ onMounted(async () => {
 
 function openCreate() { editing.value = null; showModal.value = true }
 function openEdit(p)  { editing.value = p;    showModal.value = true }
-function showPersonal(value) {
+function toglePersonal(value) {
   showPersonal = !showPersonal;
   localStorage.setItem( "showPersonal", showPersonal);
 }
