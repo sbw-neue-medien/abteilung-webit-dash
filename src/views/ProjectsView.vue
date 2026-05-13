@@ -144,7 +144,7 @@ const saving         = ref(false)
 const activeFilter   = ref('alle')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
-const showPersonal   = ref(true)
+const showPersonal   = ref(localStorage.getItem("show-personal") !== "false" ?? true);
 
 const tabs = [
   { value: 'projekte', label: 'Projekte' },
@@ -195,7 +195,10 @@ onMounted(async () => {
 
 function openCreate() { editing.value = null; showModal.value = true }
 function openEdit(p)  { editing.value = p;    showModal.value = true }
-
+function showPersonal(value) {
+  showPersonal = !showPersonal;
+  localStorage.setItem( "showPersonal", showPersonal);
+}
 async function save(body) {
   saving.value = true
   try {
