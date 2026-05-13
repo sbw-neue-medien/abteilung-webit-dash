@@ -74,4 +74,5 @@ Mittagspause|12:15 – 13:10 Uhr (55 Minuten)
 Nachmittagspause|15:10 – 15:20 Uhr (10 Minuten)
 Arbeitsschluss|17:05 Uhr
 
-Vormittags ist Schule BM/BF, am Mittwoch findet dann noch die SOL / Lerndokumentation stunden statt. Es bleiben also pro Tag Brutto 2Std. + 1Std.45Min = 3Std. 45Min. 
+Vormittags ist Schule BM/BF, Es bleiben also pro Tag Brutto 2Std. + 1Std.45Min = 3Std. 45Min oder __225Min.__ für Betrieb.
+Am Mittwoch findet die _SOL_- / _Lerndokumentation_-Stunden statt. So bleiben in einer regulieren Woche __900Min.__ Brutto-Arbeitszeit.
