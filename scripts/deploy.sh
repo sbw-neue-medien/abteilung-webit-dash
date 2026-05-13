@@ -17,6 +17,10 @@ echo "→ Build starten…"
 npm run build
 
 # ── Deploy via lftp ────────────────────────────────────────
+# store password in .netrc for lftp
+# echo "machine ${FTP_HOST} login ${FTP_USER} password ${FTP_PASSWORD}" > ~/.netrc
+# chmod 600 ~/.netrc
+
 echo "→ Uploade dist/ nach ${FTP_HOST}${FTP_REMOTE}…"
 lftp -u "${FTP_USER}" "${FTP_HOST}" <<'LFTP'
 set ftp:ssl-allow yes
