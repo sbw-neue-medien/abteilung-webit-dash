@@ -55,6 +55,7 @@ jobs:
         SFTP_PORT: ${{ vars.SFTP_PORT || '22' }}
         SFTP_REMOTE_PATH: ${{ vars.SFTP_REMOTE_PATH }}
         BACKUP_PATH: ${{ vars.SFTP_BACKUP_PATH || 'backups' }}
+        NEW_DEPLOY_PATH: ${{ github.workspace }}/new-deploy
       run: |
         DEPLOY_TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
         BACKUP_NAME="backup_${DEPLOY_TIMESTAMP}_${GITHUB_RUN_NUMBER}"
@@ -62,11 +63,13 @@ jobs:
         echo "Starting deployment with backup..."
         echo "Backup name: ${BACKUP_NAME}"
         echo "New deployment from commit: ${GITHUB_SHA}"
+        echo "Local source: ${NEW_DEPLOY_PATH}"
 
         lftp -c "
         set sftp:auto-confirm yes;
         set net:timeout 30;
         set net:max-retries 3;
+        set cmd:fail-exit yes;
 
         open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
 
@@ -78,10 +81,10 @@ jobs:
         echo 'Backup created: ../$BACKUP_PATH/${BACKUP_NAME}';
 
         echo 'Uploading new deployment...';
-        mirror -R --delete ../new-deploy/ ./;
+        mirror -R --delete $NEW_DEPLOY_PATH/ ./;
 
         echo 'New deployment uploaded successfully';
-        ls -la .;
+        ls -l .;
         "
 
   rollback:
@@ -146,7 +149,7 @@ jobs:
         mirror -R --delete ../$BACKUP_PATH/${LATEST_BACKUP}/ ./;
 
         echo 'Rollback completed successfully';
-        ls -la .;
+        ls -l .;
         "
 
     - name: Rollback notification
