@@ -67,7 +67,7 @@ jobs:
         echo "SFTP target: sftp://${SFTP_HOST}:${SFTP_PORT}${SFTP_REMOTE_PATH} (user: ${SFTP_USERNAME})"
 
         lftp -c "
-        set sftp:auto-confirm yes;
+        set ftp:ssl-allow yes;
         set net:timeout 30;
         set net:max-retries 3;
         set cmd:fail-exit yes;
@@ -110,7 +110,7 @@ jobs:
       run: |
         echo "Available backups:"
         lftp -c "
-        set sftp:auto-confirm yes;
+        set ftp:ssl-allow yes;
         open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
         cd $BACKUP_PATH;
         ls -lt;
@@ -138,8 +138,8 @@ jobs:
         echo "Rolling back to backup: ${LATEST_BACKUP}"
 
         lftp -c "
-        set sftp:auto-confirm yes;
-        set net:timeout 30;
+        set ftp:ssl-allow yes;
+        set net:timeout 10;
         set net:max-retries 3;
 
         open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
@@ -179,7 +179,7 @@ jobs:
         echo "Cleaning old backups (keeping last 10)..."
 
         lftp -c "
-        set sftp:auto-confirm yes;
+        set ftp:ssl-allow yes;
         open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
         cd $BACKUP_PATH;
         ls -lt;
@@ -195,7 +195,7 @@ jobs:
         for BACKUP in $OLD_BACKUPS; do
           echo "Removing old backup: $BACKUP"
           lftp -c "
-          set sftp:auto-confirm yes;
+          set ftp:ssl-allow yes;
           open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
           cd $BACKUP_PATH;
           rm -rf $BACKUP;
@@ -204,7 +204,7 @@ jobs:
 
         echo "Remaining backups:"
         lftp -c "
-        set sftp:auto-confirm yes;
+        set ftp:ssl-allow yes;
         open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
         cd $BACKUP_PATH;
         ls -lt;
