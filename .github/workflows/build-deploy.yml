@@ -49,7 +49,10 @@ jobs:
     
     - name: Install lftp
       run: sudo apt-get update && sudo apt-get install -y lftp
-    
+    - name: Dump vars context
+      env:
+          VARS_JSON: ${{ toJSON(vars) }}
+      run: echo "${VARS_JSON}"
     - name: SFTP Deploy with backup and rollback capability
       env:
         SFTP_HOST: ${{ secrets.SFTP_HOST }}
