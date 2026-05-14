@@ -141,7 +141,7 @@ const mentors        = ref([])
 const showModal      = ref(false)
 const editing        = ref(null)
 const saving         = ref(false)
-const activeFilter   = ref('alle')
+const activeFilter   = ref('aktiv')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
 const showPersonal   = ref(localStorage.getItem("show-personal") !== "false");
