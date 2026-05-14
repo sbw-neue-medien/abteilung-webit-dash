@@ -74,8 +74,6 @@ jobs:
 
         open -u $SFTP_USERNAME,$SFTP_PASSWORD ftp://$SFTP_HOST;
 
-        cd $SFTP_REMOTE_PATH;
-
         echo 'Taking snapshot of current deployment...';
         mkdir -p $BACKUP_PATH/${BACKUP_NAME};
         mirror . $BACKUP_PATH/${BACKUP_NAME}/;
@@ -112,7 +110,7 @@ jobs:
         lftp -c "
         set ftp:ssl-allow yes;
         open -u $SFTP_USERNAME,$SFTP_PASSWORD ftp://$SFTP_HOST;
-        cd $BACKUP_PATH;
+
         ls -lt;
         " > backups.txt
 
