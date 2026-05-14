@@ -30,7 +30,7 @@
       <div class="flex flex-wrap items-center gap-2 mb-5">
         <button v-for="f in filters" :key="f.value" class="btn btn-sm"
           :class="activeFilter === f.value ? 'btn-primary' : 'btn-secondary'"
-          @click="activeFilter = f.value">
+          @click="setFilter(f.value)">
           {{ f.label }}
         </button>
         <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer select-none ml-1">
@@ -141,7 +141,7 @@ const mentors        = ref([])
 const showModal      = ref(false)
 const editing        = ref(null)
 const saving         = ref(false)
-const activeFilter   = ref('aktiv')
+const activeFilter   = ref(localStorage.getItem('project-filter') || 'aktiv')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
 const showPersonal   = ref(localStorage.getItem("show-personal") !== "false");
@@ -198,6 +198,10 @@ function openEdit(p)  { editing.value = p;    showModal.value = true }
 function togglePersonal() {
   showPersonal.value = !showPersonal.value
   localStorage.setItem('show-personal', String(showPersonal.value))
+}
+function setFilter(filter) {
+  activeFilter.value = filter
+  localStorage.setItem('project-filter', filter)
 }
 async function save(body) {
   saving.value = true
