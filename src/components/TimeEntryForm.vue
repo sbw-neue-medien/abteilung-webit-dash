@@ -27,7 +27,7 @@
         <input v-model.number="minutes" type="number" min="0" max="59" step="5" class="input w-20" placeholder="Min" />
         <span class="text-mid text-sm">min</span>
       </div>
-      <p class="mt-1 text-xs text-lo">Reguläre Arbeitszeit: 3h 35min — Ausnahmen möglich</p>
+      <p class="mt-1 text-xs text-lo">Reguläre, tägliche Arbeitszeit: 3h 45min — Ausnahmen möglich</p>
     </div>
     <div>
       <MarkdownTextarea label="Tätigkeit" v-model="form.description" placeholder="Was wurde erledigt?" />
