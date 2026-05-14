@@ -42,12 +42,12 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: build-output
-        path: new-deploy
+        path: deploy-stage
 
     - name: Install lftp
       run: sudo apt-get install -y lftp
 
-    - name: SFTP Deploy with backup and rollback capability
+    - name: LFTP Deploy with backup and rollback capability
       env:
         SFTP_HOST: ${{ vars.SFTP_HOST }}
         SFTP_USERNAME: ${{ vars.SFTP_USERNAME }}
@@ -64,7 +64,7 @@ jobs:
         echo "Backup name: ${BACKUP_NAME}"
         echo "New deployment from commit: ${GITHUB_SHA}"
         echo "Local source: ${NEW_DEPLOY_PATH}"
-        echo "SFTP target: sftp://${SFTP_HOST}:${SFTP_PORT}${SFTP_REMOTE_PATH} (user: ${SFTP_USERNAME})"
+        echo "FTP target: ftp://${SFTP_HOST}:${SFTP_REMOTE_PATH} (user: ${SFTP_USERNAME})"
 
         lftp -c "
         set ftp:ssl-allow yes;
@@ -72,7 +72,7 @@ jobs:
         set net:max-retries 3;
         set cmd:fail-exit yes;
 
-        open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
+        open -u $SFTP_USERNAME,$SFTP_PASSWORD ftp://$SFTP_HOST;
 
         cd $SFTP_REMOTE_PATH;
 
@@ -111,7 +111,7 @@ jobs:
         echo "Available backups:"
         lftp -c "
         set ftp:ssl-allow yes;
-        open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
+        open -u $SFTP_USERNAME,$SFTP_PASSWORD ftp://$SFTP_HOST;
         cd $BACKUP_PATH;
         ls -lt;
         " > backups.txt
@@ -180,7 +180,7 @@ jobs:
 
         lftp -c "
         set ftp:ssl-allow yes;
-        open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
+        open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST;
         cd $BACKUP_PATH;
         ls -lt;
         " > all-backups.txt
@@ -196,7 +196,7 @@ jobs:
           echo "Removing old backup: $BACKUP"
           lftp -c "
           set ftp:ssl-allow yes;
-          open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
+          open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST;
           cd $BACKUP_PATH;
           rm -rf $BACKUP;
           "
@@ -205,7 +205,7 @@ jobs:
         echo "Remaining backups:"
         lftp -c "
         set ftp:ssl-allow yes;
-        open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST:$SFTP_PORT;
+        open -u $SFTP_USERNAME,$SFTP_PASSWORD sftp://$SFTP_HOST;
         cd $BACKUP_PATH;
         ls -lt;
         "
