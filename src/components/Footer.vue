@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-black dark:bg-zinc-950 text-neutral-400 text-xs mt-auto">
+  <footer class="bg-black dark:bg-zinc-950 text-neutral-400 text-xs mt-auto" aria-label="Footer">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-4">
         <a
