@@ -4,7 +4,7 @@
       <TopBar />
       <div class="flex flex-1 overflow-hidden">
         <SideBar />
-        <main class="flex-1 overflow-y-auto">
+        <main class="flex-1 overflow-y-auto flex flex-col">
           <RouterView />
           <Footer />
         </main>
