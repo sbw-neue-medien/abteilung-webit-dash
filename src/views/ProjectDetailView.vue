@@ -23,7 +23,19 @@
             </button>
           </div>
         </div>
-        <MarkdownRenderer v-if="projects.current.description" class="mt-3" :content="projects.current.description" />
+        <div v-if="projects.current.description" class="mt-3">
+          <div :class="descOpen ? '' : 'max-h-[3.5rem] overflow-hidden relative'">
+            <MarkdownRenderer :content="projects.current.description" />
+            <div v-if="!descOpen" class="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-bg to-transparent pointer-events-none" />
+          </div>
+          <button @click="descOpen = !descOpen"
+                  class="mt-1 flex items-center gap-1 text-xs text-lo hover:text-mid transition-colors">
+            <svg class="w-3 h-3 transition-transform" :class="descOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+            {{ descOpen ? 'Weniger anzeigen' : 'Mehr anzeigen' }}
+          </button>
+        </div>
       </div>
 
       <!-- Sprint filter bar -->
@@ -182,6 +194,7 @@ const usersStore = useUsersStore()
 const showTaskModal  = ref(false)
 const showEdit       = ref(false)
 const showDescEdit   = ref(false)
+const descOpen       = ref(false)
 const descDraft      = ref('')
 const editingTask    = ref(null)
 const saving         = ref(false)
