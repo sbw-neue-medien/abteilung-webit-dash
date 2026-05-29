@@ -38,4 +38,7 @@ const columns = computed(() =>
 .markdown-content :deep(h1),
 .markdown-content :deep(h2),
 .markdown-content :deep(h3)          { font-weight: 600; margin-bottom: 0.25rem; }
+.markdown-content :deep(table)       { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; font-size: 0.875rem; }
+.markdown-content :deep(th)          { text-align: left; font-weight: 600; color: var(--c-hi); padding: 0.25rem 0.5rem; border-bottom: 1px solid var(--c-line); }
+.markdown-content :deep(td)          { padding: 0.25rem 0.5rem; border-bottom: 1px solid var(--c-line); }
 </style>
