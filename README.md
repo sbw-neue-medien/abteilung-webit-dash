@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.9.1
+**Version:** 1.9.2
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -159,6 +159,9 @@ npm run build        # Produktions-Build nach dist/
 ---
 
 ## Changelog
+
+### 1.9.2
+- **Bugfix: Aufgabe leer im Zeiterfassungs-Bearbeiten-Formular** — beim Öffnen eines Eintrags blieb das Aufgaben-Feld leer, weil der Projekt-Watcher noch nicht registriert war, als die sofortige Entry-Watch-Initialisierung das Projekt setzte; Reihenfolge der `watch`-Aufrufe getauscht
 
 ### 1.9.1
 - **RSS-Feed-Link** — Leiter sehen im Benachrichtigungs-Dropdown einen «RSS»-Link, der die Feed-URL im neuen Tab öffnet (kompatibel mit MS Teams und RSS-Lesern wie Vivaldi)
