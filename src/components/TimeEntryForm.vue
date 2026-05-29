@@ -58,18 +58,6 @@ const minutes      = ref(DEFAULT_MIN % 60)
 const tasks        = ref([])
 const tasksLoading = ref(false)
 
-watch(() => props.entry, (e) => {
-  if (!e) {
-    form.value    = { date: today, project_id: '', task_id: null, description: '' }
-    hours.value   = Math.floor(DEFAULT_MIN / 60)
-    minutes.value = DEFAULT_MIN % 60
-    return
-  }
-  form.value    = { date: e.date, project_id: e.project_id, task_id: e.task_id ?? null, description: e.description ?? '' }
-  hours.value   = Math.floor(e.duration_min / 60)
-  minutes.value = e.duration_min % 60
-}, { immediate: true })
-
 watch(() => form.value.project_id, async (pid) => {
   tasks.value    = []
   form.value.task_id = null
@@ -84,6 +72,18 @@ watch(() => form.value.project_id, async (pid) => {
     form.value.task_id = props.entry.task_id
   }
 })
+
+watch(() => props.entry, (e) => {
+  if (!e) {
+    form.value    = { date: today, project_id: '', task_id: null, description: '' }
+    hours.value   = Math.floor(DEFAULT_MIN / 60)
+    minutes.value = DEFAULT_MIN % 60
+    return
+  }
+  form.value    = { date: e.date, project_id: e.project_id, task_id: e.task_id ?? null, description: e.description ?? '' }
+  hours.value   = Math.floor(e.duration_min / 60)
+  minutes.value = e.duration_min % 60
+}, { immediate: true })
 
 const dayWarning = computed(() => {
   if (!form.value.date) return null
