@@ -23,7 +23,7 @@ Das webIT Abteilungs-Dashboard ist eine interne Webanwendung zur Verwaltung der 
 |---|---|
 | **Leiter** | Vollzugriff — verwaltet Benutzer, Projekte, Sprints, Coaches und Berechtigungen |
 | **Lernpartner** | Sieht eigene und zugewiesene Projekte, erfasst seine Arbeitszeiten |
-| **Coach** | Lesezugriff auf die Daten der zugewiesenen Lernpartner, kein Schreibzugriff |
+| **Coach** | Lesezugriff auf die Daten der zugewiesenen Lernpartner inkl. Lead-Time-Ansicht, kein Schreibzugriff |
 
 ## Was kann die Anwendung?
 
@@ -68,7 +68,7 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 
 ### Neu in Version 1.9.x
 
-- **Lead-Time-Ansicht** — Leiter sehen auf einen Blick, wie viel Prozent der verfügbaren Brutto-Arbeitszeit jeder Lernpartner im gewählten Zeitraum verbucht hat. Ein farbiger Fortschrittsbalken (grün ≥ 80 %, gelb ≥ 50 %, rot < 50 %) ermöglicht eine schnelle Einschätzung der Auslastung. Der Zeitraum wird über einen flexiblen Perioden-Selektor (Woche / Monat / Quartal / benutzerdefiniert) gesteuert. Die verfügbare Bruttozeit wird automatisch aus den Werktagen und der täglichen Netto-Betriebszeit (225 min) berechnet.
+- **Lead-Time-Ansicht** — Leiter und Coaches sehen auf einen Blick, wie viel Prozent der verfügbaren Brutto-Arbeitszeit jeder Lernpartner im gewählten Zeitraum verbucht hat. Coaches sehen dabei nur ihre zugeordneten Lernpartner. Ein farbiger Fortschrittsbalken (grün ≥ 80 %, gelb ≥ 50 %, rot < 50 %) ermöglicht eine schnelle Einschätzung der Auslastung. Der Zeitraum wird über einen flexiblen Perioden-Selektor (Woche / Monat / Quartal / benutzerdefiniert) gesteuert. Die verfügbare Bruttozeit wird automatisch aus den Werktagen und der täglichen Netto-Betriebszeit (225 min) berechnet.
 
 ## Aktueller Stand
 

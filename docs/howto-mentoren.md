@@ -47,17 +47,27 @@ Du erhältst automatisch eine E-Mail-Benachrichtigung, wenn einer deiner Lernend
 
 ---
 
+## Lead Time
+
+Unter **Lead Time** siehst du, wie viel Prozent der verfügbaren Betriebszeit deine Lernenden im gewählten Zeitraum verbucht haben.
+
+- Wähle oben einen Zeitraum (Woche / Monat / Quartal / benutzerdefiniert)
+- Jeder Lernende wird als Balken dargestellt: grün (≥ 80 %), gelb (≥ 50 %), rot (< 50 %)
+- Es werden nur deine zugeordneten Lernenden angezeigt
+
+---
+
 ## Hinweis zu Berechtigungen
 
 | Aktion | Möglich? |
 |--------|----------|
 | Projekte & Aufgaben ansehen | Ja |
 | Zeiteinträge der Lernenden ansehen | Ja |
+| Lead-Time-Statistiken ansehen (eigene Lernende) | Ja |
 | Eigenes Passwort ändern | Ja |
 | E-Mail-Benachrichtigungen steuern | Ja |
 | Aufgaben erstellen / bearbeiten | Nein |
 | Zeiteinträge erstellen / bearbeiten | Nein |
-| Lead-Time-Statistiken einsehen | Nein |
 | Lernende verwalten | Nein |
 
 
