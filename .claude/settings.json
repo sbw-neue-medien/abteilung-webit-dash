@@ -8,7 +8,9 @@
       "Bash(git -C /home/j/Projekte/webIT add README.md management_summary.md package.json)",
       "Bash(git -C /home/j/Projekte/webIT commit -m ' *)",
       "Bash(git -C /home/j/Projekte/webIT/api add README.md)",
-      "Bash(git -C /home/j/Projekte/webIT/api commit -m ' *)"
+      "Bash(git -C /home/j/Projekte/webIT/api commit -m ' *)",
+      "Bash(git -C /home/j/Projekte/webIT/api branch -D feature/role-management feature/user-permission-overrides)",
+      "Bash(git -C /home/j/Projekte/webIT branch -D bug-timeentryform-empty feat-multicolumns-markdown fix/88-zeiterfassung-tabelle-overflow)"
     ]
   }
 }
