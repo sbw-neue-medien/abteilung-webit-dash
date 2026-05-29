@@ -2,7 +2,7 @@
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
 date: "Mai 2026"
-version: "1.9.5"
+version: "1.9.6"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -11,7 +11,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.9.5
+# Stand der Anwendung — Version 1.9.6
 
 ## Worum geht es?
 
@@ -66,12 +66,17 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 - **Coach: Mein Bereich** — Coaches können ihr Passwort und ihre E-Mail-Benachrichtigungen selbst verwalten
 - **Erweiterte E-Mail-Benachrichtigungen** — Leiter und Coaches werden bei neuen Eigenprojekten benachrichtigt
 
-### Neu in Version 1.9.x
+### Neu in Version 1.9.6
 
 - **Lead-Time-Ansicht** — Leiter und Coaches sehen auf einen Blick, wie viel Prozent der verfügbaren Brutto-Arbeitszeit jeder Lernpartner im gewählten Zeitraum verbucht hat. Coaches sehen dabei nur ihre zugeordneten Lernpartner. Ein farbiger Fortschrittsbalken (grün ≥ 80 %, gelb ≥ 50 %, rot < 50 %) ermöglicht eine schnelle Einschätzung der Auslastung. Der Zeitraum wird über einen flexiblen Perioden-Selektor (Woche / Monat / Quartal / benutzerdefiniert) gesteuert. Die verfügbare Bruttozeit wird automatisch aus den Werktagen und der täglichen Netto-Betriebszeit (225 min) berechnet.
 
+### Neu in Version 1.9.6
+
+- **Kanban-Navigation in der Kopfzeile** — Die Vor/Zurück-Pfeile wurden in eine feste Kopfzeile direkt neben die Spalten-Labels (Offen · In Arbeit · Review · Erledigt) verschoben. Die Labels bleiben beim Scrollen immer sichtbar und scrollen synchron mit dem Karten-Bereich mit.
+- **Einklappbare Projektbeschreibung** — Lange Beschreibungen in der Projektdetailansicht sind standardmässig eingeklappt (erste Zeile sichtbar) und können per Klick aufgeklappt werden. Das hält den Kanban-Bereich beim Öffnen eines Projekts im Blickfeld.
+
 ## Aktueller Stand
 
-Die Anwendung ist produktiv im Einsatz. Version 1.9.5 wurde im Mai 2026 veröffentlicht.
+Die Anwendung ist produktiv im Einsatz. Version 1.9.6 wurde im Mai 2026 veröffentlicht.
 
 **Produktions-Hinweis:** Beim Deployment einer neuen Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server eingespielt werden, bevor der Code aktiviert wird.
