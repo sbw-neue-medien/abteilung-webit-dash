@@ -1,5 +1,10 @@
 <template>
-  <div class="markdown-content text-sm text-mid" v-html="html" />
+  <div v-if="columns.length > 1" class="flex gap-6 items-start">
+    <div v-for="(col, i) in columns" :key="i"
+         class="markdown-content text-sm text-mid flex-1 min-w-0"
+         v-html="col" />
+  </div>
+  <div v-else class="markdown-content text-sm text-mid" v-html="columns[0]" />
 </template>
 
 <script setup>
@@ -12,7 +17,9 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-const html = computed(() => marked.parse(escapeHtml(props.content ?? '')))
+const columns = computed(() =>
+  (props.content ?? '').split(/\n\|\|\|\n/).map(chunk => marked.parse(escapeHtml(chunk)))
+)
 </script>
 
 <style scoped>

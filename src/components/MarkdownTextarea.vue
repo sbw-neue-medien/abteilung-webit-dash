@@ -57,6 +57,7 @@ const hints = [
   { label: 'Liste',       syntax: '- Punkt' },
   { label: 'Link',        syntax: '[Name](URL)' },
   { label: 'Code',        syntax: '`code`' },
+  { label: 'Spalten',     syntax: '\n|||\n' },
 ]
 
 function insert(syntax) {
