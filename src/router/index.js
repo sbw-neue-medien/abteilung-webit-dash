@@ -12,7 +12,7 @@ const routes = [
   { path: '/lernende',     name: 'learners', component: () => import('../views/LearnersView.vue'),    meta: { permission: 'users.list' } },
   { path: '/mentoren',     name: 'mentors',  component: () => import('../views/MentorsView.vue'),     meta: { permission: 'mentors.manage' } },
   { path: '/werkstatt',   name: 'werkstatt', component: () => import('../views/WerkstattView.vue'),  meta: { permission: 'werkstatt.view' } },
-  { path: '/lead-time',  name: 'lead-time', component: () => import('../views/StatistikView.vue'), meta: { permission: 'werkstatt.view' } },
+  { path: '/lead-time',  name: 'lead-time', component: () => import('../views/LeadTimeView.vue'), meta: { permission: 'lead-time.view' } },
   { path: '/mein-bereich', name: 'my-area',  component: () => import('../views/MyAreaView.vue') },
   { path: '/rollen',       name: 'roles',    component: () => import('../views/RolesView.vue'),    meta: { permission: 'settings.manage' } },
 ]

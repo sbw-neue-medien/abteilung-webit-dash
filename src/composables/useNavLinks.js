@@ -28,7 +28,7 @@ export function useNavLinks() {
     if (auth.can('users.list'))     base.push({ to: '/lernende',     label: 'Lernpartner',   icon: ICONS.lernende })
     if (auth.can('mentors.manage')) base.push({ to: '/mentoren',     label: 'Coaches',       icon: ICONS.coaches  })
     if (auth.can('werkstatt.view'))   base.push({ to: '/werkstatt',  label: 'Werkstatt',       icon: ICONS.werkstatt })
-    if (auth.can('werkstatt.view'))   base.push({ to: '/lead-time',  label: 'Lead Time',        icon: ICONS.statistik })
+    if (auth.can('lead-time.view'))   base.push({ to: '/lead-time',  label: 'Lead Time',        icon: ICONS.statistik })
     if (auth.can('settings.manage')) base.push({ to: '/rollen',     label: 'Berechtigungen',  icon: ICONS.rollen   })
     return base
   })
