@@ -86,6 +86,7 @@ export const api = {
   updateSprint: (id, body)         => req(`/sprints/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteSprint: (id)               => req(`/sprints/${id}`, { method: 'DELETE' }),
   getWerkstattStats: (params = {}) => req('/werkstatt/stats?' + new URLSearchParams(params)),
+  getLeadTimeStats:  (params = {}) => req('/lead-time/stats?' + new URLSearchParams(params)),
   getFooterLinks: ()               => req('/footer-links'),
   createFooterLink: (body)         => req('/footer-links', { method: 'POST', body: JSON.stringify(body) }),
   updateFooterLink: (id, body)     => req(`/footer-links/${id}`, { method: 'PUT', body: JSON.stringify(body) }),

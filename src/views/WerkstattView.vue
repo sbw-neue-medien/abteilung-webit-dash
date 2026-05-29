@@ -3,56 +3,7 @@
     <div class="flex items-center justify-between gap-4 flex-wrap">
       <h1 class="text-2xl font-bold text-hi">Werkstatt-Übersicht</h1>
 
-      <!-- Filter -->
-      <div class="flex items-center gap-3 flex-wrap">
-        <div class="flex rounded-md ring-1 ring-line overflow-hidden text-sm">
-          <button
-            class="px-3 py-1.5 transition-colors"
-            :class="mode === 'current' ? 'bg-brand-subtle text-brand-600 font-medium' : 'bg-surface text-mid hover:text-hi'"
-            @click="setMode('current')">
-            Sprint
-          </button>
-          <button
-            class="px-3 py-1.5 border-l border-groove transition-colors"
-            :class="mode === 'range' ? 'bg-brand-subtle text-brand-600 font-medium' : 'bg-surface text-mid hover:text-hi'"
-            @click="setMode('range')">
-            Zeitraum
-          </button>
-        </div>
-
-        <!-- Sprint navigation -->
-        <template v-if="mode === 'current'">
-          <div class="flex items-center gap-1">
-            <button
-              class="p-1 rounded text-mid hover:text-hi hover:bg-lift transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              :disabled="sprintIndex <= 0"
-              @click="stepSprint(-1)"
-              title="Vorheriger Sprint">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
-            </button>
-            <span class="text-sm text-mid px-1 min-w-[8rem] text-center">
-              {{ currentSprint ? currentSprint.name : '–' }}
-            </span>
-            <button
-              class="p-1 rounded text-mid hover:text-hi hover:bg-lift transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              :disabled="sprintIndex >= sprints.list.length - 1"
-              @click="stepSprint(1)"
-              title="Nächster Sprint">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>
-        </template>
-
-        <template v-if="mode === 'range'">
-          <input type="date" v-model="from" class="input text-sm py-1" @change="load" />
-          <span class="text-lo text-sm">–</span>
-          <input type="date" v-model="to" class="input text-sm py-1" @change="load" />
-        </template>
-      </div>
+      <PeriodSelector @change="onPeriodChange" />
     </div>
 
     <div v-if="loading" class="text-center py-12 text-lo italic">Laden…</div>
@@ -123,54 +74,24 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref } from 'vue'
 import { api } from '../api/index.js'
-import { useSprintsStore } from '../stores/sprints.js'
 import UserAvatar from '../components/UserAvatar.vue'
+import PeriodSelector from '../components/PeriodSelector.vue'
 
 const loading = ref(true)
 const rows    = ref([])
-const mode    = ref('current')
-const from    = ref('')
-const to      = ref('')
 
-const sprints     = useSprintsStore()
-const sprintIndex = ref(0)
-const currentSprint = computed(() => sprints.list[sprintIndex.value] ?? null)
-
-async function load() {
+async function load(params) {
   loading.value = true
   try {
-    let params = {}
-    if (mode.value === 'range' && from.value && to.value) {
-      params = { from: from.value, to: to.value }
-    } else if (mode.value === 'current' && currentSprint.value) {
-      params = { from: currentSprint.value.start_date, to: currentSprint.value.end_date }
-    }
     rows.value = await api.getWerkstattStats(params)
   } finally {
     loading.value = false
   }
 }
 
-function stepSprint(dir) {
-  const next = sprintIndex.value + dir
-  if (next < 0 || next >= sprints.list.length) return
-  sprintIndex.value = next
-  load()
+function onPeriodChange({ from, to } = {}) {
+  load(from && to ? { from, to } : {})
 }
-
-function setMode(m) {
-  mode.value = m
-  if (m === 'current') load()
-}
-
-onMounted(async () => {
-  await sprints.fetchAll()
-  // default to current sprint (last one whose start_date <= today)
-  const today = new Date().toISOString().slice(0, 10)
-  const idx = sprints.list.findLastIndex(s => s.start_date <= today)
-  sprintIndex.value = idx >= 0 ? idx : 0
-  load()
-})
 </script>
