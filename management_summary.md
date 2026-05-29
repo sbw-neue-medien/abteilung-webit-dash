@@ -2,7 +2,7 @@
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
 date: "Mai 2026"
-version: "1.8.0"
+version: "1.9.5"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -11,7 +11,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.8.0
+# Stand der Anwendung — Version 1.9.5
 
 ## Worum geht es?
 
@@ -66,8 +66,12 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 - **Coach: Mein Bereich** — Coaches können ihr Passwort und ihre E-Mail-Benachrichtigungen selbst verwalten
 - **Erweiterte E-Mail-Benachrichtigungen** — Leiter und Coaches werden bei neuen Eigenprojekten benachrichtigt
 
+### Neu in Version 1.9.x
+
+- **Lead-Time-Ansicht** — Leiter sehen auf einen Blick, wie viel Prozent der verfügbaren Brutto-Arbeitszeit jeder Lernpartner im gewählten Zeitraum verbucht hat. Ein farbiger Fortschrittsbalken (grün ≥ 80 %, gelb ≥ 50 %, rot < 50 %) ermöglicht eine schnelle Einschätzung der Auslastung. Der Zeitraum wird über einen flexiblen Perioden-Selektor (Woche / Monat / Quartal / benutzerdefiniert) gesteuert. Die verfügbare Bruttozeit wird automatisch aus den Werktagen und der täglichen Netto-Betriebszeit (225 min) berechnet.
+
 ## Aktueller Stand
 
-Die Anwendung ist produktiv im Einsatz. Version 1.8.0 wurde im Mai 2026 veröffentlicht.
+Die Anwendung ist produktiv im Einsatz. Version 1.9.5 wurde im Mai 2026 veröffentlicht.
 
 **Produktions-Hinweis:** Beim Deployment einer neuen Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server eingespielt werden, bevor der Code aktiviert wird.

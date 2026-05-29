@@ -57,6 +57,7 @@ Du erhältst automatisch eine E-Mail-Benachrichtigung, wenn einer deiner Lernend
 | E-Mail-Benachrichtigungen steuern | Ja |
 | Aufgaben erstellen / bearbeiten | Nein |
 | Zeiteinträge erstellen / bearbeiten | Nein |
+| Lead-Time-Statistiken einsehen | Nein |
 | Lernende verwalten | Nein |
 
 
