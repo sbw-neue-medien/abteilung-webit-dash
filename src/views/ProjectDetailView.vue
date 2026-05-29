@@ -2,26 +2,28 @@
   <div class="max-w-full px-4 py-8">
     <div v-if="projects.loading || tasks.loading" class="text-center py-16 text-lo italic">Laden…</div>
     <template v-else-if="projects.current">
-      <div class="flex flex-wrap items-start gap-4 mb-6 max-w-7xl mx-auto">
-        <div class="flex-1 min-w-0">
-          <RouterLink to="/projekte" class="text-brand-600 hover:underline text-sm">← Projekte</RouterLink>
-          <h1 class="text-2xl font-bold text-hi truncate mt-1">{{ projects.current.name }}</h1>
-          <div class="flex items-center gap-3 mt-1">
-            <StatusBadge :status="projects.current.status" />
-            <span v-if="projects.current.client" class="text-sm text-lo">{{ projects.current.client }}</span>
+      <div class="max-w-7xl mx-auto mb-6">
+        <div class="flex flex-wrap items-start gap-4">
+          <div class="flex-1 min-w-0">
+            <RouterLink to="/projekte" class="text-brand-600 hover:underline text-sm">← Projekte</RouterLink>
+            <h1 class="text-2xl font-bold text-hi truncate mt-1">{{ projects.current.name }}</h1>
+            <div class="flex items-center gap-3 mt-1">
+              <StatusBadge :status="projects.current.status" />
+              <span v-if="projects.current.client" class="text-sm text-lo">{{ projects.current.client }}</span>
+            </div>
           </div>
-          <MarkdownRenderer v-if="projects.current.description" class="mt-2" :content="projects.current.description" />
+          <div class="flex gap-2 shrink-0">
+            <button v-if="canEditOwnDescription" class="btn-secondary" @click="openDescEdit">Beschreibung</button>
+            <button v-if="auth.can('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
+            <button v-if="auth.can('tasks.create')" class="btn-primary" @click="addTask('offen')">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              Aufgabe
+            </button>
+          </div>
         </div>
-        <div class="flex gap-2 shrink-0">
-          <button v-if="canEditOwnDescription" class="btn-secondary" @click="openDescEdit">Beschreibung</button>
-          <button v-if="auth.can('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
-          <button v-if="auth.can('tasks.create')" class="btn-primary" @click="addTask('offen')">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Aufgabe
-          </button>
-        </div>
+        <MarkdownRenderer v-if="projects.current.description" class="mt-3" :content="projects.current.description" />
       </div>
 
       <!-- Sprint filter bar -->
