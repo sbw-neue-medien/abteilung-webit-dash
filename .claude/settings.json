@@ -20,7 +20,8 @@
       "Bash(git -C /home/j/Projekte/webIT checkout -b chore/release-1.9.6)",
       "Bash(git -C /home/j/Projekte/webIT merge feat/collapsible-description --no-ff -m \"Merge branch 'feat/collapsible-description' into chore/release-1.9.6\")",
       "Bash(git -C /home/j/Projekte/webIT add package.json management_summary.md)",
-      "Bash(git -C /home/j/Projekte/webIT push -u origin chore/release-1.9.6)"
+      "Bash(git -C /home/j/Projekte/webIT push -u origin chore/release-1.9.6)",
+      "Bash(git branch *)"
     ]
   }
 }
