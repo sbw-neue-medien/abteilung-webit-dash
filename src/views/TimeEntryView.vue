@@ -61,7 +61,7 @@
             <td class="px-4 py-3 text-mid">{{ formatDate(e.date) }}</td>
             <td v-if="auth.can('time_entries.read_all')" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
             <td class="px-4 py-3">
-              <span class="text-mid">{{ e.project_name }}</span>
+              <RouterLink :to="`/projekte/${e.project_id}`" class="text-mid hover:text-brand-600 hover:underline">{{ e.project_name }}</RouterLink>
               <span v-if="e.task_title" class="block text-xs text-lo mt-0.5">{{ e.task_title }}</span>
             </td>
             <td class="px-4 py-3 font-medium">
