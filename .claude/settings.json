@@ -21,7 +21,12 @@
       "Bash(git -C /home/j/Projekte/webIT merge feat/collapsible-description --no-ff -m \"Merge branch 'feat/collapsible-description' into chore/release-1.9.6\")",
       "Bash(git -C /home/j/Projekte/webIT add package.json management_summary.md)",
       "Bash(git -C /home/j/Projekte/webIT push -u origin chore/release-1.9.6)",
-      "Bash(git branch *)"
+      "Bash(git branch *)",
+      "Bash(git -C /home/j/Projekte/webIT log --oneline --all)",
+      "Bash(git -C /home/j/Projekte/webIT show f3e1d10 --stat)",
+      "Bash(git -C /home/j/Projekte/webIT show 8972331 --stat)",
+      "Bash(git -C /home/j/Projekte/webIT branch --show-current)",
+      "Bash(git -C /home/j/Projekte/webIT checkout -b chore/release-1.9.7)"
     ]
   }
 }
