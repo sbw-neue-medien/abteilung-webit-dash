@@ -1,18 +1,18 @@
 <template>
-  <div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+  <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Zeiterfassung</h1>
       <button v-if="auth.can('time_entries.create')" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
         Eintragen
       </button>
     </div>
 
     <div class="card flex flex-wrap gap-4 items-end">
-      <div><label class="label">Von</label><input v-model="filter.from" type="date" class="input w-24 md:w-40" /></div>
-      <div><label class="label">Bis</label><input v-model="filter.to" type="date" class="input w-24 md:w-40" /></div>
+      <PeriodSelector @change="onPeriodChange" />
+
       <div v-if="auth.can('time_entries.read_all')">
         <label class="label">Lernpartner</label>
         <select v-model="filter.user_id" class="input w-48">
@@ -45,15 +45,15 @@
     </div>
 
     <div class="card overflow-x-auto p-0">
-      <table class="min-w-full text-sm">
+      <table class="min-w-full w-full table-fixed text-sm">
         <thead class="bg-lift border-b border-line">
           <tr>
-            <th class="px-4 py-3 text-left font-medium text-mid">Datum</th>
-            <th v-if="auth.can('time_entries.read_all')" class="px-4 py-3 text-left font-medium text-mid">Person</th>
-            <th class="px-4 py-3 text-left font-medium text-mid">Projekt / Aufgabe</th>
-            <th class="px-4 py-3 text-left font-medium text-mid">Dauer</th>
+            <th class="px-4 py-3 text-left font-medium text-mid w-28">Datum</th>
+            <th v-if="auth.can('time_entries.read_all')" class="px-4 py-3 text-left font-medium text-mid w-32">Person</th>
+            <th class="px-4 py-3 text-left font-medium text-mid w-48">Projekt / Aufgabe</th>
+            <th class="px-4 py-3 text-left font-medium text-mid w-24">Dauer</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
-            <th class="px-4 py-3"></th>
+            <th class="px-4 py-3 w-16"></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-groove">
@@ -66,23 +66,31 @@
             </td>
             <td class="px-4 py-3 font-medium">
               <span v-if="Number(e.duration_min) === 0"
-                    class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Ausstehend
               </span>
               <span v-else class="text-hi">{{ formatMin(e.duration_min) }}</span>
             </td>
-            <td class="px-4 py-3 text-mid max-w-xs truncate">{{ e.description || '—' }}</td>
+            <td class="px-4 py-3 text-mid">
+              <div class="max-w-xs truncate">{{ e.description || '—' }}</div>
+            </td>
             <td class="px-4 py-3 flex gap-1 justify-end">
               <template v-if="canEdit(e)">
                 <button class="btn btn-sm btn-secondary" @click="openEdit(e)">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                    </path>
+                  </svg>
                 </button>
                 <ConfirmButton class="btn btn-sm btn-danger" label="Eintrag wirklich löschen?" @confirm="remove(e.id)">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
                 </ConfirmButton>
               </template>
             </td>
@@ -112,6 +120,7 @@ import { useSprintsStore } from '../stores/sprints.js'
 import ConfirmButton from '../components/ConfirmButton.vue'
 import Modal from '../components/Modal.vue'
 import TimeEntryForm from '../components/TimeEntryForm.vue'
+import PeriodSelector from '../components/PeriodSelector.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()
@@ -142,11 +151,6 @@ onMounted(async () => {
   const calls = [projects.fetchAll(), sprints.fetchAll()]
   if (auth.can('time_entries.read_all')) calls.push(usersStore.fetchAll())
   await Promise.all(calls)
-  const currentSprint = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
-  if (currentSprint) {
-    filter.value.from = currentSprint.start_date
-    filter.value.to   = currentSprint.end_date
-  }
   await load()
   watch(filter, load, { deep: true })
 })
@@ -157,7 +161,7 @@ async function load() {
 }
 
 function openCreate() { editing.value = null; showModal.value = true }
-function openEdit(e)  { editing.value = e;    showModal.value = true }
+function openEdit(e) { editing.value = e; showModal.value = true }
 
 async function save(body) {
   saving.value = true
@@ -172,6 +176,11 @@ async function remove(id) {
   await timeStore.remove(id)
 }
 
+async function onPeriodChange({ from, to } = {}) {
+  filter.value.from = from
+  filter.value.to = to
+  await load();
+}
 function formatMin(min) { if (!min) return '0h'; const h = Math.floor(min / 60), m = min % 60; return m ? `${h}h ${m}min` : `${h}h` }
 function formatDate(d) { return new Date(d).toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) }
 </script>
