@@ -14,6 +14,15 @@
           </div>
           <div class="flex gap-2 shrink-0">
             <button v-if="canEditOwnDescription" class="btn-secondary" @click="openDescEdit">Beschreibung</button>
+            <button v-if="auth.can('time_entries.read_all') || auth.can('time_entries.read_own')"
+                    class="btn-secondary"
+                    title="Zeiterfassung für dieses Projekt"
+                    @click="router.push({ name: 'time', query: { project_id: route.params.id } })">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </button>
             <button v-if="auth.can('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
             <button v-if="auth.can('tasks.create')" class="btn-primary" @click="addTask('offen')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,7 +176,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useTasksStore } from '../stores/tasks.js'
@@ -184,6 +193,7 @@ import MarkdownTextarea from '../components/MarkdownTextarea.vue'
 import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 
 const route      = useRoute()
+const router     = useRouter()
 const auth       = useAuthStore()
 const projects   = useProjectsStore()
 const tasks      = useTasksStore()
