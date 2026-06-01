@@ -180,7 +180,7 @@ const modalTitle = computed(() => {
 })
 
 function canEditProject(p) {
-  if (auth.can('projects.create')) return true
+  if (auth.can('projects.create') || auth.can('projects.update')) return true
   return auth.can('projects.update_own') && p.is_personal && p.owner_id === auth.user?.id
 }
 
