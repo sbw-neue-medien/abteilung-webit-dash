@@ -50,8 +50,8 @@
           <tr>
             <th class="px-4 py-3 text-left font-medium text-mid w-28">Datum</th>
             <th v-if="auth.can('time_entries.read_all')" class="px-4 py-3 text-left font-medium text-mid w-32">Person</th>
-            <th class="px-4 py-3 text-left font-medium text-mid w-48">Projekt / Aufgabe</th>
-            <th class="px-4 py-3 text-left font-medium text-mid w-24">Dauer</th>
+            <th class="px-4 py-3 text-left font-medium text-mid w-64">Projekt / Aufgabe</th>
+            <th class="px-4 py-3 text-left font-medium text-mid w-28">Dauer</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
             <th class="px-4 py-3 w-16"></th>
           </tr>
@@ -76,7 +76,7 @@
               <span v-else class="text-hi">{{ formatMin(e.duration_min) }}</span>
             </td>
             <td class="px-4 py-3 text-mid">
-              <div class="max-w-xs truncate">{{ e.description || '—' }}</div>
+              <div class="max-w-md truncate">{{ e.description || '—' }}</div>
             </td>
             <td class="px-4 py-3 flex gap-1 justify-end">
               <template v-if="canEdit(e)">
