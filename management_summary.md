@@ -1,8 +1,8 @@
 ---
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
-date: "Mai 2026"
-version: "1.9.6"
+date: "Juni 2026"
+version: "1.9.7"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -11,7 +11,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.9.6
+# Stand der Anwendung — Version 1.9.7
 
 ## Worum geht es?
 
@@ -75,8 +75,16 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 - **Kanban-Navigation in der Kopfzeile** — Die Vor/Zurück-Pfeile wurden in eine feste Kopfzeile direkt neben die Spalten-Labels (Offen · In Arbeit · Review · Erledigt) verschoben. Die Labels bleiben beim Scrollen immer sichtbar und scrollen synchron mit dem Karten-Bereich mit.
 - **Einklappbare Projektbeschreibung** — Lange Beschreibungen in der Projektdetailansicht sind standardmässig eingeklappt (erste Zeile sichtbar) und können per Klick aufgeklappt werden. Das hält den Kanban-Bereich beim Öffnen eines Projekts im Blickfeld.
 
+### Neu in Version 1.9.7
+
+- **Projekt-Team kontaktieren** — Leiter können mit einem Klick eine E-Mail an alle Projektmitglieder senden. Das Standard-E-Mail-Programm öffnet sich mit vorausgefülltem Betreff («Projektname -») und Anrede («Liebes Projekt-Team»).
+- **Zeiterfassung: Sprint-Perioden-Selektor** — Die Zeiterfassung verwendet denselben Perioden-Selektor wie die Werkstatt-Ansicht: Direkte Sprint-Navigation oder freier Datumsbereich wählbar.
+- **Zeiterfassung: Projektlink** — Der Projektname in der Zeiterfassungstabelle ist ein direkter Link zur Projektdetailansicht.
+- **Zeiterfassung: Stabile Spaltenbreiten** — Die Spaltenbreiten in der Zeiterfassungstabelle ändern sich nicht mehr mit dem Inhalt der Einträge.
+- **Zeiterfassung: Schnelleintrag** — Neuer «+»-Button in der Kopfzeile der Zeiterfassung für schnelle Neueingaben.
+
 ## Aktueller Stand
 
-Die Anwendung ist produktiv im Einsatz. Version 1.9.6 wurde im Mai 2026 veröffentlicht.
+Die Anwendung ist produktiv im Einsatz. Version 1.9.7 wurde im Juni 2026 veröffentlicht.
 
 **Produktions-Hinweis:** Beim Deployment einer neuen Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server eingespielt werden, bevor der Code aktiviert wird.
