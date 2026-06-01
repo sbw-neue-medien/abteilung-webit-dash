@@ -216,11 +216,13 @@ const editingTask    = ref(null)
 const saving         = ref(false)
 
 const teamMailto = computed(() => {
-  const emails = (projects.current?.members ?? []).map(m => m.email).filter(Boolean)
-  if (!emails.length) return null
+  const recipients = (projects.current?.members ?? [])
+    .filter(m => m.email)
+    .map(m => encodeURIComponent(`"${m.name}" <${m.email}>`))
+  if (!recipients.length) return null
   const subject = encodeURIComponent(`${projects.current.name} - `)
   const body    = encodeURIComponent('Liebes Projekt-Team')
-  return `mailto:${emails.join(',')}?subject=${subject}&body=${body}`
+  return `mailto:${recipients.join(',')}?subject=${subject}&body=${body}`
 })
 
 const canEditOwnDescription = computed(() =>
