@@ -103,6 +103,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
@@ -112,6 +113,7 @@ import ConfirmButton from '../components/ConfirmButton.vue'
 import Modal from '../components/Modal.vue'
 import TimeEntryForm from '../components/TimeEntryForm.vue'
 
+const route      = useRoute()
 const auth       = useAuthStore()
 const projects   = useProjectsStore()
 const usersStore = useUsersStore()
@@ -128,7 +130,7 @@ function localDate(d = new Date()) {
 const today      = localDate()
 const monday     = (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return localDate(d) })()
 
-const filter   = ref({ from: monday, to: today, user_id: '', project_id: '' })
+const filter   = ref({ from: monday, to: today, user_id: '', project_id: route.query.project_id ?? '' })
 const entries  = computed(() => timeStore.list)
 const learners = computed(() => usersStore.list.filter(u => u.role === 'lernender' && u.active))
 const totalMin = computed(() => entries.value.reduce((s, e) => s + Number(e.duration_min), 0))
