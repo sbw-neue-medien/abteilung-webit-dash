@@ -7,10 +7,7 @@
     </div>
     <div>
       <label class="label">Projekt</label>
-      <select v-model="form.project_id" class="input" required>
-        <option value="">— Projekt wählen —</option>
-        <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
-      </select>
+      <ProjectSelect v-model="form.project_id" :projects="projects" placeholder="— Projekt wählen —" required />
     </div>
     <div v-if="form.project_id">
       <label class="label">Aufgabe <span class="text-lo font-normal">(optional)</span></label>
@@ -45,6 +42,7 @@
 import { ref, computed, watch } from 'vue'
 import { api } from '../api/index.js'
 import MarkdownTextarea from './MarkdownTextarea.vue'
+import ProjectSelect from './ProjectSelect.vue'
 
 const props = defineProps({ projects: Array, entry: Object, loading: Boolean })
 const emit  = defineEmits(['submit', 'cancel'])

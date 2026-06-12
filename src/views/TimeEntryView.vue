@@ -22,10 +22,7 @@
       </div>
       <div>
         <label class="label">Projekt</label>
-        <select v-model="filter.project_id" class="input w-48">
-          <option value="">Alle</option>
-          <option v-for="p in projects.list" :key="p.id" :value="p.id">{{ p.name }}</option>
-        </select>
+        <ProjectSelect v-model="filter.project_id" :projects="projects.list" placeholder="Alle" class="w-48" />
       </div>
     </div>
 
@@ -121,6 +118,7 @@ import ConfirmButton from '../components/ConfirmButton.vue'
 import Modal from '../components/Modal.vue'
 import TimeEntryForm from '../components/TimeEntryForm.vue'
 import PeriodSelector from '../components/PeriodSelector.vue'
+import ProjectSelect from '../components/ProjectSelect.vue'
 
 const route      = useRoute()
 const auth       = useAuthStore()

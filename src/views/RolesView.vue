@@ -55,26 +55,6 @@
         </table>
       </div>
     </section>
-
-    <!-- Projektberechtigungen -->
-    <section class="space-y-4 border-t border-groove pt-8">
-      <h2 class="text-lg font-semibold text-hi">Projektberechtigungen</h2>
-
-      <div class="card flex items-end gap-3">
-        <div class="flex-1 min-w-[15rem]">
-          <label class="label">Projekt auswählen</label>
-          <select v-model="selectedProjectId" class="input text-sm py-2">
-            <option :value="null">— Projekt wählen —</option>
-            <option v-for="p in projectsStore.list" :key="p.id" :value="p.id">{{ p.name }}</option>
-          </select>
-        </div>
-      </div>
-
-      <ProjectPermissionsPanel
-        v-if="selectedProjectId"
-        :project-id="selectedProjectId"
-        :users="lernende" />
-    </section>
   </div>
 </template>
 
@@ -82,9 +62,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from '../composables/useToast.js'
 import { api } from '../api/index.js'
-import { useProjectsStore } from '../stores/projects.js'
-import { useUsersStore } from '../stores/users.js'
-import ProjectPermissionsPanel from '../components/ProjectPermissionsPanel.vue'
 
 const ROLE_LABELS = {
   leiter:    'Leiter',
@@ -105,19 +82,12 @@ const GROUP_LABELS = {
   werkstatt:    'Werkstatt',
 }
 
-const projectsStore = useProjectsStore()
-const usersStore    = useUsersStore()
 const { toastError } = useToast()
 
-const loading          = ref(true)
-const roles            = ref([])
-const permissions      = ref([])
-const saving           = ref({})
-const selectedProjectId = ref(null)
-
-const lernende = computed(() =>
-  usersStore.list.filter(u => u.role === 'lernender' && u.active)
-)
+const loading     = ref(true)
+const roles       = ref([])
+const permissions = ref([])
+const saving      = ref({})
 
 const groups = computed(() => {
   const map = {}
@@ -133,11 +103,7 @@ const groups = computed(() => {
 })
 
 onMounted(async () => {
-  const [data] = await Promise.all([
-    api.getRoles(),
-    projectsStore.fetchAll(),
-    usersStore.list.length ? Promise.resolve() : usersStore.fetchAll(),
-  ])
+  const data = await api.getRoles()
   roles.value = data.roles
   permissions.value = data.permissions
   roles.value.forEach(r => (saving.value[r] = false))
