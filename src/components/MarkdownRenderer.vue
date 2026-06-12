@@ -17,8 +17,15 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+const renderer = new marked.Renderer()
+renderer.link = ({ href, title, tokens }) => {
+  const text = renderer.parser.parseInline(tokens)
+  const titleAttr = title ? ` title="${title}"` : ''
+  return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`
+}
+
 const columns = computed(() =>
-  (props.content ?? '').split(/\n\|\|\|\n/).map(chunk => marked.parse(escapeHtml(chunk)))
+  (props.content ?? '').split(/\n\|\|\|\n/).map(chunk => marked.parse(escapeHtml(chunk), { renderer }))
 )
 </script>
 
