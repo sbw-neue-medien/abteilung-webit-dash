@@ -13,8 +13,9 @@
       "Bash(git -C /home/j/Projekte/webIT branch --show-current)",
       "Bash(git -C /home/j/Projekte/webIT checkout -b chore/release-1.9.7)",
       "Bash(gh api *)",
-      "Bash(git -C /home/j/Projekte/webIT branch -a)",
-      "Bash(git -C /home/j/Projekte/webIT/api branch -a)"
+      "Bash(git -C /home/j/Projekte/webIT/api branch -a)",
+      "Bash(curl -s http://localhost/api/sprints)",
+      "Bash(git checkout *)"
     ]
   }
 }
