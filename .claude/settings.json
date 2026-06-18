@@ -9,25 +9,12 @@
       "Bash(git -C /home/j/Projekte/webIT commit -m ' *)",
       "Bash(git -C /home/j/Projekte/webIT/api add README.md)",
       "Bash(git -C /home/j/Projekte/webIT/api commit -m ' *)",
-      "Bash(git -C /home/j/Projekte/webIT/api branch -D feature/role-management feature/user-permission-overrides)",
-      "Bash(git -C /home/j/Projekte/webIT branch -D bug-timeentryform-empty feat-multicolumns-markdown fix/88-zeiterfassung-tabelle-overflow)",
-      "Bash(git -C /home/j/Projekte/webIT checkout main)",
-      "Bash(git -C /home/j/Projekte/webIT checkout -b feat/collapsible-description)",
-      "Bash(git -C /home/j/Projekte/webIT add src/views/ProjectDetailView.vue)",
-      "Bash(git -C /home/j/Projekte/webIT push -u origin feat/collapsible-description)",
-      "Bash(git -C /home/j/Projekte/webIT log main --oneline)",
-      "Bash(git -C /home/j/Projekte/webIT log --oneline 53bc991..main)",
-      "Bash(git -C /home/j/Projekte/webIT checkout -b chore/release-1.9.6)",
-      "Bash(git -C /home/j/Projekte/webIT merge feat/collapsible-description --no-ff -m \"Merge branch 'feat/collapsible-description' into chore/release-1.9.6\")",
-      "Bash(git -C /home/j/Projekte/webIT add package.json management_summary.md)",
-      "Bash(git -C /home/j/Projekte/webIT push -u origin chore/release-1.9.6)",
-      "Bash(git branch *)",
       "Bash(git -C /home/j/Projekte/webIT log --oneline --all)",
-      "Bash(git -C /home/j/Projekte/webIT show f3e1d10 --stat)",
-      "Bash(git -C /home/j/Projekte/webIT show 8972331 --stat)",
       "Bash(git -C /home/j/Projekte/webIT branch --show-current)",
       "Bash(git -C /home/j/Projekte/webIT checkout -b chore/release-1.9.7)",
-      "Bash(gh api *)"
+      "Bash(gh api *)",
+      "Bash(git -C /home/j/Projekte/webIT branch -a)",
+      "Bash(git -C /home/j/Projekte/webIT/api branch -a)"
     ]
   }
 }
