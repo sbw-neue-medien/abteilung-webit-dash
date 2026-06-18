@@ -91,6 +91,10 @@
           </div>
         </div>
         <div>
+          <label class="label">Sprintgröße pro Lernende (Min.)</label>
+          <input v-model.number="form.capacity_min" type="number" min="0" step="15" class="input" />
+        </div>
+        <div>
           <MarkdownTextarea label="Sprint-Ziel" v-model="form.goal" :rows="2" placeholder="Was soll dieser Sprint erreichen?" />
         </div>
         <div class="flex gap-2 justify-end pt-2">
@@ -118,7 +122,7 @@ const auth      = useAuthStore()
 const showModal = ref(false)
 const editing   = ref(null)
 const expanded  = ref(false)
-const form      = ref({ name: '', start_date: '', end_date: '', goal: '' })
+const form      = ref({ name: '', start_date: '', end_date: '', goal: '', capacity_min: 900 })
 
 const today = new Date().toISOString().slice(0, 10)
 
@@ -187,13 +191,13 @@ function openNew() {
     mon = mondayOfNextWeek()
   }
   const kw = isoWeekNumber(new Date(mon + 'T00:00:00'))
-  form.value = { name: `KW ${kw}`, start_date: mon, end_date: fridayOfWeek(mon), goal: '' }
+  form.value = { name: `KW ${kw}`, start_date: mon, end_date: fridayOfWeek(mon), goal: '', capacity_min: 900 }
   showModal.value = true
 }
 
 function openEdit(sprint) {
   editing.value = sprint
-  form.value = { name: sprint.name, start_date: sprint.start_date, end_date: sprint.end_date, goal: sprint.goal ?? '' }
+  form.value = { name: sprint.name, start_date: sprint.start_date, end_date: sprint.end_date, goal: sprint.goal ?? '', capacity_min: sprint.capacity_min ?? 900 }
   showModal.value = true
 }
 

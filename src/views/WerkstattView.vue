@@ -21,6 +21,7 @@
             <th class="text-center px-4 py-3 font-medium text-mid">Offen / In Arbeit</th>
             <th class="text-center px-4 py-3 font-medium text-mid">Review / Erledigt</th>
             <th class="text-center px-4 py-3 font-medium text-mid">Stunden</th>
+            <th class="text-center px-4 py-3 font-medium text-mid">Kapazität</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-groove">
@@ -65,6 +66,21 @@
             <td class="px-4 py-3 text-center">
               <span class="font-medium text-hi">{{ r.declared_hours }}</span>
               <span class="text-lo ml-0.5">h</span>
+            </td>
+
+            <!-- Capacity -->
+            <td class="px-4 py-3 text-center">
+              <span v-if="r.capacity_min === null" class="text-lo">–</span>
+              <div v-else class="inline-flex flex-col items-center gap-1 min-w-[5.5rem]">
+                <span class="text-xs" :class="r.declared_min > r.capacity_min ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-mid'">
+                  {{ r.declared_min }} / {{ r.capacity_min }} min
+                </span>
+                <span class="w-full h-1.5 rounded-full bg-lift ring-1 ring-line overflow-hidden">
+                  <span class="block h-full rounded-full"
+                        :class="r.declared_min > r.capacity_min ? 'bg-red-500' : 'bg-brand-500'"
+                        :style="{ width: Math.min(100, (r.declared_min / r.capacity_min) * 100) + '%' }" />
+                </span>
+              </div>
             </td>
           </tr>
         </tbody>
