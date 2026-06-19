@@ -208,7 +208,7 @@ async function save(body) {
   try {
     if (editing.value) {
       await projects.update(editing.value.id, body)
-      if (editing.value.is_template) await projects.fetchTemplates()
+      if (editing.value.is_template || body.is_template) await projects.fetchTemplates()
     } else {
       if (activeTab.value === 'vorlagen') body.is_template = true
       await projects.create(body)

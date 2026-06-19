@@ -55,21 +55,19 @@
         </select>
       </div>
 
-      <template v-if="!project">
-        <div v-if="templates.length && !form.is_template">
-          <label class="label">Vorlage verwenden</label>
-          <select v-model="form.template_id" class="input">
-            <option :value="null">— Keine Vorlage —</option>
-            <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
-          </select>
-        </div>
+      <div v-if="!project && templates.length && !form.is_template">
+        <label class="label">Vorlage verwenden</label>
+        <select v-model="form.template_id" class="input">
+          <option :value="null">— Keine Vorlage —</option>
+          <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
+        </select>
+      </div>
 
-        <div class="flex items-center gap-2">
-          <input id="is_template" type="checkbox" v-model="form.is_template"
-                 class="rounded border-line text-brand-600" />
-          <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
-        </div>
-      </template>
+      <div class="flex items-center gap-2">
+        <input id="is_template" type="checkbox" v-model="form.is_template"
+               class="rounded border-line text-brand-600" />
+        <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
+      </div>
     </template>
 
     <div class="flex gap-2 justify-end pt-2">
@@ -112,7 +110,7 @@ watch(() => props.project, (p) => {
     owner_id:    p.is_personal ? (p.owner_id ?? null) : null,
     member_ids:  p.members ? p.members.map(m => m.id) : (p.member_ids ?? []),
     mentor_id:   p.mentor_id ?? null,
-    is_template: false,
+    is_template: !!p.is_template,
     template_id: null,
   }
 }, { immediate: true })
