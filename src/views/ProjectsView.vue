@@ -47,53 +47,18 @@
 
       <div v-if="projects.loading" class="text-lo italic py-8 text-center">Laden…</div>
       <div v-else class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="p in filtered" :key="p.id"
-             class="card hover:shadow-md transition-shadow cursor-pointer flex flex-col gap-3"
-             @click="router.push(`/projekte/${p.id}`)">
-          <div class="flex items-start justify-between gap-2">
-            <div>
-              <p class="font-semibold text-hi">{{ p.name }}</p>
-              <p v-if="p.client" class="text-xs text-lo mt-0.5">{{ p.client }}</p>
-            </div>
-            <StatusBadge :status="p.status" />
-          </div>
-          <p v-if="p.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(p.description) }}</p>
-          <div v-if="p.member_ids?.length && auth.can('projects.create')" class="flex flex-wrap gap-1">
-            <span v-for="uid in p.member_ids" :key="uid"
-                  class="text-xs bg-brand-subtle text-brand-700 rounded-full px-2 py-0.5">
-              {{ users.list.find(u => u.id === uid)?.name ?? '?' }}
-            </span>
-          </div>
-          <div class="flex items-center justify-between mt-auto pt-2 border-t border-groove">
-            <div class="flex flex-col gap-0.5">
-              <span class="text-xs text-lo">{{ p.owner_name }}</span>
-              <span v-if="p.mentor_name" class="text-xs text-lo">Mentor: {{ p.mentor_name }}</span>
-            </div>
-            <div v-if="canEditProject(p)" class="flex gap-1" @click.stop>
-              <button class="btn btn-sm btn-secondary" @click="openEdit(p)">Bearbeiten</button>
-              <ConfirmButton class="btn btn-sm btn-danger" :label="`Projekt «${p.name}» wirklich löschen?`" @confirm="confirmDelete(p)">Löschen</ConfirmButton>
-            </div>
-          </div>
-        </div>
+        <ProjectCard v-for="p in filtered" :key="p.id"
+          :project="p" :can-edit="canEditProject(p)" :member-names="memberNames(p)"
+          @open="router.push(`/projekte/${p.id}`)" @edit="openEdit(p)" @delete="confirmDelete(p)" />
         <div v-if="!filtered.length" class="col-span-full text-center py-12 text-lo italic">Keine Projekte.</div>
       </div>
     </template>
 
     <template v-else>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="t in projects.templates" :key="t.id"
-             class="card hover:shadow-md transition-shadow cursor-pointer flex flex-col gap-3"
-             @click="router.push(`/projekte/${t.id}`)">
-          <div class="flex items-start justify-between gap-2">
-            <p class="font-semibold text-hi">{{ t.name }}</p>
-            <span class="text-xs bg-brand-subtle text-brand-700 rounded-full px-2 py-0.5 shrink-0">Vorlage</span>
-          </div>
-          <p v-if="t.description" class="text-sm text-mid line-clamp-2">{{ markdownPreview(t.description) }}</p>
-          <div class="flex justify-end gap-1 mt-auto pt-2 border-t border-groove" @click.stop>
-            <button class="btn btn-sm btn-secondary" @click="openEdit(t)">Bearbeiten</button>
-            <ConfirmButton class="btn btn-sm btn-danger" :label="`Vorlage «${t.name}» wirklich löschen?`" @confirm="confirmDelete(t)">Löschen</ConfirmButton>
-          </div>
-        </div>
+        <ProjectCard v-for="t in projects.templates" :key="t.id"
+          :project="t" is-template can-edit
+          @open="router.push(`/projekte/${t.id}`)" @edit="openEdit(t)" @delete="confirmDelete(t)" />
         <div v-if="!projects.templates.length" class="col-span-full text-center py-12 text-lo italic">
           Noch keine Vorlagen. Erstelle ein Projekt und aktiviere «Als Vorlage speichern».
         </div>
@@ -122,15 +87,9 @@ import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
 import { useUsersStore } from '../stores/users.js'
 import { api } from '../api/index.js'
-import ConfirmButton from '../components/ConfirmButton.vue'
-import StatusBadge from '../components/StatusBadge.vue'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
-import { marked } from 'marked'
-
-function markdownPreview(text) {
-  return marked.parse(text ?? '').replace(/<[^>]*>/g, '')
-}
+import ProjectCard from '../components/ProjectCard.vue'
 
 const auth     = useAuthStore()
 const projects = useProjectsStore()
@@ -144,7 +103,7 @@ const saving         = ref(false)
 const activeFilter   = ref(localStorage.getItem('project-filter') || 'aktiv')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
-const showPersonal   = ref(localStorage.getItem("show-personal") !== "false");
+const showPersonal   = ref(localStorage.getItem('show-personal') !== 'false')
 
 const tabs = [
   { value: 'projekte', label: 'Projekte' },
@@ -182,6 +141,11 @@ const modalTitle = computed(() => {
 function canEditProject(p) {
   if (auth.can('projects.create') || auth.can('projects.update')) return true
   return auth.can('projects.update_own') && p.is_personal && p.owner_id === auth.user?.id
+}
+
+function memberNames(p) {
+  if (!p.member_ids?.length || !auth.can('projects.create')) return []
+  return p.member_ids.map(uid => users.list.find(u => u.id === uid)?.name ?? '?')
 }
 
 onMounted(async () => {
