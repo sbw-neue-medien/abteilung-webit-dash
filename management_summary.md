@@ -2,7 +2,7 @@
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
 date: "Juni 2026"
-version: "1.9.7"
+version: "1.9.8"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -11,7 +11,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.9.7
+# Stand der Anwendung — Version 1.9.8
 
 ## Worum geht es?
 
@@ -83,8 +83,13 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 - **Zeiterfassung: Stabile Spaltenbreiten** — Die Spaltenbreiten in der Zeiterfassungstabelle ändern sich nicht mehr mit dem Inhalt der Einträge.
 - **Zeiterfassung: Schnelleintrag** — Neuer «+»-Button in der Kopfzeile der Zeiterfassung für schnelle Neueingaben.
 
+### Neu in Version 1.9.8
+
+- **CSV-Export für Zeiterfassung** — Einträge der aktuell gefilterten Ansicht lassen sich als CSV-Datei herunterladen (Excel-kompatibel); ist ein Lernpartner ausgewählt, erscheint dessen Name im Dateinamen
+- **Aktueller Sprint im Filter hervorgehoben** — In der Projektdetailansicht markiert ein farbiger Ring den Sprint, der heute aktiv ist, unabhängig davon, welcher Sprint gerade ausgewählt ist
+
 ## Aktueller Stand
 
-Die Anwendung ist produktiv im Einsatz. Version 1.9.7 wurde im Juni 2026 veröffentlicht.
+Die Anwendung ist produktiv im Einsatz. Version 1.9.8 wurde im Juni 2026 veröffentlicht.
 
 **Produktions-Hinweis:** Beim Deployment einer neuen Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server eingespielt werden, bevor der Code aktiviert wird.

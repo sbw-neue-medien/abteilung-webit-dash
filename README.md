@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.9.2
+**Version:** 1.9.8
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -159,6 +159,39 @@ npm run build        # Produktions-Build nach dist/
 ---
 
 ## Changelog
+
+### 1.9.8
+- **CSV-Export für Zeiterfassung** (`TimeEntryView.vue`) — exportiert die aktuell gefilterten Einträge als Excel-kompatible CSV (Semikolon-getrennt, UTF-8-BOM); Dateiname enthält bei aktivem Lernpartner-Filter dessen Namen
+- **`ProjectCard`-Komponente** — Projekt- und Vorlagenkarten in `ProjectsView.vue` waren als zwei fast identische Markup-Blöcke dupliziert; jetzt eine gemeinsame Komponente mit `is-template`/`can-edit`-Props
+- **Aktueller Sprint im Filter hervorgehoben** (`ProjectDetailView.vue`) — der heute aktive Sprint erhält einen Ring-Indikator im Sprint-Filter, unabhängig von der aktuellen Auswahl; `currentSprintId` von einer Funktion zu einem reaktiven `computed` gemacht
+
+### 1.9.7
+- **Projekt-Team kontaktieren** — Leiter können mit einem Klick eine E-Mail an alle Projektmitglieder senden (vorausgefüllter Betreff und Anrede)
+- **Zeiterfassung: Sprint-Perioden-Selektor** — derselbe Perioden-Selektor wie in der Werkstatt-Ansicht: direkte Sprint-Navigation oder freier Datumsbereich
+- **Zeiterfassung: Projektlink** — der Projektname in der Zeiterfassungstabelle verlinkt direkt auf die Projektdetailansicht
+- **Zeiterfassung: Stabile Spaltenbreiten** — Spaltenbreiten ändern sich nicht mehr mit dem Inhalt der Einträge
+- **Zeiterfassung: Schnelleintrag** — neuer «+»-Button in der Kopfzeile für schnelle Neueingaben
+
+### 1.9.6
+- **Lead-Time-Ansicht** — Leiter und Coaches sehen die verbuchte Brutto-Arbeitszeit pro Lernpartner im gewählten Zeitraum als farbigen Fortschrittsbalken; Coaches sehen nur ihre zugeordneten Lernpartner
+- **Kanban-Navigation in der Kopfzeile** — Vor/Zurück-Pfeile in einer festen Kopfzeile direkt neben den Spalten-Labels, die beim Scrollen sichtbar bleiben
+- **Einklappbare Projektbeschreibung** — lange Beschreibungen in der Projektdetailansicht sind standardmässig eingeklappt
+
+### 1.9.5
+- **Mentor-Auswahl für Projekte** — Projekte können einem Coach direkt zugewiesen werden (api#55)
+- **Kanban Pfeil-Navigation mit Snap-Scroll** — ersetzt die Scrollbar durch Pfeil-Buttons mit Snap-Verhalten (#82)
+- **Kanban öffnet automatisch im aktuellen Sprint** (#84)
+- **Persistenter «Eigenprojekte»-Filter** — Auswahl wird in `localStorage` gespeichert (#85, #86)
+- **Zeiterfassung: horizontales Scrollen statt Abschneiden** der Tabelle (#89)
+- **Mehrspaltige Markdown-Darstellung** für breite Container
+- Diverse Layout-Fixes (Footer, TimeEntryForm)
+
+### 1.9.4
+- **Confirm-Button-Overflow-Fix** — Bestätigungs-Popup überlappte den Bildschirmrand bei Lösch-Buttons nahe der rechten Kante (#76)
+- **Todo-Priorität statt Dauer** — Todos verwenden jetzt eine 1–5-Priorität statt einer geplanten Dauer (#78)
+
+### 1.9.3
+- **Zoom-Modal für Aufgaben** — schreibgeschütztes Vergrösserungs-Modal für Kanban-Karten (#74)
 
 ### 1.9.2
 - **Bugfix: Aufgabe leer im Zeiterfassungs-Bearbeiten-Formular** — beim Öffnen eines Eintrags blieb das Aufgaben-Feld leer, weil der Projekt-Watcher noch nicht registriert war, als die sofortige Entry-Watch-Initialisierung das Projekt setzte; Reihenfolge der `watch`-Aufrufe getauscht

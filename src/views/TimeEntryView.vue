@@ -2,12 +2,20 @@
   <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Zeiterfassung</h1>
-      <button v-if="auth.can('time_entries.create')" class="btn-primary" @click="openCreate">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Eintragen
-      </button>
+      <div class="flex gap-2">
+        <button class="btn-secondary" :disabled="!entries.length" @click="exportCsv">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" />
+          </svg>
+          CSV exportieren
+        </button>
+        <button v-if="auth.can('time_entries.create')" class="btn-primary" @click="openCreate">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Eintragen
+        </button>
+      </div>
     </div>
 
     <div class="card flex flex-wrap gap-4 items-end">
@@ -181,4 +189,38 @@ async function onPeriodChange({ from, to } = {}) {
 }
 function formatMin(min) { if (!min) return '0h'; const h = Math.floor(min / 60), m = min % 60; return m ? `${h}h ${m}min` : `${h}h` }
 function formatDate(d) { return new Date(d).toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) }
+
+function csvEscape(value) {
+  const s = String(value ?? '')
+  return /[;"\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
+}
+
+function exportCsv() {
+  const cols = ['Datum']
+  if (auth.can('time_entries.read_all')) cols.push('Person')
+  cols.push('Projekt', 'Aufgabe', 'Dauer (Min)', 'Tätigkeit')
+
+  const rows = entries.value.map(e => {
+    const row = [formatDate(e.date)]
+    if (auth.can('time_entries.read_all')) row.push(e.user_name ?? '')
+    row.push(e.project_name ?? '', e.task_title ?? '', e.duration_min ?? 0, e.description ?? '')
+    return row
+  })
+
+  const csv = [cols, ...rows].map(row => row.map(csvEscape).join(';')).join('\r\n')
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `zeiterfassung${exportFilenameSuffix()}_${filter.value.from}_${filter.value.to}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function exportFilenameSuffix() {
+  if (!filter.value.user_id) return ''
+  const learner = learners.value.find(u => u.id === filter.value.user_id)
+  if (!learner) return ''
+  return `_${learner.name.trim().replace(/\s+/g, '_').replace(/[^\w\-]/g, '')}`
+}
 </script>
