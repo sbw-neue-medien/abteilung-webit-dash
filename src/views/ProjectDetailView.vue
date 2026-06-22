@@ -55,7 +55,6 @@
 
       <!-- Sprint filter bar -->
       <div class="max-w-7xl mx-auto mb-4 flex items-center gap-2 flex-wrap">
-        <span class="text-xs text-lo font-medium uppercase tracking-wide">Anzeigen:</span>
         <button @click="sprintFilter = null"
                 class="text-xs px-3 py-1 rounded-full transition-colors"
                 :class="sprintFilter === null ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
@@ -63,8 +62,12 @@
         </button>
         <button v-for="sprint in sprints.list" :key="sprint.id"
                 @click="sprintFilter = sprint.id"
-                class="text-xs px-3 py-1 rounded-full transition-colors"
-                :class="sprintFilter === sprint.id ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
+                class="text-xs px-3 py-1 rounded-full transition-colors inline-flex items-center gap-1.5"
+                :class="[
+                  sprintFilter === sprint.id ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi',
+                  sprint.id === currentSprintId ? 'ring-2 ring-emerald-500 ring-offset-1 ring-offset-surface' : '',
+                ]">
+          <span v-if="sprint.id === currentSprintId" class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
           {{ sprint.name }}
         </button>
         <button @click="sprintFilter = 'backlog'"
@@ -234,11 +237,10 @@ const allUsers       = ref([])
 const mentors        = ref([])
 const sprintFilter   = ref(null)
 
-function currentSprintId() {
+const currentSprintId = computed(() => {
   const today = new Date().toISOString().slice(0, 10)
-  const active = sprints.list.find(s => s.start_date <= today && s.end_date >= today)
-  return active?.id ?? null
-}
+  return sprints.list.find(s => s.start_date <= today && s.end_date >= today)?.id ?? null
+})
 const isSerie        = ref(false)
 const serieSprintIds = ref([])
 const taskForm       = ref({
@@ -260,7 +262,7 @@ onMounted(async () => {
     todos.fetchForProject(id),
     sprints.fetchAll(),
   ])
-  sprintFilter.value = currentSprintId()
+  sprintFilter.value = currentSprintId.value
   if (auth.can('projects.manage_members')) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender' && u.active)
