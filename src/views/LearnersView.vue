@@ -2,12 +2,17 @@
   <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-hi">Lernpartner</h1>
-      <button v-if="auth.can('users.create')" class="btn-primary" @click="openCreate">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Lernpartner anlegen
-      </button>
+      <div class="flex items-center gap-2">
+        <button v-if="auth.isLeiter" class="btn-secondary" @click="showWizard = true">
+          Quartalswechsel
+        </button>
+        <button v-if="auth.can('users.create')" class="btn-primary" @click="openCreate">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Lernpartner anlegen
+        </button>
+      </div>
     </div>
 
     <div v-if="users.loading" class="text-center py-12 text-lo italic">Laden…</div>
@@ -44,6 +49,8 @@
     <UserPermissionsModal v-if="permTarget" v-model="showPermModal"
       :user-id="permTarget.id" :user-name="permTarget.name" />
 
+    <QuarterWizard v-model="showWizard" />
+
     <Modal v-model="showModal" :title="editing ? 'Lernpartner bearbeiten' : 'Lernpartner anlegen'">
       <UserForm :user="editing" :loading="saving" @submit="save" @cancel="showModal = false" />
       <p v-if="!editing" class="mt-3 text-xs text-lo">
@@ -63,6 +70,7 @@ import Modal from '../components/Modal.vue'
 import UserForm from '../components/UserForm.vue'
 import LearnerCard from '../components/LearnerCard.vue'
 import UserPermissionsModal from '../components/UserPermissionsModal.vue'
+import QuarterWizard from '../components/QuarterWizard.vue'
 
 const auth              = useAuthStore()
 const users             = useUsersStore()
@@ -72,6 +80,7 @@ const editing   = ref(null)
 const saving    = ref(false)
 const permTarget    = ref(null)
 const showPermModal = ref(false)
+const showWizard    = ref(false)
 const fileInput = ref(null)
 const uploading = ref(null)
 
