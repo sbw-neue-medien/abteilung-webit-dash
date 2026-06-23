@@ -38,12 +38,14 @@
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('edit', u)">Bearbeiten</button>
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('editPermissions', u)" title="Berechtigungen anpassen">Berechtigungen</button>
       <ConfirmButton v-if="u.active" class="btn btn-sm btn-danger" :label="`«${u.name}» wirklich löschen?`" @confirm="$emit('remove', u)">Löschen</ConfirmButton>
-      <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer ml-auto select-none">
-        <input type="checkbox" :checked="!!u.active"
-               class="rounded border-line text-brand-600"
-               @change="$emit('toggleActive', u, $event.target.checked)" />
+      <ConfirmButton v-if="u.active" class="btn btn-sm btn-secondary ml-auto"
+                     :label="`«${u.name}» deaktivieren? Eigenprojekt wird pausiert, offene Aufgaben verlieren ihre Zuweisung.`"
+                     @confirm="$emit('toggleActive', u, false)">
         Aktiv
-      </label>
+      </ConfirmButton>
+      <button v-else class="btn btn-sm btn-secondary ml-auto" @click="$emit('toggleActive', u, true)">
+        Inaktiv
+      </button>
     </div>
   </div>
 </template>

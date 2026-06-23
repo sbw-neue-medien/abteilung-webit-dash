@@ -114,6 +114,7 @@ import ConfirmButton from './ConfirmButton.vue'
 import Modal from './Modal.vue'
 import MarkdownRenderer from './MarkdownRenderer.vue'
 import MarkdownTextarea from './MarkdownTextarea.vue'
+import { mondayOfNextWeek, fridayOfWeek, isoWeekNumber, mondayAfter } from '../utils/sprintDates.js'
 
 const props = defineProps({ tasks: { type: Array, default: () => [] } })
 
@@ -183,10 +184,7 @@ function openNew() {
   let mon
   if (sorted.value.length) {
     const last = sorted.value[sorted.value.length - 1]
-    const d    = new Date(last.end_date + 'T00:00:00')
-    const day  = d.getDay()                          // 0=Sun … 6=Sat
-    d.setDate(d.getDate() + (day === 0 ? 1 : 8 - day)) // next Monday after end
-    mon = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    mon = mondayAfter(last.end_date)
   } else {
     mon = mondayOfNextWeek()
   }
@@ -209,24 +207,5 @@ async function save() {
 
 async function removeSprint(id) {
   await sprints.remove(id)
-}
-
-function mondayOfNextWeek() {
-  const d = new Date(), day = d.getDay()
-  d.setDate(d.getDate() + (day === 0 ? 1 : 8 - day))
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-function isoWeekNumber(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
-  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7))
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
-  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7)
-}
-
-function fridayOfWeek(mondayStr) {
-  const d = new Date(mondayStr + 'T00:00:00')
-  d.setDate(d.getDate() + 4)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 </script>

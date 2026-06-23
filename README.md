@@ -2,7 +2,7 @@
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
 
-**Version:** 1.9.8
+**Version:** 1.9.9
 **Repo:** `sbw-neue-medien/abteilung-webit-dash`
 **Backend:** [`sbw-neue-medien/abteilung-webit-api`](https://github.com/sbw-neue-medien/abteilung-webit-api)
 
@@ -47,6 +47,7 @@ src/
 │   ├── ConfirmButton.vue
 │   ├── NotificationBell.vue
 │   ├── ProjectPermissionsPanel.vue
+│   ├── QuarterWizard.vue
 │   ├── SideBar.vue
 │   ├── SprintPanel.vue
 │   ├── StatusBadge.vue
@@ -83,6 +84,8 @@ src/
 │   ├── useDarkMode.js
 │   ├── useNavLinks.js
 │   └── useToast.js
+├── utils/        # Reine Hilfsfunktionen
+│   └── sprintDates.js
 └── router/       # Route-Definitionen
 ```
 
@@ -124,7 +127,8 @@ src/
 - **Passwort-Reset** — per E-Mail anfordern und setzen
 - **Avatar-Upload** — Profilbild pro Benutzer
 - **E-Mail-Benachrichtigungen** — bei Review-Aufgaben (Leiter), bei Projekterstellung (Leiter + Mitglieder), bei Aufgabenzuweisung (Assignee), bei Eigenprojekt-Erstellung (Leiter + zugewiesene Coaches)
-- **Lernpartner deaktivieren** — kein Login, aus Auswahllisten ausgeblendet, Eigenprojekte pausiert
+- **Lernpartner deaktivieren** — kein Login, aus Auswahllisten ausgeblendet, Eigenprojekte pausiert, offene Aufgaben verlieren ihre Zuweisung; bei Reaktivierung wird das Eigenprojekt wieder aktiviert
+- **Quartalswechsel-Assistent** (`/lernende`, Leiter) — geführter Dialog für den Quartalswechsel: neue Sprints in Serie anlegen, mehrere Lernpartner auswählen und deaktivieren/aktivieren, jeweils mit Bestätigung
 - **Werkstatt-Übersicht** — Projekte, Sprint-Tasks, Stunden pro Lernpartner
 - **Dark Mode** — System-/manuelles Umschalten
 - **Todos** — Checklisten pro Projekt in der linken Sidebar (sichtbar auf `/projekte/:id`)
@@ -159,6 +163,10 @@ npm run build        # Produktions-Build nach dist/
 ---
 
 ## Changelog
+
+### 1.9.9
+- **Quartalswechsel-Assistent** (`QuarterWizard.vue`, `LearnersView.vue`) — geführter 3-Schritte-Dialog für den Quartalswechsel: 1) Serienanlage von Sprints (Datumslogik aus `SprintPanel.vue` nach `utils/sprintDates.js` extrahiert), 2) Lernpartner deaktivieren, 3) Lernpartner (re-)aktivieren; jede Aktion läuft über die bestehende `users.toggleActive()`-Action (#119)
+- **`LearnerCard.vue`** — Aktiv/Inaktiv-Checkbox durch `ConfirmButton` ersetzt (konsistent mit den übrigen Inline-Bestätigungen); Deaktivieren zeigt jetzt eine Warnung zu Eigenprojekt-Pause und Aufgaben-Entzug
 
 ### 1.9.8
 - **CSV-Export für Zeiterfassung** (`TimeEntryView.vue`) — exportiert die aktuell gefilterten Einträge als Excel-kompatible CSV (Semikolon-getrennt, UTF-8-BOM); Dateiname enthält bei aktivem Lernpartner-Filter dessen Namen

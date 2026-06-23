@@ -29,9 +29,10 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   async function toggleActive(id, active) {
-    await api.setUserActive(id, active)
+    const res = await api.setUserActive(id, active)
     const u = list.value.find(u => u.id === id)
     if (u) u.active = active ? 1 : 0
+    return res
   }
 
   return { list, loading, fetchAll, create, update, remove, toggleActive }
