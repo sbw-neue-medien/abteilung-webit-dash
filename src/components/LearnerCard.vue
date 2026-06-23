@@ -41,7 +41,7 @@
       <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer ml-auto select-none">
         <input type="checkbox" :checked="!!u.active"
                class="rounded border-line text-brand-600"
-               @change="$emit('toggleActive', u, $event.target.checked)" />
+               @change="onChange($event)" />
         Aktiv
       </label>
     </div>
@@ -52,9 +52,17 @@
 import UserAvatar from './UserAvatar.vue'
 import ConfirmButton from './ConfirmButton.vue'
 
-defineProps({
+const props = defineProps({
   u:    { type: Object, required: true },
   auth: { type: Object, required: true },
 })
-defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'editPermissions', 'remove', 'toggleActive'])
+const emit = defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'editPermissions', 'remove', 'toggleActive'])
+
+function onChange(e) {
+  const checked = e.target.checked
+  // Revert the native DOM state immediately: if the parent doesn't confirm
+  // (or the request fails), Vue won't re-patch :checked since u.active is unchanged.
+  e.target.checked = !!props.u.active
+  emit('toggleActive', props.u, checked)
+}
 </script>
