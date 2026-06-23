@@ -38,12 +38,14 @@
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('edit', u)">Bearbeiten</button>
       <button v-if="u.active" class="btn btn-sm btn-secondary" @click="$emit('editPermissions', u)" title="Berechtigungen anpassen">Berechtigungen</button>
       <ConfirmButton v-if="u.active" class="btn btn-sm btn-danger" :label="`«${u.name}» wirklich löschen?`" @confirm="$emit('remove', u)">Löschen</ConfirmButton>
-      <label class="flex items-center gap-1.5 text-sm text-mid cursor-pointer ml-auto select-none">
-        <input type="checkbox" :checked="!!u.active"
-               class="rounded border-line text-brand-600"
-               @change="onChange($event)" />
+      <ConfirmButton v-if="u.active" class="btn btn-sm btn-secondary ml-auto"
+                     :label="`«${u.name}» deaktivieren? Eigenprojekt wird pausiert, offene Aufgaben verlieren ihre Zuweisung.`"
+                     @confirm="$emit('toggleActive', u, false)">
         Aktiv
-      </label>
+      </ConfirmButton>
+      <button v-else class="btn btn-sm btn-secondary ml-auto" @click="$emit('toggleActive', u, true)">
+        Inaktiv
+      </button>
     </div>
   </div>
 </template>
@@ -52,17 +54,9 @@
 import UserAvatar from './UserAvatar.vue'
 import ConfirmButton from './ConfirmButton.vue'
 
-const props = defineProps({
+defineProps({
   u:    { type: Object, required: true },
   auth: { type: Object, required: true },
 })
-const emit = defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'editPermissions', 'remove', 'toggleActive'])
-
-function onChange(e) {
-  const checked = e.target.checked
-  // Revert the native DOM state immediately: if the parent doesn't confirm
-  // (or the request fails), Vue won't re-patch :checked since u.active is unchanged.
-  e.target.checked = !!props.u.active
-  emit('toggleActive', props.u, checked)
-}
+defineEmits(['triggerUpload', 'removeAvatar', 'sendReset', 'edit', 'editPermissions', 'remove', 'toggleActive'])
 </script>

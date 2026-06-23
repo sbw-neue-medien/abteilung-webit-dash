@@ -136,12 +136,6 @@ async function sendReset(u) {
 }
 
 async function handleToggleActive(u, active) {
-  if (!active) {
-    const ok = window.confirm(
-      `«${u.name}» deaktivieren?\n\nDas Eigenprojekt wird pausiert und alle offenen Aufgaben von ${u.name} werden ihm/ihr entzogen (Zuweisung entfernt).`
-    )
-    if (!ok) return
-  }
   const res = await users.toggleActive(u.id, active)
   if (active) {
     toast(`«${u.name}» wurde aktiviert.`)

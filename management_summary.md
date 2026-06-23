@@ -2,7 +2,7 @@
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
 date: "Juni 2026"
-version: "1.9.8"
+version: "1.9.9"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -11,7 +11,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.9.8
+# Stand der Anwendung — Version 1.9.9
 
 ## Worum geht es?
 
@@ -36,7 +36,8 @@ Das webIT Abteilungs-Dashboard ist eine interne Webanwendung zur Verwaltung der 
 - **Todo-Listen** — Einfache Checklisten pro Projekt mit geplantem und tatsächlichem Aufwand
 - **Eigenprojekte** — Persönliche Projekte einem Lernpartner zuordnen
 - **Werkstatt-Übersicht** — Tabellarische Übersicht pro Lernpartner: aktive Projekte, Sprint-Tasks, Stunden
-- **Benutzerverwaltung** — Konten anlegen, Passwörter zurücksetzen, Profilbilder hochladen, Lernpartner deaktivieren
+- **Benutzerverwaltung** — Konten anlegen, Passwörter zurücksetzen, Profilbilder hochladen, Lernpartner deaktivieren/reaktivieren
+- **Quartalswechsel-Assistent** — geführter Dialog, um am Ende eines Quartals in einem Durchgang neue Sprints anzulegen sowie ausscheidende/neue Lernpartner zu (de)aktivieren
 - **Coach-System** — Coaches werden Lernpartner zugewiesen und erhalten automatisch Lesezugriff
 
 ### Neu in Version 1.7.0: Granulares Berechtigungssystem
@@ -88,8 +89,18 @@ Damit ist es möglich, einen Lernpartner als **Projektleiter** für ein bestimmt
 - **CSV-Export für Zeiterfassung** — Einträge der aktuell gefilterten Ansicht lassen sich als CSV-Datei herunterladen (Excel-kompatibel); ist ein Lernpartner ausgewählt, erscheint dessen Name im Dateinamen
 - **Aktueller Sprint im Filter hervorgehoben** — In der Projektdetailansicht markiert ein farbiger Ring den Sprint, der heute aktiv ist, unabhängig davon, welcher Sprint gerade ausgewählt ist
 
+### Neu in Version 1.9.9: Quartalswechsel-Assistent
+
+Lernpartner arbeiten in der webIT-Abteilung in Quartalen von rund 12 Sprints. Bisher musste der Leiter beim Quartalswechsel jeden Sprint einzeln anlegen, jeden ausscheidenden Lernpartner einzeln deaktivieren und offene Aufgaben von Hand neu zuweisen. Ein neuer geführter Dialog («Quartalswechsel») auf der Lernpartner-Seite bündelt diese drei Schritte:
+
+1. **Sprints anlegen** — eine ganze Serie neuer Sprints (Standard: 12) wird automatisch im Anschluss an den letzten bestehenden Sprint vorgeschlagen und mit einem Klick erstellt
+2. **Lernpartner deaktivieren** — gezielte Auswahl ausscheidender Lernpartner; ihr Eigenprojekt wird automatisch pausiert und ihre offenen Aufgaben verlieren die Zuweisung, damit sie nicht weiter beim ausgeschiedenen Lernpartner aufscheinen
+3. **Lernpartner (re-)aktivieren** — neue oder zurückkehrende Lernpartner werden aktiviert, ihr Eigenprojekt wird dabei automatisch wieder freigegeben
+
+Da Deaktivieren/Aktivieren weiterhin einzeln pro Lernpartner mit Bestätigung erfolgt, bleibt der Wechsel bewusst ein manueller, kontrollierter Vorgang — nicht jeder Lernpartner verlässt die Abteilung am Quartalsende.
+
 ## Aktueller Stand
 
-Die Anwendung ist produktiv im Einsatz. Version 1.9.8 wurde im Juni 2026 veröffentlicht.
+Die Anwendung ist produktiv im Einsatz. Version 1.9.9 wurde im Juni 2026 veröffentlicht.
 
 **Produktions-Hinweis:** Beim Deployment einer neuen Version müssen Datenbank-Migrationen manuell auf dem Plesk-Server eingespielt werden, bevor der Code aktiviert wird.
