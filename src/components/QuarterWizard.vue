@@ -38,9 +38,11 @@
           </label>
         </div>
         <div class="flex justify-end mt-3">
-          <button class="btn-secondary" :disabled="deactivating || !toDeactivate.length" @click="deactivateSelected">
+          <ConfirmButton
+            :label="`${toDeactivate.length} Lernpartner deaktivieren? Eigenprojekte werden pausiert, offene Aufgaben verlieren ihre Zuweisung.`"
+            class="btn-secondary" :disabled="deactivating || !toDeactivate.length" @confirm="deactivateSelected">
             {{ deactivating ? 'Wird deaktiviert…' : `${toDeactivate.length} deaktivieren` }}
-          </button>
+          </ConfirmButton>
         </div>
       </section>
 
@@ -75,6 +77,7 @@ import { useSprintsStore } from '../stores/sprints.js'
 import { useUsersStore } from '../stores/users.js'
 import { useToast } from '../composables/useToast.js'
 import Modal from './Modal.vue'
+import ConfirmButton from './ConfirmButton.vue'
 import { mondayOfNextWeek, fridayOfWeek, isoWeekNumber, mondayAfter } from '../utils/sprintDates.js'
 
 const props = defineProps({ modelValue: Boolean })

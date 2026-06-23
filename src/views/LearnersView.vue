@@ -136,8 +136,19 @@ async function sendReset(u) {
 }
 
 async function handleToggleActive(u, active) {
-  await users.toggleActive(u.id, active)
-  toast(active ? `«${u.name}» wurde aktiviert.` : `«${u.name}» wurde deaktiviert.`)
+  if (!active) {
+    const ok = window.confirm(
+      `«${u.name}» deaktivieren?\n\nDas Eigenprojekt wird pausiert und alle offenen Aufgaben von ${u.name} werden ihm/ihr entzogen (Zuweisung entfernt).`
+    )
+    if (!ok) return
+  }
+  const res = await users.toggleActive(u.id, active)
+  if (active) {
+    toast(`«${u.name}» wurde aktiviert.`)
+  } else {
+    const n = res?.unassigned_tasks ?? 0
+    toast(`«${u.name}» wurde deaktiviert${n ? ` (${n} Aufgabe${n !== 1 ? 'n' : ''} freigegeben)` : ''}.`)
+  }
 }
 
 async function remove(u) {
