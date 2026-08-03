@@ -10,5 +10,5 @@ import { useSprintsStore } from '../stores/sprints.js'
 import SprintPanel from '../components/SprintPanel.vue'
 
 const sprints = useSprintsStore()
-onMounted(() => sprints.fetchAll())
+onMounted(() => Promise.all([sprints.fetchAll(), sprints.fetchCutoff()]))
 </script>

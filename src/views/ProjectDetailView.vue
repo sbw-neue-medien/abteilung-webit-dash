@@ -60,7 +60,7 @@
                 :class="sprintFilter === null ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
           Alle
         </button>
-        <button v-for="sprint in sprints.list" :key="sprint.id"
+        <button v-for="sprint in sprints.visibleList" :key="sprint.id"
                 @click="sprintFilter = sprint.id"
                 class="text-xs px-3 py-1 rounded-full transition-colors inline-flex items-center gap-1.5"
                 :class="[
@@ -130,16 +130,16 @@
           <label class="label">{{ isSerie && !editingTask ? 'Sprints' : 'Sprint' }}</label>
           <select v-if="!isSerie || editingTask" v-model="taskForm.sprint_id" class="input">
             <option :value="null">— Kein Sprint (Backlog) —</option>
-            <option v-for="s in sprints.list" :key="s.id" :value="s.id">{{ s.name }}</option>
+            <option v-for="s in sprints.visibleList" :key="s.id" :value="s.id">{{ s.name }}</option>
           </select>
           <template v-else>
             <div class="border border-groove rounded-lg p-2 bg-surface max-h-44 overflow-y-auto space-y-1">
-              <label v-for="s in sprints.list" :key="s.id"
+              <label v-for="s in sprints.visibleList" :key="s.id"
                      class="flex items-center gap-2 cursor-pointer py-1 px-1 rounded hover:bg-lift">
                 <input type="checkbox" :value="s.id" v-model="serieSprintIds" class="rounded shrink-0" />
                 <span class="text-sm text-hi">{{ s.name }}</span>
               </label>
-              <p v-if="!sprints.list.length" class="text-sm text-lo italic px-1">Keine Sprints vorhanden.</p>
+              <p v-if="!sprints.visibleList.length" class="text-sm text-lo italic px-1">Keine Sprints vorhanden.</p>
             </div>
             <p v-if="serieSprintIds.length === 0" class="text-xs text-amber-600 mt-1">
               Bitte mindestens einen Sprint auswählen.
@@ -261,6 +261,7 @@ onMounted(async () => {
     tasks.fetchForProject(id),
     todos.fetchForProject(id),
     sprints.fetchAll(),
+    sprints.fetchCutoff(),
   ])
   sprintFilter.value = currentSprintId.value
   if (auth.can('projects.manage_members')) {

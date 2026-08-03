@@ -127,8 +127,8 @@ function applyCapacityToAll() {
 async function createSprints() {
   creatingSprints.value = true
   try {
-    await Promise.all(sprintRows.value.map(row => sprints.create(row)))
-    toastSuccess(`${sprintRows.value.length} Sprints erstellt.`)
+    await sprints.createPeriod(sprintRows.value)
+    toastSuccess(`${sprintRows.value.length} Sprints erstellt. Sprint-Verlauf beginnt jetzt bei diesem Quartal.`)
     regenerateSprints()
   } catch (err) {
     toastError(err.message)

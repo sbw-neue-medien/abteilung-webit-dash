@@ -2,18 +2,23 @@
   <div>
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-hi">Sprint-Planung</h2>
-      <button v-if="auth.can('sprints.manage')" class="btn-primary" @click="openNew">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Neuer Sprint
-      </button>
+      <div class="flex items-center gap-3">
+        <button v-if="sprints.cutoff" class="text-xs text-lo hover:text-hi transition-colors" @click="showHistory = !showHistory">
+          {{ showHistory ? 'Verlauf ausblenden' : 'Verlauf anzeigen' }}
+        </button>
+        <button v-if="auth.can('sprints.manage')" class="btn-primary" @click="openNew">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Neuer Sprint
+        </button>
+      </div>
     </div>
 
     <div v-if="sprints.loading" class="text-lo italic text-sm">Laden…</div>
 
-    <div v-else-if="sprints.list.length === 0" class="text-lo text-sm italic py-4">
-      Noch keine Sprints angelegt.
+    <div v-else-if="baseList.length === 0" class="text-lo text-sm italic py-4">
+      {{ showHistory ? 'Noch keine Sprints angelegt.' : 'Keine Sprints im aktuellen Zeitraum.' }}
     </div>
 
     <div v-else class="space-y-3">
@@ -120,15 +125,18 @@ const props = defineProps({ tasks: { type: Array, default: () => [] } })
 
 const sprints   = useSprintsStore()
 const auth      = useAuthStore()
-const showModal = ref(false)
-const editing   = ref(null)
-const expanded  = ref(false)
-const form      = ref({ name: '', start_date: '', end_date: '', goal: '', capacity_min: 900 })
+const showModal  = ref(false)
+const editing    = ref(null)
+const expanded   = ref(false)
+const showHistory = ref(false)
+const form       = ref({ name: '', start_date: '', end_date: '', goal: '', capacity_min: 900 })
 
 const today = new Date().toISOString().slice(0, 10)
 
+const baseList = computed(() => showHistory.value ? sprints.list : sprints.visibleList)
+
 const sorted = computed(() =>
-  [...sprints.list].sort((a, b) => a.start_date.localeCompare(b.start_date))
+  [...baseList.value].sort((a, b) => a.start_date.localeCompare(b.start_date))
 )
 
 const visibleSprints = computed(() => {
