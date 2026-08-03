@@ -31,7 +31,7 @@
         </span>
         <button
           class="p-1 rounded text-mid hover:text-hi hover:bg-lift transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          :disabled="sprintIndex >= sprints.list.length - 1"
+          :disabled="sprintIndex >= sprints.visibleList.length - 1"
           @click="stepSprint(1)"
           title="Nächster Sprint">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +61,7 @@ const to   = ref('')
 
 const sprints     = useSprintsStore()
 const sprintIndex = ref(0)
-const currentSprint = computed(() => sprints.list[sprintIndex.value] ?? null)
+const currentSprint = computed(() => sprints.visibleList[sprintIndex.value] ?? null)
 
 function emitChange() {
   if (mode.value === 'range') {
@@ -75,7 +75,7 @@ function emitChange() {
 
 function stepSprint(dir) {
   const next = sprintIndex.value + dir
-  if (next < 0 || next >= sprints.list.length) return
+  if (next < 0 || next >= sprints.visibleList.length) return
   sprintIndex.value = next
   emitChange()
 }
@@ -86,9 +86,9 @@ function setMode(m) {
 }
 
 onMounted(async () => {
-  await sprints.fetchAll()
+  await Promise.all([sprints.fetchAll(), sprints.fetchCutoff()])
   const today = new Date().toISOString().slice(0, 10)
-  const idx = sprints.list.findLastIndex(s => s.start_date <= today)
+  const idx = sprints.visibleList.findLastIndex(s => s.start_date <= today)
   sprintIndex.value = idx >= 0 ? idx : 0
   emitChange()
 })
