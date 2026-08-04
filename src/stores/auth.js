@@ -90,14 +90,21 @@ export const useAuthStore = defineStore('auth', () => {
     refreshTimer = null
   }
 
-  async function login(username, password) {
-    const data = await api.login({ username, password })
+  function applySession(data) {
     token.value = data.token
     user.value  = data.user
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
     setPermissions(data.permissions ?? [])
     startRefreshInterval()
+  }
+
+  async function login(username, password) {
+    applySession(await api.login({ username, password }))
+  }
+
+  async function loginWithMicrosoft(accessToken) {
+    applySession(await api.loginMicrosoft(accessToken))
   }
 
   function logout() {
@@ -116,5 +123,5 @@ export const useAuthStore = defineStore('auth', () => {
     api.getMyPermissions().then(data => setPermissions(data.permissions)).catch(() => {})
   }
 
-  return { token, user, isLoggedIn, isLeiter, isMentor, can, login, logout }
+  return { token, user, isLoggedIn, isLeiter, isMentor, can, login, loginWithMicrosoft, logout }
 })

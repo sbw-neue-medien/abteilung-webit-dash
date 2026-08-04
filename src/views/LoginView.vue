@@ -28,6 +28,17 @@
           </button>
         </p>
       </form>
+
+      <template v-if="microsoftEnabled">
+        <div class="flex items-center gap-3 my-6">
+          <div class="flex-1 border-t border-groove" />
+          <span class="text-xs text-lo">oder</span>
+          <div class="flex-1 border-t border-groove" />
+        </div>
+        <button type="button" class="btn-secondary w-full justify-center" :disabled="msLoading" @click="loginWithMicrosoft">
+          {{ msLoading ? 'Anmelden…' : 'Mit Microsoft anmelden' }}
+        </button>
+      </template>
     </div>
 
     <Modal v-model="showForgot" title="Passwort zurücksetzen">
@@ -55,10 +66,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { api } from '../api/index.js'
+import { loginWithMicrosoftPopup, msalConfigured } from '../msal.js'
 import Modal from '../components/Modal.vue'
 
 const auth           = useAuthStore()
@@ -69,6 +81,17 @@ const username = ref('')
 const password = ref('')
 const loading  = ref(false)
 const error    = ref(null)
+
+const microsoftEnabled = ref(false)
+const msLoading         = ref(false)
+
+onMounted(async () => {
+  if (!msalConfigured) return
+  try {
+    const status = await api.getMicrosoftLoginStatus()
+    microsoftEnabled.value = status.enabled
+  } catch { /* Flag bleibt aus, Passwort-Login funktioniert unabhängig davon */ }
+})
 
 const showForgot   = ref(false)
 const forgotEmail  = ref('')
@@ -86,6 +109,20 @@ async function login() {
     error.value = e.message
   } finally {
     loading.value = false
+  }
+}
+
+async function loginWithMicrosoft() {
+  msLoading.value = true
+  error.value     = null
+  try {
+    const accessToken = await loginWithMicrosoftPopup()
+    await auth.loginWithMicrosoft(accessToken)
+    router.push('/')
+  } catch (e) {
+    error.value = e.message
+  } finally {
+    msLoading.value = false
   }
 }
 

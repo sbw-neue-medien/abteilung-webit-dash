@@ -26,6 +26,8 @@ async function req(path, options = {}) {
 
 export const api = {
   login: (body)                  => req('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+  loginMicrosoft: (accessToken)  => req('/auth/microsoft', { method: 'POST', body: JSON.stringify({ access_token: accessToken }) }),
+  getMicrosoftLoginStatus: ()    => req('/auth/microsoft-status'),
   refreshToken: ()               => req('/auth/refresh', { method: 'POST' }),
   getMyPermissions: ()           => req('/auth/permissions'),
   forgotPassword: (body)         => req('/auth/forgot-password', { method: 'POST', body: JSON.stringify(body) }),
