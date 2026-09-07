@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FTP_HOST="palladius.sui-inter.net"
-FTP_USER="ftp.webit"
+SFTP_HOST="palladius.sui-inter.net"
+SFTP_PORT="2121"
+SFTP_USER="plc.sbw.media_w21zm3gj1c"
 
-FTP_REMOTE="/"   # HTTP-Root auf dem Server
+# Der SFTP-User landet im Server-Root, nicht in htdocs -- Pfad muss explizit angegeben werden.
+SFTP_REMOTE="/domains/webit.sbw.media/"
 
 # ── Management Summary ─────────────────────────────────────
 echo "→ Management Summary generieren…"
@@ -16,27 +18,27 @@ pandoc management_summary.md \
 echo "→ Build starten…"
 npm run build
 
-# ── Deploy via lftp ────────────────────────────────────────
-# store password in .netrc for lftp
-# echo "machine ${FTP_HOST} login ${FTP_USER} password ${FTP_PASSWORD}" > ~/.netrc
-# chmod 600 ~/.netrc
+# ── Deploy via lftp (SFTP) ─────────────────────────────────
+# Passwort in ~/.netrc hinterlegen (chmod 600):
+#   machine palladius.sui-inter.net login plc.sbw.media_w21zm3gj1c password <pw>
 
-echo "→ Uploade dist/ nach ${FTP_HOST}${FTP_REMOTE}…"
-lftp -u "${FTP_USER}" "${FTP_HOST}" <<'LFTP'
-set ftp:ssl-allow yes
+echo "→ Uploade dist/ nach ${SFTP_HOST}:${SFTP_PORT}${SFTP_REMOTE}…"
+lftp -p "${SFTP_PORT}" -u "${SFTP_USER}" "sftp://${SFTP_HOST}" <<LFTP
 set net:max-retries 3
 set net:timeout 10
 
+cd "${SFTP_REMOTE}"
+
 # Alte Assets entfernen (Hashes ändern bei jedem Build)
-glob rm -rf /assets/*
+glob rm -rf assets/*
 
 # Ohne --delete: api/, uploads/ und alles andere auf dem Server bleibt unangetastet
-mirror --reverse --parallel=4 --verbose dist/ /
+mirror --reverse --parallel=4 --verbose dist/ .
 
 # .htaccess separat (mirror überspringt dotfiles standardmässig)
-put .htaccess -o /.htaccess
+put .htaccess -o .htaccess
 
 quit
 LFTP
 
-echo "✓ Frontend deployed nach ${FTP_HOST}"
+echo "✓ Frontend deployed nach ${SFTP_HOST}"
