@@ -1,8 +1,8 @@
 ---
 title: "webIT Abteilungs-Dashboard"
 subtitle: "Management Summary"
-date: "Juni 2026"
-version: "1.9.9"
+date: "September 2026"
+version: "1.9.10"
 lang: de
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -11,7 +11,7 @@ sansfont: "DejaVu Sans"
 colorlinks: true
 ---
 
-# Stand der Anwendung — Version 1.9.9
+# Stand der Anwendung — Version 1.9.10
 
 ## Worum geht es?
 
