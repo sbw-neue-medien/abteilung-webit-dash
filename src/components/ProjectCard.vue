@@ -50,7 +50,11 @@ const deleteLabel = computed(() =>
   `${props.isTemplate ? 'Vorlage' : 'Projekt'} «${props.project.name}» wirklich löschen?`
 )
 
+const HTML_ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" }
+
 function markdownPreview(text) {
-  return marked.parse(text ?? '').replace(/<[^>]*>/g, '')
+  return marked.parse(text ?? '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&amp;|&lt;|&gt;|&quot;|&#39;/g, (entity) => HTML_ENTITIES[entity])
 }
 </script>
