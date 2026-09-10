@@ -150,9 +150,11 @@ function memberNames(p) {
 
 onMounted(async () => {
   projects.fetchAll()
+  if (auth.can('projects.create') || auth.can('projects.create_own')) {
+    projects.fetchTemplates()
+  }
   if (auth.can('projects.create')) {
     users.fetchAll()
-    projects.fetchTemplates()
     mentors.value = await api.getMentors()
   }
 })
