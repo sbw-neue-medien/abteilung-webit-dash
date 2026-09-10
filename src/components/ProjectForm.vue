@@ -55,20 +55,20 @@
         </select>
       </div>
 
-      <div v-if="!project && templates.length && !form.is_template">
-        <label class="label">Vorlage verwenden</label>
-        <select v-model="form.template_id" class="input">
-          <option :value="null">— Keine Vorlage —</option>
-          <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
-        </select>
-      </div>
-
       <div class="flex items-center gap-2">
         <input id="is_template" type="checkbox" v-model="form.is_template"
                class="rounded border-line text-brand-600" />
         <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
       </div>
     </template>
+
+    <div v-if="!project && templates.length && !form.is_template">
+      <label class="label">Vorlage verwenden</label>
+      <select v-model="form.template_id" class="input">
+        <option :value="null">— Keine Vorlage —</option>
+        <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
+      </select>
+    </div>
 
     <div class="flex gap-2 justify-end pt-2">
       <button type="button" class="btn-secondary" @click="$emit('cancel')">Abbrechen</button>
