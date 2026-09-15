@@ -54,26 +54,28 @@
       </div>
 
       <!-- Sprint filter bar -->
-      <div class="max-w-7xl mx-auto mb-4 flex items-center gap-2 flex-wrap">
-        <button @click="sprintFilter = null"
-                class="text-xs px-3 py-1 rounded-full transition-colors"
-                :class="sprintFilter === null ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
-          Alle
-        </button>
-        <button v-for="sprint in sprints.visibleList" :key="sprint.id"
-                @click="sprintFilter = sprint.id"
-                class="text-xs px-3 py-1 rounded-full transition-colors inline-flex items-center gap-1.5"
-                :class="[
-                  sprintFilter === sprint.id ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi',
-                  sprint.id === currentSprintId ? 'ring-2 ring-emerald-500 ring-offset-1 ring-offset-surface' : '',
-                ]">
-          <span v-if="sprint.id === currentSprintId" class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-          {{ sprint.name }}
-        </button>
+      <div class="max-w-7xl mx-auto mb-4 flex items-center gap-2">
         <button @click="sprintFilter = 'backlog'"
-                class="text-xs px-3 py-1 rounded-full transition-colors"
+                class="shrink-0 text-xs px-3 py-1 rounded-full transition-colors"
                 :class="sprintFilter === 'backlog' ? 'bg-amber-500 text-white' : 'bg-lift text-mid hover:text-hi'">
           Backlog
+        </button>
+        <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          <button v-for="sprint in sprints.visibleList" :key="sprint.id"
+                  @click="sprintFilter = sprint.id"
+                  class="shrink-0 text-xs px-3 py-1 rounded-full transition-colors inline-flex items-center gap-1.5"
+                  :class="[
+                    sprintFilter === sprint.id ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi',
+                    sprint.id === currentSprintId ? 'ring-2 ring-emerald-500 ring-offset-1 ring-offset-surface' : '',
+                  ]">
+            <span v-if="sprint.id === currentSprintId" class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+            {{ sprint.name }}
+          </button>
+        </div>
+        <button @click="sprintFilter = null"
+                class="shrink-0 text-xs px-3 py-1 rounded-full transition-colors"
+                :class="sprintFilter === null ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
+          Alle
         </button>
       </div>
 
