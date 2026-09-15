@@ -54,15 +54,28 @@
       </div>
 
       <!-- Sprint filter bar -->
-      <div class="max-w-7xl mx-auto mb-4 flex items-center gap-2">
+      <div class="max-w-7xl mx-auto mb-4 flex items-center gap-1">
         <button @click="sprintFilter = 'backlog'"
                 class="shrink-0 text-xs px-3 py-1 rounded-full transition-colors"
                 :class="sprintFilter === 'backlog' ? 'bg-amber-500 text-white' : 'bg-lift text-mid hover:text-hi'">
           Backlog
         </button>
-        <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+
+        <button
+          :class="sprintCanScrollLeft ? 'text-mid hover:text-hi' : 'invisible'"
+          @click="sprintScrollBy(-1)"
+          class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-surface ring-1 ring-line shadow-sm transition-colors"
+          aria-label="Nach links scrollen">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <div ref="sprintScrollEl" @scroll.passive="updateSprintScrollState"
+             class="flex-1 min-w-0 flex items-center gap-2 overflow-x-auto scrollbar-hide">
           <button v-for="sprint in sprints.visibleList" :key="sprint.id"
                   @click="sprintFilter = sprint.id"
+                  :data-sprint-id="sprint.id"
                   class="shrink-0 text-xs px-3 py-1 rounded-full transition-colors inline-flex items-center gap-1.5"
                   :class="[
                     sprintFilter === sprint.id ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi',
@@ -72,6 +85,17 @@
             {{ sprint.name }}
           </button>
         </div>
+
+        <button
+          :class="sprintCanScrollRight ? 'text-mid hover:text-hi' : 'invisible'"
+          @click="sprintScrollBy(1)"
+          class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-surface ring-1 ring-line shadow-sm transition-colors"
+          aria-label="Nach rechts scrollen">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+
         <button @click="sprintFilter = null"
                 class="shrink-0 text-xs px-3 py-1 rounded-full transition-colors"
                 :class="sprintFilter === null ? 'bg-brand-600 text-white' : 'bg-lift text-mid hover:text-hi'">
@@ -186,7 +210,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useProjectsStore } from '../stores/projects.js'
@@ -238,6 +262,9 @@ const canEditOwnDescription = computed(() =>
 const allUsers       = ref([])
 const mentors        = ref([])
 const sprintFilter   = ref(null)
+const sprintScrollEl       = ref(null)
+const sprintCanScrollLeft  = ref(false)
+const sprintCanScrollRight = ref(false)
 
 const currentSprintId = computed(() => {
   const today = new Date().toISOString().slice(0, 10)
@@ -256,6 +283,21 @@ const filteredTasks = computed(() => {
   return tasks.list.filter(t => Number(t.sprint_id) === sprintFilter.value)
 })
 
+function updateSprintScrollState() {
+  const el = sprintScrollEl.value
+  if (!el) return
+  sprintCanScrollLeft.value  = el.scrollLeft > 0
+  sprintCanScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+}
+
+function sprintScrollBy(dir) {
+  const el = sprintScrollEl.value
+  if (!el) return
+  el.scrollBy({ left: dir * 200, behavior: 'smooth' })
+}
+
+watch(() => sprints.visibleList, () => nextTick(updateSprintScrollState), { deep: true })
+
 onMounted(async () => {
   const id = Number(route.params.id)
   await Promise.all([
@@ -273,6 +315,23 @@ onMounted(async () => {
   if (auth.can('projects.update')) {
     mentors.value = await api.getMentors()
   }
+  await nextTick()
+  updateSprintScrollState()
+  scrollToCurrentSprint()
+  window.addEventListener('resize', updateSprintScrollState)
+})
+
+function scrollToCurrentSprint() {
+  const el = sprintScrollEl.value
+  if (!el || currentSprintId.value === null) return
+  const btn = el.querySelector(`[data-sprint-id="${currentSprintId.value}"]`)
+  if (!btn) return
+  el.scrollLeft += btn.getBoundingClientRect().left - el.getBoundingClientRect().left
+  updateSprintScrollState()
+}
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateSprintScrollState)
 })
 
 function addTask(status) {
