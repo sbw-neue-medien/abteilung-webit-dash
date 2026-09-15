@@ -72,7 +72,7 @@
         </button>
 
         <div ref="sprintScrollEl" @scroll.passive="updateSprintScrollState"
-             class="flex-1 min-w-0 flex items-center gap-2 overflow-x-auto scrollbar-hide">
+             class="flex-1 min-w-0 flex items-center gap-2 overflow-x-auto scrollbar-hide sprint-scroll">
           <button v-for="sprint in sprints.visibleList" :key="sprint.id"
                   @click="sprintFilter = sprint.id"
                   :data-sprint-id="sprint.id"
@@ -413,3 +413,9 @@ async function saveDescription() {
   }
 }
 </script>
+
+<style scoped>
+.sprint-scroll {
+  padding: 0.2rem 0.15rem;
+}
+</style>
