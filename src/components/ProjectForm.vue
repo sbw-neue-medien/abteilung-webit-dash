@@ -62,13 +62,8 @@
       </div>
     </template>
 
-    <div v-if="!project && templates.length && !form.is_template">
-      <label class="label">Vorlage verwenden</label>
-      <select v-model="form.template_id" class="input">
-        <option :value="null">— Keine Vorlage —</option>
-        <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
-      </select>
-    </div>
+    <TemplatePicker v-if="!project && templates.length && !form.is_template"
+                    v-model="form.template_id" :templates="templates" />
 
     <div class="flex gap-2 justify-end pt-2">
       <button type="button" class="btn-secondary" @click="$emit('cancel')">Abbrechen</button>
@@ -82,6 +77,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import MarkdownTextarea from './MarkdownTextarea.vue'
+import TemplatePicker from './TemplatePicker.vue'
 
 const props = defineProps({
   project:      Object,
