@@ -50,6 +50,7 @@ export const api = {
   },
   deleteAvatar: (id)             => req(`/users/${id}/avatar`, { method: 'DELETE' }),
   getTemplates: ()               => req('/templates'),
+  getTemplate: (id)              => req(`/templates/${id}`),
   getProjects: ()                => req('/projects'),
   getProject: (id)               => req(`/projects/${id}`),
   createProject: (body)          => req('/projects', { method: 'POST', body: JSON.stringify(body) }),

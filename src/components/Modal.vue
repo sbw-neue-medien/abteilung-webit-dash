@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div v-if="modelValue" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div v-if="modelValue" :class="['fixed inset-0 flex items-center justify-center p-4', zClass]">
       <div class="absolute inset-0 bg-black/50" @click="$emit('update:modelValue', false)" />
       <div :class="['relative w-full bg-surface rounded-2xl shadow-xl p-6 z-10 max-h-[90vh] overflow-y-auto ring-1 ring-line', wide ? 'max-w-3xl' : 'max-w-lg']">
         <div class="flex items-start justify-between mb-4">
@@ -19,6 +19,11 @@
 </template>
 
 <script setup>
-defineProps({ modelValue: Boolean, title: String, wide: Boolean })
+import { computed } from 'vue'
+
+// `layer` hebt ein Modal über ein bereits offenes (z.B. Vorschau über Projektformular).
+const props = defineProps({ modelValue: Boolean, title: String, wide: Boolean, layer: { type: Number, default: 0 } })
 defineEmits(['update:modelValue'])
+
+const zClass = computed(() => (props.layer > 0 ? 'z-[60]' : 'z-50'))
 </script>

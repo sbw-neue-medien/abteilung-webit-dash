@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold text-hi">Projekte</h1>
-      <button v-if="auth.can('projects.create') || auth.can('projects.create_own')" class="btn-primary" @click="openCreate">
+      <button v-if="canCreateHere" class="btn-primary" @click="openCreate">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -10,7 +10,7 @@
       </button>
     </div>
 
-    <div v-if="auth.can('projects.create')" class="flex gap-1 mb-5 border-b border-groove">
+    <div v-if="canSeeTemplates" class="flex gap-1 mb-5 border-b border-groove">
       <button
         v-for="tab in tabs" :key="tab.value"
         class="px-4 py-2 text-sm font-medium transition-colors"
@@ -57,10 +57,12 @@
     <template v-else>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <ProjectCard v-for="t in projects.templates" :key="t.id"
-          :project="t" is-template can-edit
-          @open="router.push(`/projekte/${t.id}`)" @edit="openEdit(t)" @delete="confirmDelete(t)" />
+          :project="t" is-template :can-edit="auth.can('projects.create')"
+          @open="openPreview(t.id)" @edit="openEdit(t)" @delete="confirmDelete(t)" />
         <div v-if="!projects.templates.length" class="col-span-full text-center py-12 text-lo italic">
-          Noch keine Vorlagen. Erstelle ein Projekt und aktiviere «Als Vorlage speichern».
+          {{ auth.can('projects.create')
+             ? 'Noch keine Vorlagen. Erstelle ein Projekt und aktiviere «Als Vorlage speichern».'
+             : 'Noch keine Vorlagen vorhanden.' }}
         </div>
       </div>
     </template>
@@ -77,6 +79,8 @@
         @cancel="showModal = false"
       />
     </Modal>
+
+    <TemplatePreviewModal v-model="showPreview" :template-id="previewId" />
   </div>
 </template>
 
@@ -90,6 +94,7 @@ import { api } from '../api/index.js'
 import Modal from '../components/Modal.vue'
 import ProjectForm from '../components/ProjectForm.vue'
 import ProjectCard from '../components/ProjectCard.vue'
+import TemplatePreviewModal from '../components/TemplatePreviewModal.vue'
 
 const auth     = useAuthStore()
 const projects = useProjectsStore()
@@ -104,6 +109,15 @@ const activeFilter   = ref(localStorage.getItem('project-filter') || 'aktiv')
 const activeTab      = ref('projekte')
 const learnerFilter  = ref(null)
 const showPersonal   = ref(localStorage.getItem('show-personal') !== 'false')
+const showPreview    = ref(false)
+const previewId      = ref(null)
+
+// Vorlagen anlegen bleibt 'projects.create'; auf dem Vorlagen-Tab sieht ein
+// Lernender daher gar keinen Anlegen-Button.
+const canSeeTemplates = computed(() => auth.can('projects.create') || auth.can('projects.create_own'))
+const canCreateHere   = computed(() =>
+  activeTab.value === 'vorlagen' ? auth.can('projects.create') : canSeeTemplates.value
+)
 
 const tabs = [
   { value: 'projekte', label: 'Projekte' },
@@ -160,6 +174,7 @@ onMounted(async () => {
 })
 
 function openCreate() { editing.value = null; showModal.value = true }
+function openPreview(id) { previewId.value = id; showPreview.value = true }
 function openEdit(p)  { editing.value = p;    showModal.value = true }
 function togglePersonal() {
   showPersonal.value = !showPersonal.value

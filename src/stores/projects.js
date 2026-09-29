@@ -3,15 +3,28 @@ import { ref } from 'vue'
 import { api } from '../api/index.js'
 
 export const useProjectsStore = defineStore('projects', () => {
-  const list      = ref([])
-  const templates = ref([])
-  const current   = ref(null)
-  const loading   = ref(false)
-  const error     = ref(null)
+  const list            = ref([])
+  const templates       = ref([])
+  const templateDetails = ref({})
+  const current         = ref(null)
+  const loading         = ref(false)
+  const error           = ref(null)
 
   async function fetchTemplates() {
-    try { templates.value = await api.getTemplates() }
+    try {
+      templates.value       = await api.getTemplates()
+      templateDetails.value = {} // Liste neu geladen -> Vorschau-Cache verwerfen
+    }
     catch (e) { /* leiter-only, ignorieren wenn kein Zugriff */ }
+  }
+
+  // Vorlagen ändern sich selten – einmal geladene Details bleiben im Cache,
+  // damit das erneute Öffnen einer Vorschau ohne Wartezeit funktioniert.
+  async function fetchTemplate(id) {
+    if (templateDetails.value[id]) return templateDetails.value[id]
+    const detail = await api.getTemplate(id)
+    templateDetails.value = { ...templateDetails.value, [id]: detail }
+    return detail
   }
 
   async function fetchAll() {
@@ -47,5 +60,5 @@ export const useProjectsStore = defineStore('projects', () => {
     list.value = list.value.filter(p => p.id !== id)
   }
 
-  return { list, templates, current, loading, error, fetchAll, fetchTemplates, fetchOne, create, update, remove }
+  return { list, templates, templateDetails, current, loading, error, fetchAll, fetchTemplates, fetchTemplate, fetchOne, create, update, remove }
 })
