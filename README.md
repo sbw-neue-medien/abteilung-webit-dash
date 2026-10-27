@@ -25,7 +25,7 @@ Das Frontend kommuniziert ausschliesslich über HTTP-Requests mit dem Backend (`
 - **Pinia** — State Management
 - **Vue Router 4** — Client-seitiges Routing
 - **Tailwind CSS 3** — Styling
-- **Vite 5** — Build-Tool
+- **Vite 6** — Build-Tool
 
 ---
 
@@ -170,6 +170,7 @@ npm run build        # Produktions-Build nach dist/
 ### Unveröffentlicht
 - **Projektleiter-Rechte** (#132) — `auth.canOnProject()` und `project_permissions` im Auth-Store; Projektdetail (Bearbeiten, Aufgaben, Mitglieder, Zeiterfassung), `TodoList` und `TimeEntryView` prüfen Rechte pro Projekt; «Als Projektleiter»-Button in `ProjectPermissionsPanel`; `ProjectForm` mit `scoped`-Modus
 - Projektleiter finden ihr Projekt jetzt auch in der Projektliste, wenn sie nicht Mitglied sind; die Lernpartner-Auswahl für Mitglieder erhält keine E-Mail-Adressen mehr (Backend-Fix, #132)
+- **Abhängigkeiten aktualisiert** (#135) — `package-lock.json` innerhalb der bestehenden Versionsbereiche aktualisiert (u.a. Vue 3.5.44, PostCSS 8.5.32) und Vite 5 → 6.4.5; behebt alle offenen Dependabot-Warnungen (`npm audit`: 0)
 
 ### 1.9.9
 - **Quartalswechsel-Assistent** (`QuarterWizard.vue`, `LearnersView.vue`) — geführter 3-Schritte-Dialog für den Quartalswechsel: 1) Serienanlage von Sprints (Datumslogik aus `SprintPanel.vue` nach `utils/sprintDates.js` extrahiert), 2) Lernpartner deaktivieren, 3) Lernpartner (re-)aktivieren; jede Aktion läuft über die bestehende `users.toggleActive()`-Action (#119)
