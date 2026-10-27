@@ -45,6 +45,12 @@
                 @click="addPermission">
           Hinzufügen
         </button>
+        <button class="btn btn-sm btn-secondary shrink-0"
+                :disabled="!form.userId || saving"
+                title="Alle Rechte eines Projektleiters für dieses Projekt vergeben"
+                @click="grantLeader">
+          Als Projektleiter
+        </button>
       </div>
     </template>
   </div>
@@ -68,6 +74,14 @@ const PERM_GROUPS = {
   settings:     'Einstellungen',
   werkstatt:    'Werkstatt',
 }
+
+// Typical set for managing a single project without global rights
+const PROJECT_LEADER_PERMS = [
+  'projects.update', 'projects.manage_members',
+  'tasks.create', 'tasks.update', 'tasks.delete', 'tasks.move',
+  'todos.update_all', 'todos.delete_all',
+  'time_entries.read_all', 'time_entries.update_all', 'time_entries.delete_all',
+]
 
 const props = defineProps({
   projectId: { type: Number, required: true },
@@ -109,14 +123,13 @@ async function load() {
 
 onMounted(load)
 
-async function addPermission() {
-  if (!form.value.userId || !form.value.permission) return
+async function grant(perms) {
   saving.value = true
   try {
     const existing = grants.value.find(g => g.user_id === form.value.userId)
-    const current  = existing ? [...existing.permissions] : []
-    if (!current.includes(form.value.permission)) current.push(form.value.permission)
-    await api.updateProjectPermissions(props.projectId, form.value.userId, current)
+    const current  = new Set(existing ? existing.permissions : [])
+    perms.forEach(p => current.add(p))
+    await api.updateProjectPermissions(props.projectId, form.value.userId, [...current])
     form.value.userId = ''
     form.value.permission = ''
     await load()
@@ -125,6 +138,16 @@ async function addPermission() {
   } finally {
     saving.value = false
   }
+}
+
+function addPermission() {
+  if (!form.value.userId || !form.value.permission) return
+  return grant([form.value.permission])
+}
+
+function grantLeader() {
+  if (!form.value.userId) return
+  return grant(PROJECT_LEADER_PERMS)
 }
 
 async function removePermission(grant, perm) {

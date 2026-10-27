@@ -22,13 +22,13 @@
     </div>
 
     <template v-if="!personalOnly">
-      <div class="flex items-center gap-2">
+      <div v-if="!scoped" class="flex items-center gap-2">
         <input id="is_personal" type="checkbox" v-model="form.is_personal"
                class="rounded border-line text-brand-600" />
         <label for="is_personal" class="text-sm text-hi cursor-pointer select-none">Eigenprojekt (einem Lernpartner zuordnen)</label>
       </div>
 
-      <div v-if="form.is_personal && users.length">
+      <div v-if="!scoped && form.is_personal && users.length">
         <label class="label">Lernpartner *</label>
         <select v-model="form.owner_id" class="input" required>
           <option :value="null">— Bitte wählen —</option>
@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <div v-if="mentors.length">
+      <div v-if="!scoped && mentors.length">
         <label class="label">Mentor (optional)</label>
         <select v-model="form.mentor_id" class="input">
           <option :value="null">— Kein Mentor —</option>
@@ -55,7 +55,7 @@
         </select>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div v-if="!scoped" class="flex items-center gap-2">
         <input id="is_template" type="checkbox" v-model="form.is_template"
                class="rounded border-line text-brand-600" />
         <label for="is_template" class="text-sm text-hi cursor-pointer select-none">Als Vorlage speichern</label>
@@ -86,6 +86,8 @@ const props = defineProps({
   templates:    { type: Array, default: () => [] },
   loading:      Boolean,
   personalOnly: { type: Boolean, default: false },
+  // Project-scoped editing (Projektleiter): only members, no ownership/mentor/template fields
+  scoped:       { type: Boolean, default: false },
 })
 const emit = defineEmits(['submit', 'cancel'])
 

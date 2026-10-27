@@ -118,7 +118,7 @@ function priorityLabel(p) { return PRIORITY_LABELS[Number(p)] ?? 'Mittel' }
 function priorityColor(p) { return PRIORITY_COLORS[Number(p)] ?? 'text-lo' }
 
 function canModify(todo) {
-  return auth.can('todos.update_all') || Number(todo.created_by) === Number(auth.user?.id)
+  return auth.canOnProject('todos.update_all', Number(todo.project_id ?? todos.projectId)) || Number(todo.created_by) === Number(auth.user?.id)
 }
 
 function openAdd() {

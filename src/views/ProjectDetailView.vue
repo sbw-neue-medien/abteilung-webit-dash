@@ -14,7 +14,7 @@
           </div>
           <div class="flex gap-2 shrink-0">
             <button v-if="canEditOwnDescription" class="btn-secondary" @click="openDescEdit">Beschreibung</button>
-            <button v-if="auth.can('time_entries.read_all') || auth.can('time_entries.read_own')"
+            <button v-if="canHere('time_entries.read_all') || auth.can('time_entries.read_own')"
                     class="btn-secondary"
                     title="Zeiterfassung für dieses Projekt"
                     @click="router.push({ name: 'time', query: { project_id: route.params.id } })">
@@ -29,8 +29,8 @@
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
             </a>
-            <button v-if="auth.can('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
-            <button v-if="auth.can('tasks.create')" class="btn-primary" @click="addTask('offen')">
+            <button v-if="canHere('projects.update')" class="btn-secondary" @click="showEdit = true">Bearbeiten</button>
+            <button v-if="canHere('tasks.create')" class="btn-primary" @click="addTask('offen')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
@@ -103,10 +103,10 @@
         </button>
       </div>
 
-      <KanbanBoard :tasks="filteredTasks" :readonly="!auth.can('tasks.create')"
+      <KanbanBoard :tasks="filteredTasks" :readonly="!canHere('tasks.create')"
                    @move="moveTask" @add="addTask" @duplicate="duplicateTask" @edit="openEditTask" @delete="deleteTask" />
 
-      <div v-if="auth.can('projects.manage_members') && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
+      <div v-if="canHere('projects.manage_members') && projects.current.members?.length" class="mt-6 max-w-7xl mx-auto">
         <h3 class="text-sm font-semibold text-lo uppercase tracking-wide mb-2">Mitglieder</h3>
         <div class="flex flex-wrap gap-2">
           <span v-for="m in projects.current.members" :key="m.id"
@@ -194,6 +194,7 @@
 
     <Modal v-model="showEdit" title="Projekt bearbeiten">
       <ProjectForm :project="projects.current" :users="allUsers" :mentors="mentors" :loading="saving"
+        :scoped="!auth.can('projects.update')"
         @submit="saveProject" @cancel="showEdit = false" />
     </Modal>
 
@@ -254,8 +255,11 @@ const teamMailto = computed(() => {
   return `mailto:${recipients.join(',')}?subject=${subject}&body=${body}`
 })
 
+// Global permission or a project-scoped grant (Projektleiter) on this project
+const canHere = (permission) => auth.canOnProject(permission, Number(route.params.id))
+
 const canEditOwnDescription = computed(() =>
-  !auth.can('projects.update') &&
+  !canHere('projects.update') &&
   !!projects.current?.is_personal &&
   projects.current?.owner_id === auth.user?.id
 )
@@ -301,6 +305,7 @@ watch(() => sprints.visibleList, () => nextTick(updateSprintScrollState), { deep
 onMounted(async () => {
   const id = Number(route.params.id)
   await Promise.all([
+    auth.loadPermissions().catch(() => {}),
     projects.fetchOne(id),
     tasks.fetchForProject(id),
     todos.fetchForProject(id),
@@ -308,7 +313,7 @@ onMounted(async () => {
     sprints.fetchCutoff(),
   ])
   sprintFilter.value = currentSprintId.value
-  if (auth.can('projects.manage_members')) {
+  if (canHere('projects.manage_members')) {
     await usersStore.fetchAll()
     allUsers.value = usersStore.list.filter(u => u.role === 'lernender' && u.active)
   }

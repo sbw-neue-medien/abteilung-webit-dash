@@ -54,7 +54,7 @@
         <thead class="bg-lift border-b border-line">
           <tr>
             <th class="px-4 py-3 text-left font-medium text-mid w-28">Datum</th>
-            <th v-if="auth.can('time_entries.read_all')" class="px-4 py-3 text-left font-medium text-mid w-32">Person</th>
+            <th v-if="showPerson" class="px-4 py-3 text-left font-medium text-mid w-32">Person</th>
             <th class="px-4 py-3 text-left font-medium text-mid w-64">Projekt / Aufgabe</th>
             <th class="px-4 py-3 text-left font-medium text-mid w-28">Dauer</th>
             <th class="px-4 py-3 text-left font-medium text-mid">Tätigkeit</th>
@@ -64,7 +64,7 @@
         <tbody class="divide-y divide-groove">
           <tr v-for="e in entries" :key="e.id" class="hover:bg-lift transition-colors">
             <td class="px-4 py-3 text-mid">{{ formatDate(e.date) }}</td>
-            <td v-if="auth.can('time_entries.read_all')" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
+            <td v-if="showPerson" class="px-4 py-3 text-mid">{{ e.user_name }}</td>
             <td class="px-4 py-3">
               <RouterLink :to="`/projekte/${e.project_id}`" class="text-mid hover:text-brand-600 hover:underline">{{ e.project_name }}</RouterLink>
               <span v-if="e.task_title" class="block text-xs text-lo mt-0.5">{{ e.task_title }}</span>
@@ -101,7 +101,7 @@
             </td>
           </tr>
           <tr v-if="!entries.length">
-            <td :colspan="(auth.can('time_entries.read_all')) ? 6 : 5" class="px-4 py-8 text-center text-lo italic">Keine Einträge.</td>
+            <td :colspan="showPerson ? 6 : 5" class="px-4 py-8 text-center text-lo italic">Keine Einträge.</td>
           </tr>
         </tbody>
       </table>
@@ -151,7 +151,13 @@ const learners = computed(() => usersStore.list.filter(u => u.role === 'lernende
 const totalMin = computed(() => entries.value.reduce((s, e) => s + Number(e.duration_min), 0))
 const avgMin   = computed(() => { const days = new Set(entries.value.map(e => e.date)).size; return days ? Math.round(totalMin.value / days) : 0 })
 
-function canEdit(e) { return auth.can('time_entries.update_all') || (auth.can('time_entries.update_own') && e.user_id === auth.user?.id) }
+// Project-scoped read_all (Projektleiter) only applies while filtered to that project
+const showPerson = computed(() =>
+  auth.can('time_entries.read_all') ||
+  (!!filter.value.project_id && auth.canOnProject('time_entries.read_all', Number(filter.value.project_id)))
+)
+
+function canEdit(e) { return auth.canOnProject('time_entries.update_all', Number(e.project_id)) || (auth.can('time_entries.update_own') && e.user_id === auth.user?.id) }
 
 onMounted(async () => {
   const calls = [projects.fetchAll(), sprints.fetchAll()]
@@ -197,12 +203,12 @@ function csvEscape(value) {
 
 function exportCsv() {
   const cols = ['Datum']
-  if (auth.can('time_entries.read_all')) cols.push('Person')
+  if (showPerson.value) cols.push('Person')
   cols.push('Projekt', 'Aufgabe', 'Dauer (Min)', 'Tätigkeit')
 
   const rows = entries.value.map(e => {
     const row = [formatDate(e.date)]
-    if (auth.can('time_entries.read_all')) row.push(e.user_name ?? '')
+    if (showPerson.value) row.push(e.user_name ?? '')
     row.push(e.project_name ?? '', e.task_title ?? '', e.duration_min ?? 0, e.description ?? '')
     return row
   })
