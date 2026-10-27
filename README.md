@@ -124,6 +124,9 @@ src/
   - **Rollen-Matrix** (`/rollen`) — globale Berechtigungen pro Rolle konfigurieren
   - **Per-User-Overrides** — individuelle Rechte-Grants oder -Entzüge pro Benutzer (in Lernpartner-Verwaltung)
   - **Projektspezifische Grants** — Lernpartner für einzelne Projekte mit erweiterten Rechten ausstatten (Projektleiter-Muster)
+    - «Als Projektleiter» vergibt in einem Schritt alle Rechte, um ein einzelnes Projekt zu führen (Projekt bearbeiten, Mitglieder, Aufgaben, Todos, Zeiterfassung des Projekts)
+    - `auth.canOnProject('x.y', projectId)` — globales Recht oder projektspezifischer Grant; Grants kommen als `project_permissions` vom Login/Refresh und werden beim Öffnen eines Projekts neu geladen
+    - Projektleiter sehen im Bearbeiten-Dialog nur Projektfelder und Mitglieder (`ProjectForm` mit `scoped`), keine Owner-, Coach- oder Vorlagen-Felder
 - **Passwort-Reset** — per E-Mail anfordern und setzen
 - **Avatar-Upload** — Profilbild pro Benutzer
 - **E-Mail-Benachrichtigungen** — bei Review-Aufgaben (Leiter), bei Projekterstellung (Leiter + Mitglieder), bei Aufgabenzuweisung (Assignee), bei Eigenprojekt-Erstellung (Leiter + zugewiesene Coaches)
@@ -163,6 +166,10 @@ npm run build        # Produktions-Build nach dist/
 ---
 
 ## Changelog
+
+### Unveröffentlicht
+- **Projektleiter-Rechte** (#132) — `auth.canOnProject()` und `project_permissions` im Auth-Store; Projektdetail (Bearbeiten, Aufgaben, Mitglieder, Zeiterfassung), `TodoList` und `TimeEntryView` prüfen Rechte pro Projekt; «Als Projektleiter»-Button in `ProjectPermissionsPanel`; `ProjectForm` mit `scoped`-Modus
+- Projektleiter finden ihr Projekt jetzt auch in der Projektliste, wenn sie nicht Mitglied sind; die Lernpartner-Auswahl für Mitglieder erhält keine E-Mail-Adressen mehr (Backend-Fix, #132)
 
 ### 1.9.9
 - **Quartalswechsel-Assistent** (`QuarterWizard.vue`, `LearnersView.vue`) — geführter 3-Schritte-Dialog für den Quartalswechsel: 1) Serienanlage von Sprints (Datumslogik aus `SprintPanel.vue` nach `utils/sprintDates.js` extrahiert), 2) Lernpartner deaktivieren, 3) Lernpartner (re-)aktivieren; jede Aktion läuft über die bestehende `users.toggleActive()`-Action (#119)
