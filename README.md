@@ -179,6 +179,7 @@ Mit `npm run dev` erreicht der Proxy kein Backend, und der Login meldet `Failed 
 ## Changelog
 
 ### Unveröffentlicht
+- **Fix: Status von Eigenprojekten** (#139) — Lernende können Name, Kunde, Beschreibung und Status ihres Eigenprojekts in der Projektliste ändern; bisher hat das Backend alles ausser der Beschreibung verworfen (Backend-Fix); Hilfeseite für Lernende angepasst
 - **Projektleiter-Rechte** (#132) — `auth.canOnProject()` und `project_permissions` im Auth-Store; Projektdetail (Bearbeiten, Aufgaben, Mitglieder, Zeiterfassung), `TodoList` und `TimeEntryView` prüfen Rechte pro Projekt; «Als Projektleiter»-Button in `ProjectPermissionsPanel`; `ProjectForm` mit `scoped`-Modus
 - Projektleiter finden ihr Projekt jetzt auch in der Projektliste, wenn sie nicht Mitglied sind; die Lernpartner-Auswahl für Mitglieder erhält keine E-Mail-Adressen mehr (Backend-Fix, #132)
 - **Abhängigkeiten aktualisiert** (#135) — `package-lock.json` innerhalb der bestehenden Versionsbereiche aktualisiert (u.a. Vue 3.5.44, PostCSS 8.5.32) und Vite 5 → 6.4.5; behebt alle offenen Dependabot-Warnungen (`npm audit`: 0)

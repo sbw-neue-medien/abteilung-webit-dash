@@ -12,9 +12,9 @@ Unter **Projekte** findest du alle Projekte, an denen du beteiligt bist – sowi
 
 Klicke auf ein Projekt, um die Detailansicht zu öffnen.
 
-### Eigenprojekt-Beschreibung bearbeiten
+### Eigenprojekt bearbeiten
 
-In der Detailansicht deines Eigenprojekts erscheint die Schaltfläche **Beschreibung**. Damit kannst du die Projektbeschreibung selbst anpassen (Markdown wird unterstützt). Name, Status und weitere Felder werden vom Abteilungsleiter verwaltet.
+In der Projektliste kannst du dein Eigenprojekt über **Bearbeiten** ändern: Name, Kunde, Beschreibung und Status (z. B. auf **Abgeschlossen** setzen, wenn du fertig bist). In der Detailansicht deines Eigenprojekts erscheint zusätzlich die Schaltfläche **Beschreibung**, mit der du nur die Beschreibung anpasst (Markdown wird unterstützt). Mitglieder, Coach und Mentor verwaltet die Abteilungsleitung.
 
 > Wenn du ein Eigenprojekt anlegst, werden dein Coach und die Abteilungsleitung automatisch per E-Mail benachrichtigt.
 
