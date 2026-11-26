@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **Archiviert.** Frontend und API liegen seit 26.11.2026 im Monorepo [`sbw-neue-medien/abteilung-webit`](https://github.com/sbw-neue-medien/abteilung-webit) (Historie übernommen, offene Issues dorthin verschoben, Deploy per GitHub Actions). Dieses Repo ist nur noch lesbar.
+
 # webIT Abteilungs-Dashboard — Frontend
 
 Vue 3 Single-Page Application für die Verwaltung der webIT-Abteilung.
