@@ -146,10 +146,21 @@ src/
 
 ```bash
 npm install
-npm run dev          # http://localhost:5173 (proxied an Backend)
-npm run debug        # Backend auf Port 9080
+npm run dev          # http://localhost:5173, /api wird an http://localhost (Port 80) weitergeleitet
+npm run debug        # wie dev, aber /api an das Docker-Backend auf http://localhost:9080
 npm run build        # Produktions-Build nach dist/
 ```
+
+**Mit dem Docker-Backend** (`server/compose.yaml`, Container `webit-app-web` und `webit-app-db`):
+
+```bash
+cd server && docker compose up -d    # Backend auf http://localhost:9080
+npm run debug                        # nicht `npm run dev`, sonst schlägt der Login fehl
+```
+
+Mit `npm run dev` erreicht der Proxy kein Backend, und der Login meldet `Failed to execute 'json' on 'Response': Unexpected end of JSON input`.
+
+**Demo-Login:** Benutzer `leiter`, Passwort `leiter123` (Rolle Leiter). Das Konto legt `api/database/schema.sql` an; Benutzer für die anderen Rollen erstellt man als Leiter in der App.
 
 ---
 
